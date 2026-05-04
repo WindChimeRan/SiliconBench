@@ -1,0 +1,84 @@
+{
+  "framework": "vllm_mlx",
+  "model": "/Users/haorzhang/applebench/.models/Qwen3-0.6B-bf16-mlx",
+  "endpoint": "http://localhost:8008",
+  "timestamp": "2026-05-03T20:22:03",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 2505,
+      "total_output_tokens": 4937,
+      "total_input_tokens": 99518,
+      "server_usage_available": true,
+      "ttft_avg_ms": 186.70546085423214,
+      "ttft_p50_ms": 108.23145788162947,
+      "ttft_p99_ms": 891.8022077996284,
+      "throughput_avg_tps": 131.25295280415838,
+      "throughput_p50_tps": 95.97723993118382,
+      "itl_avg_ms": 10.560342903643315,
+      "itl_p50_ms": 10.359006002545357,
+      "latency_avg_s": 0.4430361334610768,
+      "latency_p50_s": 0.33556129201315343,
+      "latency_p99_s": 1.8385189999826252,
+      "output_throughput_tps": 112.35815160364817,
+      "input_throughput_tps": 2264.8690563686164,
+      "total_token_throughput_tps": 2377.2272079722648,
+      "wall_time_s": 43.939847083063796,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'p032_medium_out256' (requested max_tokens=256)"
+      ],
+      "sanity_warnings": [
+        "99/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.94x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 34,
+      "failed": 66,
+      "total_tokens_generated": 673,
+      "total_output_tokens": 1320,
+      "total_input_tokens": 27335,
+      "server_usage_available": true,
+      "ttft_avg_ms": 486.4276385359356,
+      "ttft_p50_ms": 478.6890000104904,
+      "ttft_p99_ms": 940.3820422012359,
+      "throughput_avg_tps": 12.993760192334278,
+      "throughput_p50_tps": 13.832370184373874,
+      "itl_avg_ms": 64.51291034513662,
+      "itl_p50_ms": 63.1925370371728,
+      "latency_avg_s": 1.869958571083022,
+      "latency_p50_s": 1.826776082860306,
+      "latency_p99_s": 4.0147285419516265,
+      "output_throughput_tps": 117.72466275247172,
+      "input_throughput_tps": 2437.881557832435,
+      "total_token_throughput_tps": 2555.606220584907,
+      "wall_time_s": 11.212603792082518,
+      "error_samples": [
+        "Response payload is not completed: <TransferEncodingError: 400, message='Not enough data to satisfy transfer length header.'>",
+        "Server disconnected",
+        "Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]",
+        "Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]"
+      ],
+      "sanity_warnings": [
+        "34/34 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.91x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.022677000146359205,
+      "error": "no successful requests",
+      "error_samples": [
+        "Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]",
+        "Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]"
+      ]
+    }
+  ],
+  "total_duration_s": 58.26099091582
+}
