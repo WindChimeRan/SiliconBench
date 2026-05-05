@@ -66,6 +66,27 @@ def load_peak_memory(split_dir: Path) -> dict[str, dict[int, float]]:
     return out
 
 
+def merge_fallback_memory(
+    mem: dict[str, dict[int, float]], model: str, split: str
+) -> dict[str, dict[int, float]]:
+    """Fill in (framework, concurrency) cells missing from metalstat with values
+    from peak_memory_fallback.json. Used to recover Qwen3-0.6B peaks for the 8
+    frameworks whose original sidecars were wiped on 2026-04-27 (sglang add via
+    run_all.sh sans --skip-existing). Metalstat values always win when present.
+    """
+    fb_path = Path(__file__).resolve().parent / "peak_memory_fallback.json"
+    if not fb_path.exists():
+        return mem
+    fb_all = json.loads(fb_path.read_text())
+    fb = fb_all.get(model, {}).get(split, {})
+    for fw, ccs in fb.items():
+        slot = mem.setdefault(fw, {})
+        for c_str, v in ccs.items():
+            c = int(c_str)
+            slot.setdefault(c, v)
+    return mem
+
+
 def pareto_front(points: list[tuple[float, float]]) -> list[int]:
     """Indices of non-dominated points under (maximize x, minimize y).
     A point i is dominated iff ∃ j ≠ i with x_j ≥ x_i and y_j ≤ y_i and
@@ -95,6 +116,7 @@ def main() -> None:
     split_dir = REPO_ROOT / "results" / args.model / args.split
     tput = load_throughput(split_dir)
     mem = load_peak_memory(split_dir)
+    mem = merge_fallback_memory(mem, args.model, args.split)
     if not tput:
         raise SystemExit(f"No benchmark result JSONs under {split_dir}")
 

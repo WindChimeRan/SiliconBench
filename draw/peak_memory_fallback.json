@@ -1,0 +1,24 @@
+{
+  "_comment": "Peak system memory (GB) per (framework, concurrency), used by plot_pareto.py when a framework lacks a *_metalstat.jsonl sidecar. Values for the 8 Qwen3-0.6B frameworks below were recovered by extracting label positions from the previously-committed pareto_Qwen3-0.6B_{chat,agent}.pdf (commit 01f4ea3, 2026-04-25), because the original sidecars were wiped on 2026-04-27 when sglang was added via run_all.sh without --skip-existing. They are reconstructions to within ~0.3 GB of the original metalstat peaks. To replace with fresh metalstat data, re-run the missing frameworks with --skip-existing and remove the corresponding entry here.",
+  "Qwen3-0.6B": {
+    "chat": {
+      "omlx":            {"1": 11.84, "8": 23.77, "16": 24.06},
+      "mistralrs":       {"1": 19.22, "8": 60.42},
+      "mlx_lm":          {"1": 17.70, "8": 43.50, "16": 59.74},
+      "hf_transformers": {"1": 22.96},
+      "llamacpp":        {"1": 22.69, "8": 23.00, "16": 23.26},
+      "vllm_metal":      {"1": 35.88, "8": 34.83, "16": 35.09},
+      "ollama":          {"1": 58.28, "8": 58.13, "16": 58.15},
+      "inferrs":         {"1": 59.74, "8": 59.76, "16": 59.45}
+    },
+    "agent": {
+      "omlx":       {"1": 13.95, "8": 50.64, "16": 52.61},
+      "mistralrs":  {"1": 28.71, "8": 54.03},
+      "mlx_lm":     {"1": 25.15, "8": 59.36, "16": 59.32},
+      "llamacpp":   {"1": 27.67, "8": 28.09, "16": 28.30},
+      "vllm_metal": {"1": 36.99, "8": 36.80, "16": 36.92},
+      "ollama":     {"1": 40.18, "8": 40.37, "16": 41.80},
+      "inferrs":    {"1": 61.72}
+    }
+  }
+}

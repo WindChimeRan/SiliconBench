@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -29,6 +30,23 @@ METRIC = "mem_used_gb"
 CVD_LINESTYLES = ["-", "--", "-.", ":", "-", "--", "-.", ":", "-"]
 
 
+def load_fallback_series(model: str, split: str) -> dict[str, dict[int, list[tuple[float, float]]]]:
+    """Per-framework (phase_pct, mem_GB) lists for cells without a metalstat sidecar.
+    Used to recover Qwen3-0.6B series for the 8 frameworks whose sidecars were
+    wiped on 2026-04-27 (sglang add via run_all.sh sans --skip-existing). Series
+    were extracted from line-vertex coordinates in the previously-committed
+    memory_*.pdf at commit 01f4ea3.
+    """
+    fb_path = Path(__file__).resolve().parent / "memory_timeseries_fallback.json"
+    if not fb_path.exists():
+        return {}
+    raw = json.loads(fb_path.read_text())
+    out: dict[str, dict[int, list[tuple[float, float]]]] = {}
+    for fw, ccs in raw.get(model, {}).get(split, {}).items():
+        out[fw] = {int(c): [(p, m) for p, m in series] for c, series in ccs.items()}
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="Qwen3-0.6B")
@@ -38,7 +56,8 @@ def main() -> None:
 
     split_dir = REPO_ROOT / "results" / args.model / args.split
     traces = discover_traces(split_dir)
-    if not traces:
+    fallback = load_fallback_series(args.model, args.split)
+    if not traces and not fallback:
         raise SystemExit(f"No *_metalstat.jsonl under {split_dir}")
 
     plt.rcParams.update({
@@ -49,19 +68,28 @@ def main() -> None:
         "ytick.labelsize": 7,
     })
     fig, axes = plt.subplots(1, 3, figsize=(6.8, 2.0), sharey=True)
-    frameworks = sorted(traces)
+    frameworks = sorted(set(traces) | set(fallback))
     colors = {fw: CVD_COLORS[i % len(CVD_COLORS)] for i, fw in enumerate(frameworks)}
     styles = {fw: CVD_LINESTYLES[i % len(CVD_LINESTYLES)] for i, fw in enumerate(frameworks)}
 
     for ax, conc in zip(axes, CONCURRENCIES):
         for fw in frameworks:
-            tr = traces[fw]
-            phase = tr.phase_slice(conc)
-            if phase is None:
+            x_pct: list[float] | None = None
+            y: list[float] | None = None
+            tr = traces.get(fw)
+            if tr is not None:
+                phase = tr.phase_slice(conc)
+                if phase is not None:
+                    x_pct, idxs = phase
+                    series = tr.series(METRIC)
+                    y = [series[i] for i in idxs]
+            if x_pct is None and fw in fallback and conc in fallback[fw]:
+                series_fb = fallback[fw][conc]
+                if series_fb:
+                    x_pct = [p for p, _ in series_fb]
+                    y = [m for _, m in series_fb]
+            if x_pct is None or y is None:
                 continue
-            x_pct, idxs = phase
-            series = tr.series(METRIC)
-            y = [series[i] for i in idxs]
             ax.plot(
                 x_pct, y, label=fw,
                 color=colors[fw], linestyle=styles[fw], linewidth=2.0,
