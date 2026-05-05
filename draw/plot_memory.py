@@ -42,13 +42,13 @@ def main() -> None:
         raise SystemExit(f"No *_metalstat.jsonl under {split_dir}")
 
     plt.rcParams.update({
-        "font.size": 13,
-        "axes.titlesize": 14,
-        "axes.labelsize": 13,
-        "xtick.labelsize": 12,
-        "ytick.labelsize": 12,
+        "font.size": 8,
+        "axes.titlesize": 9,
+        "axes.labelsize": 8,
+        "xtick.labelsize": 7,
+        "ytick.labelsize": 7,
     })
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(6.8, 2.0), sharey=True)
     frameworks = sorted(traces)
     colors = {fw: CVD_COLORS[i % len(CVD_COLORS)] for i, fw in enumerate(frameworks)}
     styles = {fw: CVD_LINESTYLES[i % len(CVD_LINESTYLES)] for i, fw in enumerate(frameworks)}
@@ -78,7 +78,7 @@ def main() -> None:
     axes[-1].legend(
         handles, labels,
         loc="upper left", bbox_to_anchor=(1.02, 1.0), frameon=False,
-        fontsize=12,
+        fontsize=7,
     )
     fig.tight_layout()
 

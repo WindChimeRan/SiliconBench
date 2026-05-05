@@ -31,12 +31,12 @@ else:
 GANTT_COLORS = dict(zip(ORDER, _palette))
 
 plt.rcParams.update({
-    "font.size": 13,
-    "axes.labelsize": 13,
-    "axes.titlesize": 13,
-    "legend.fontsize": 12,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
+    "font.size": 8,
+    "axes.labelsize": 8,
+    "axes.titlesize": 9,
+    "legend.fontsize": 7,
+    "xtick.labelsize": 7,
+    "ytick.labelsize": 7,
     "axes.spines.top": False,
     "axes.spines.right": False,
 })
@@ -92,14 +92,14 @@ def draw_memory(ax, data, color, label, peak_ref=None, peak_ref_color=None):
             ls="--", alpha=0.85, label="Compressed mem")
     ax.axhline(peak, color=color, ls="--", lw=0.8, alpha=0.6)
     ax.text(0.995, peak, f" {peak:.1f} GB", transform=ax.get_yaxis_transform(),
-            color=color, fontsize=12, va="center", ha="left", clip_on=False)
+            color=color, fontsize=7, va="center", ha="left", clip_on=False)
     if peak_ref is not None:
         ax.axhline(peak_ref, color=peak_ref_color, ls=":", lw=0.8, alpha=0.7)
         ax.text(0.995, peak_ref, f" seq peak", transform=ax.get_yaxis_transform(),
-                color=peak_ref_color, fontsize=11, va="center", ha="left",
+                color=peak_ref_color, fontsize=7, va="center", ha="left",
                 alpha=0.8, clip_on=False)
     ax.text(0.005, 0.95, f"{label}  ·  wall {wall:.1f}s",
-            transform=ax.transAxes, fontsize=13, fontweight="bold",
+            transform=ax.transAxes, fontsize=9, fontweight="bold",
             color=color, va="top")
     ax.set_ylabel("memory (GB)")
     ax.yaxis.grid(True, ls="--", alpha=0.3)
@@ -118,7 +118,7 @@ def main():
     gantt_h = max(1.0, 0.25 * n_prompts)
     fig_h = 6 + 2 * (gantt_h - 1)
     fig, axes = plt.subplots(
-        4, 1, figsize=(8, fig_h), sharex=True,
+        4, 1, figsize=(6.8, fig_h * 0.7), sharex=True,
         gridspec_kw={"height_ratios": [4, gantt_h, 4, gantt_h]},
         constrained_layout=True,
     )
@@ -144,7 +144,7 @@ def main():
     sizes = " + ".join(parts)
     fig.suptitle(
         f"Qwen3-0.6B  ·  prompts {sizes} tokens  ·  max_tokens={max_tokens}  ·  ratio {con_peak/seq_peak:.2f}×",
-        fontsize=12,
+        fontsize=8,
     )
     from matplotlib.lines import Line2D
     legend = [
@@ -156,7 +156,7 @@ def main():
        any(r.get("t_first_token") is None for r in seq["workload"]["results"]):
         legend.append(Patch(facecolor="#888888", alpha=0.4, hatch="///",
                             edgecolor="#444444", label="Crashed (OOM)"))
-    fig.legend(handles=legend, loc="lower center", ncol=len(legend), fontsize=12,
+    fig.legend(handles=legend, loc="lower center", ncol=len(legend), fontsize=7,
                bbox_to_anchor=(0.5, -0.04), frameon=False)
 
     plt.savefig(OUT_PNG, dpi=140, bbox_inches="tight")

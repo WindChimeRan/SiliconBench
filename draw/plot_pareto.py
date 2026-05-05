@@ -109,13 +109,13 @@ def main() -> None:
     y_hi = max(mem_vals) * 1.08 if mem_vals else 1
 
     plt.rcParams.update({
-        "font.size": 13,
-        "axes.titlesize": 14,
-        "axes.labelsize": 13,
-        "xtick.labelsize": 12,
-        "ytick.labelsize": 12,
+        "font.size": 8,
+        "axes.titlesize": 9,
+        "axes.labelsize": 8,
+        "xtick.labelsize": 7,
+        "ytick.labelsize": 7,
     })
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5.3), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(6.8, 2.4), sharey=True)
 
     for ax, c in zip(axes, CONCURRENCIES):
         xs, ys, fws = [], [], []
@@ -162,7 +162,7 @@ def main() -> None:
             ax.annotate(
                 fw, (x, y),
                 xytext=(8, 3), textcoords="offset points",
-                fontsize=11,
+                fontsize=7,
                 fontweight="bold" if on_front else "normal",
                 color="black" if on_front else "#3d3d3d",
                 zorder=5,
@@ -183,13 +183,13 @@ def main() -> None:
                    label="Pareto frontier"),
         plt.Line2D([0], [0], marker="o", color="white",
                    markerfacecolor="#aaa", markeredgecolor="black",
-                   markersize=11, markeredgewidth=1.6, linestyle="None",
+                   markersize=7, markeredgewidth=1.2, linestyle="None",
                    label="on frontier"),
     ]
     fig.legend(
         handles=style_handles,
         loc="upper center", bbox_to_anchor=(0.5, 0.02),
-        ncol=2, frameon=False, fontsize=12,
+        ncol=2, frameon=False, fontsize=7,
     )
     fig.tight_layout(rect=(0, 0.05, 1, 1))
 
