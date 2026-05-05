@@ -15,6 +15,8 @@ else
 fi
 
 source "$VENV_DIR/bin/activate"
-uv pip install aiohttp metalstat
+# adjustText is used by draw/plot_pareto.py to repel overlapping framework
+# labels in the cluster region; matplotlib comes in transitively via metalstat.
+uv pip install aiohttp metalstat adjustText
 
 echo "=== Benchmark environment installed ==="

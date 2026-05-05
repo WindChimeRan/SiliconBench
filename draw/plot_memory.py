@@ -27,7 +27,10 @@ CONCURRENCIES = [1, 8, 16]
 METRIC = "mem_used_gb"
 
 # Extra redundancy via linestyle rotation — helps when two lines overlap.
-CVD_LINESTYLES = ["-", "--", "-.", ":", "-", "--", "-.", ":", "-"]
+# Rotation period (4) is coprime with the color palette length (9), so even
+# when frameworks > colors and the color wraps, the (color, style) pair stays
+# unique through the first 36 frameworks.
+CVD_LINESTYLES = ["-", "--", "-.", ":"]
 
 
 def load_fallback_series(model: str, split: str) -> dict[str, dict[int, list[tuple[float, float]]]]:
@@ -102,13 +105,16 @@ def main() -> None:
 
     # Legend built from the c=1 panel so frameworks that only benched at c=1
     # (e.g. hf_transformers when c=8/c=16 were adaptively skipped) still appear.
+    # Single row across the bottom — reclaims the right margin so the panels
+    # span the full figure width.
     handles, labels = axes[0].get_legend_handles_labels()
-    axes[-1].legend(
+    fig.legend(
         handles, labels,
-        loc="upper left", bbox_to_anchor=(1.02, 1.0), frameon=False,
-        fontsize=7,
+        loc="lower center", bbox_to_anchor=(0.5, -0.02),
+        ncol=len(labels), frameon=False, fontsize=7,
+        columnspacing=1.0, handlelength=2.0, handletextpad=0.4,
     )
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
 
     # Stem string + manual suffix — Path.with_suffix() would truncate
     # at the first dot in names like "Qwen3-0.6B".

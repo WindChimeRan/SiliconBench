@@ -19,6 +19,22 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from adjustText import adjust_text
+
+# Compact framework names for in-figure labels — paper figures need to
+# survive 6.8 inch column width, full names overrun the cluster region.
+LABEL_SHORT = {
+    "hf_transformers": "hf_tr",
+    "mistralrs": "mistral",
+    "llamacpp": "llama.cpp",
+    "vllm_metal": "vllm-metal",
+    "vllm_mlx": "vllm-mlx",
+    "mlx_lm": "mlx_lm",
+    "inferrs": "inferrs",
+    "omlx": "omlx",
+    "ollama": "ollama",
+    "sglang": "sglang",
+}
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from parse import CVD_COLORS, discover_traces, load_concurrency_metric  # noqa: E402
@@ -169,25 +185,36 @@ def main() -> None:
                 color="gray", alpha=0.08, zorder=1,
             )
 
+        texts = []
         for i, (x, y, fw) in enumerate(zip(xs, ys, fws)):
             on_front = i in front_set
             ax.scatter(
                 x, y,
-                s=140 if on_front else 70,
+                s=80 if on_front else 35,
                 marker="o",
                 color=colors[fw],
                 edgecolors="black" if on_front else "#666666",
-                linewidths=1.6 if on_front else 0.5,
-                alpha=1.0 if on_front else 0.7,
+                linewidths=1.2 if on_front else 0.4,
+                alpha=1.0 if on_front else 0.75,
                 zorder=4 if on_front else 3,
             )
-            ax.annotate(
-                fw, (x, y),
-                xytext=(8, 3), textcoords="offset points",
+            texts.append(ax.text(
+                x, y, LABEL_SHORT.get(fw, fw),
                 fontsize=7,
                 fontweight="bold" if on_front else "normal",
                 color="black" if on_front else "#3d3d3d",
                 zorder=5,
+            ))
+
+        # Repel labels off each other and off the markers, draw thin leader
+        # lines to whichever marker each label belongs to.
+        if texts:
+            adjust_text(
+                texts, ax=ax,
+                expand=(1.15, 1.25),
+                arrowprops=dict(arrowstyle="-", color="#888", lw=0.4),
+                only_move={"text": "xy", "static": "xy", "explode": "xy"},
+                ensure_inside_axes=True,
             )
 
         ax.set_xlim(x_lo, x_hi)
