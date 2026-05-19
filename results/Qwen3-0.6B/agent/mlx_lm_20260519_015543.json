@@ -1,0 +1,112 @@
+{
+  "framework": "mlx_lm",
+  "model": "/Users/haorzhang/applebench/.models/Qwen3-0.6B-bf16-mlx",
+  "endpoint": "http://localhost:8002",
+  "timestamp": "2026-05-19T01:55:44",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 70,
+      "failed": 30,
+      "total_tokens_generated": 4741,
+      "total_output_tokens": 4882,
+      "total_input_tokens": 225676,
+      "server_usage_available": true,
+      "ttft_avg_ms": 776.5245689429711,
+      "ttft_p50_ms": 628.4845000009227,
+      "ttft_p99_ms": 2588.8387089999014,
+      "throughput_avg_tps": 119.26320254126011,
+      "throughput_p50_tps": 119.58455171229761,
+      "itl_avg_ms": 8.022730782047436,
+      "itl_p50_ms": 7.948904411772246,
+      "latency_avg_s": 1.340775222571444,
+      "latency_p50_s": 0.9512308749999647,
+      "latency_p99_s": 3.980388791002042,
+      "output_throughput_tps": 30.09324564307945,
+      "input_throughput_tps": 1391.0944907307658,
+      "total_token_throughput_tps": 1421.1877363738452,
+      "wall_time_s": 162.22909479100053,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a006_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a010_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a011_vlong_bfcl_v3' (requested max_tokens=256)"
+      ],
+      "sanity_warnings": [
+        "21/70 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 70,
+      "failed": 30,
+      "total_tokens_generated": 5031,
+      "total_output_tokens": 5165,
+      "total_input_tokens": 225676,
+      "server_usage_available": true,
+      "ttft_avg_ms": 2963.5473875572643,
+      "ttft_p50_ms": 2585.7413330013514,
+      "ttft_p99_ms": 9303.585582998494,
+      "throughput_avg_tps": 9.388012453614913,
+      "throughput_p50_tps": 6.844951709618695,
+      "itl_avg_ms": 160.99014786916143,
+      "itl_p50_ms": 145.53038060015143,
+      "latency_avg_s": 15.411724541714127,
+      "latency_p50_s": 9.904787041999953,
+      "latency_p99_s": 59.599945417001436,
+      "output_throughput_tps": 27.14168751349393,
+      "input_throughput_tps": 1185.9104494279295,
+      "total_token_throughput_tps": 1213.0521369414234,
+      "wall_time_s": 190.2976739170008,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a006_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a010_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a011_vlong_bfcl_v3' (requested max_tokens=256)"
+      ],
+      "sanity_warnings": [
+        "17/70 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 10,
+      "failed": 90,
+      "total_tokens_generated": 164,
+      "total_output_tokens": 164,
+      "total_input_tokens": null,
+      "server_usage_available": false,
+      "ttft_avg_ms": 27618.56664980005,
+      "ttft_p50_ms": 33825.15433400113,
+      "ttft_p99_ms": 36458.89049999823,
+      "throughput_avg_tps": 2.1985822705098617,
+      "throughput_p50_tps": 2.666232840959203,
+      "itl_avg_ms": 667.5718227539053,
+      "itl_p50_ms": 698.321627624864,
+      "latency_avg_s": 39.362510287300026,
+      "latency_p50_s": 39.451069583999924,
+      "latency_p99_s": 39.4518845829989,
+      "output_throughput_tps": 4.152078464935265,
+      "input_throughput_tps": null,
+      "total_token_throughput_tps": null,
+      "wall_time_s": 39.49829016599688,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a006_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a010_vlong_bfcl_v3' (requested max_tokens=256)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a011_vlong_bfcl_v3' (requested max_tokens=256)"
+      ],
+      "sanity_warnings": [
+        "avg tokens/request (16) is far below expected (max_tokens avg=256). Possible silent failures.",
+        "server did not report token usage for 9/10 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
+      ]
+    }
+  ],
+  "total_duration_s": 408.6669859579997
+}
