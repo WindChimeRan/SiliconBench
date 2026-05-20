@@ -1,0 +1,5 @@
+=== update_mistralrs.sh start 2026-05-20T04:43:44Z ===
+=== Updating mistral.rs ===
+Already up to date.
+scripts/update_mistralrs.sh: line 13: cargo: command not found
+=== update_mistralrs.sh exit=127 2026-05-20T04:43:44Z ===
