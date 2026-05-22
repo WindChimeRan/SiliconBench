@@ -16,13 +16,14 @@ if [ ! -d "$VENV_DIR" ] || [ ! -d "$REPO_DIR" ]; then
 fi
 
 cd "$REPO_DIR"
-# git pull will leave python/pyproject.toml dirty (we swapped it at install
-# time). Stash the swap, pull, then re-apply.
-if git diff --quiet -- python/pyproject.toml 2>/dev/null && [ ! -f python/pyproject_other.toml ]; then
-    # Pristine state (already swapped, working tree clean): restore the upstream
-    # name so git pull merges cleanly.
-    git checkout -- python/pyproject.toml 2>/dev/null || true
-fi
+# Install-time swap leaves the working tree in a state `git pull --ff-only`
+# refuses: pyproject.toml is modified (the upstream CUDA variant was replaced
+# with the Apple MPS one) AND pyproject_other.toml is deleted (it was mv'd onto
+# pyproject.toml). Restore both from HEAD so the merge is clean; the swap is
+# re-applied right after the pull (lines below). Idempotent: `git checkout --`
+# is a no-op when the file already matches HEAD.
+git checkout -- python/pyproject.toml 2>/dev/null || true
+git checkout -- python/pyproject_other.toml 2>/dev/null || true
 git pull --ff-only
 
 # Re-apply the MPS pyproject swap.

@@ -1,0 +1,19 @@
+=== update_inferrs.sh start 2026-05-20T04:43:44Z ===
+=== Updating inferrs ===
+Already up to date.
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /Users/haorzhang/applebench/.frameworks/inferrs/inferrs-kernels/candle-metal-kernels/Cargo.toml
+workspace: /Users/haorzhang/applebench/.frameworks/inferrs/Cargo.toml
+warning: struct `WeightArena` is never constructed
+  --> candle-core/src/metal_backend/device.rs:22:12
+   |
+22 | pub struct WeightArena;
+   |            ^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `candle-core` (lib) generated 1 warning
+warning: inferrs@0.1.0: inferrs web UI compressed to 61.5 KiB (budget: 1024 KiB)
+    Finished `release` profile [optimized] target(s) in 0.53s
+=== inferrs updated ===
+=== update_inferrs.sh exit=0 2026-05-20T04:43:45Z ===
