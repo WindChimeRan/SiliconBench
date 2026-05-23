@@ -1,4 +1,4 @@
-# AppleBench Results — Gemma-4-E4B-it (chat)
+# SiliconBench Results — Gemma-4-E4B-it (chat)
 
 **Model:** Gemma-4-E4B-it
 **Split:** chat

@@ -1,10 +1,10 @@
-# AppleBench
+# SiliconBench
 
-Benchmarks 9 local LLM inference frameworks on Apple Silicon side-by-side, re-run weekly by a Claude Code agent so the numbers don't rot. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
+Benchmarks 10 local LLM inference frameworks on Apple Silicon side-by-side, re-run weekly by a Claude Code agent so the numbers don't rot. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
 
 Run the whole weekly pipeline — update, benchmark, diagnose failures, fix, publish — with one command: **`/weekly-bench`** in Claude Code.
 
-Latest results: **[REPORT.md](results/qwen3-0.6b/REPORT.md)**
+Latest results (primary model, Qwen3-0.6B): **[chat REPORT](results/Qwen3-0.6B/chat/REPORT.md)** · **[agent REPORT](results/Qwen3-0.6B/agent/REPORT.md)**
 
 ## Frameworks
 
@@ -19,6 +19,7 @@ Latest results: **[REPORT.md](results/qwen3-0.6b/REPORT.md)**
 | [ollama](https://github.com/ollama/ollama) | Go + Metal | GGUF |
 | [inferrs](https://github.com/ericcurtin/inferrs) | Rust + Candle / Metal | Safetensors |
 | [transformers](https://github.com/huggingface/transformers) | PyTorch / MPS | Safetensors |
+| [sglang](https://github.com/sgl-project/sglang) | Python / SGLang (MLX) | Safetensors |
 
 All frameworks serve an OpenAI-compatible API. The benchmark hits `/v1/chat/completions` with streaming enabled and measures from the client side — no special instrumentation per framework.
 
@@ -55,9 +56,9 @@ Average ~4K input tokens, ~12 messages per prompt, 99/100 contain tool_calls and
 
 Because agent prompts reach ~8.8K tokens, `run_all.sh` bumps the context window to 16384/slot for llamacpp, ollama, and vllm-metal when running this split — the three frameworks that otherwise cap below that and would either reject (vllm-metal) or silently truncate (llamacpp, ollama). The other frameworks inherit Qwen3-0.6B's native 40K context and need no adjustment. Chat runs each framework untouched, so historical chat numbers remain comparable.
 
-## Model
+## Models
 
-[Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) in BF16 across three formats. Small enough for fast weekly runs (~1.2 GB), available in every format we need, and runs without quantization for a fair apple-to-apple comparison.
+**Primary — [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B)** in BF16 across three formats. Every weekly run targets it, and the headline numbers are Qwen3-0.6B: small enough for fast turnaround (~1.2 GB), available in every format we need, and runs without quantization for a fair apple-to-apple comparison.
 
 | Format | Source | Used by |
 |--------|--------|---------|
@@ -65,7 +66,16 @@ Because agent prompts reach ~8.8K tokens, `run_all.sh` bumps the context window 
 | MLX BF16 | [mlx-community/Qwen3-0.6B-bf16](https://huggingface.co/mlx-community/Qwen3-0.6B-bf16) | mlx_lm, omlx, vllm-mlx |
 | Safetensors BF16 | [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) | vllm-metal, inferrs |
 
-Other model profiles live in `models/` — notably a larger [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) MoE for when you want to measure how frameworks handle a heavier model.
+**Also benchmarked** — run periodically alongside the primary, same three formats each (GGUF / MLX / Safetensors via their `models/*.sh` profiles):
+
+| Model | Profile | Why |
+|-------|---------|-----|
+| [Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) | `qwen3.5-0.8b` | next-gen small dense model — tracks how frameworks handle a newer architecture |
+| [Gemma-4-E4B-it](https://huggingface.co/google/gemma-4-E4B-it) | `gemma-4-e4b-it` | different vendor, larger head dims (256/512), multimodal-capable port — exercises code paths Qwen doesn't |
+
+**Additional profiles** in `models/`, downloaded on demand for heavier spot checks (not part of the routine weekly): [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) (`qwen3-8b`) and the [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) MoE (`qwen3-30b-a3b`).
+
+Switch models with the `--model` flag or `APPLEBENCH_MODEL` env var, e.g. `scripts/run_all.sh --model qwen3.5-0.8b`. Each model's results live under `results/<MODEL_NAME>/`.
 
 ## Metrics
 
@@ -79,10 +89,10 @@ Tested at concurrency 1, 8, 16. Each level runs 100 requests with 3 warmup. A 60
 
 ## How it stays fresh
 
-AppleBench is re-run weekly by a Claude Code agent. The agent:
+SiliconBench is re-run weekly by a Claude Code agent. The agent:
 
 1. **Updates** each framework from upstream (`update_all.sh`)
-2. **Runs** the full benchmark across all 8 frameworks (`run_all.sh`, resumable via `--skip-existing`)
+2. **Runs** the full benchmark across all 10 frameworks (`run_all.sh`, resumable via `--skip-existing`)
 3. **Diagnoses** per-framework failures by reading the error, the framework's upstream changelog, and prior journals
 4. **Fixes** adapter scripts when it can (a renamed CLI flag, a new required parameter) within a tightly scoped write allowlist — never touching `benchmark.py`, `config.sh`, or framework source
 5. **Verifies** each fix in isolation by starting the server and running a few requests before committing

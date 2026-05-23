@@ -1,5 +1,5 @@
 #!/bin/bash
-# AppleBench configuration — sourced by all scripts
+# SiliconBench configuration — sourced by all scripts
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FRAMEWORKS_DIR="$PROJECT_DIR/.frameworks"

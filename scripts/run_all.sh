@@ -1,5 +1,5 @@
 #!/bin/bash
-# AppleBench — Run full benchmark across all (or selected) frameworks
+# SiliconBench — Run full benchmark across all (or selected) frameworks
 # Usage: bash scripts/run_all.sh [--model MODEL] [--split SPLIT] [--skip-existing] [framework ...]
 # Examples:
 #   bash scripts/run_all.sh                          # run all, default model
@@ -102,7 +102,7 @@ SPLIT_RESULTS_DIR="$RESULTS_DIR/$SPLIT"
 mkdir -p "$SPLIT_RESULTS_DIR"
 
 echo "========================================="
-echo " AppleBench — Full Benchmark Run"
+echo " SiliconBench — Full Benchmark Run"
 echo " Model: $MODEL_NAME"
 echo " Split: $SPLIT"
 echo " Output: $SPLIT_RESULTS_DIR"
@@ -211,5 +211,5 @@ python "$SCRIPT_DIR/generate_report.py" --results-dir "$SPLIT_RESULTS_DIR"
 
 echo ""
 echo "========================================="
-echo " AppleBench complete!"
+echo " SiliconBench complete!"
 echo "========================================="

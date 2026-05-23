@@ -67,7 +67,7 @@ def main():
             "oov_predictions_after_parse": s["oov_predictions_after_parse"],
         }
 
-    # Order frameworks in the canonical AppleBench order
+    # Order frameworks in the canonical SiliconBench order
     canonical_order = [
         "llamacpp", "mlx_lm", "mistralrs", "vllm_metal", "omlx",
         "ollama", "inferrs", "vllm_mlx", "hf_transformers",

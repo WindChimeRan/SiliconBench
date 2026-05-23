@@ -1,10 +1,10 @@
 #!/bin/bash
-# AppleBench — Install all frameworks, models, and benchmark dependencies
+# SiliconBench — Install all frameworks, models, and benchmark dependencies
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "========================================="
-echo " AppleBench — Installing everything"
+echo " SiliconBench — Installing everything"
 echo " $(date)"
 echo "========================================="
 echo ""

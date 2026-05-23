@@ -1,5 +1,5 @@
 #!/bin/bash
-# AppleBench — Verify system prerequisites and framework readiness
+# SiliconBench — Verify system prerequisites and framework readiness
 # Exit 1 on hard errors (missing system tools), 0 otherwise.
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/config.sh"
@@ -20,7 +20,7 @@ check_cmd() {
     fi
 }
 
-echo "=== AppleBench Environment Check ==="
+echo "=== SiliconBench Environment Check ==="
 echo ""
 
 # --- Platform ---

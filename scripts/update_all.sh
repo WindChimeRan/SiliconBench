@@ -1,10 +1,10 @@
 #!/bin/bash
-# AppleBench — Update all frameworks to latest versions
+# SiliconBench — Update all frameworks to latest versions
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "========================================="
-echo " AppleBench — Updating all frameworks"
+echo " SiliconBench — Updating all frameworks"
 echo " $(date)"
 echo "========================================="
 echo ""

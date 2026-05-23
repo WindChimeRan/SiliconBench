@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AppleBench — Benchmark an OpenAI-compatible LLM endpoint.
+SiliconBench — Benchmark an OpenAI-compatible LLM endpoint.
 
 Measures TTFT, throughput (tok/s), inter-token latency, and total latency
 at specified concurrency levels.
@@ -356,7 +356,7 @@ def get_model_name(base_url: str) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="AppleBench — LLM inference benchmark")
+    parser = argparse.ArgumentParser(description="SiliconBench — LLM inference benchmark")
     parser.add_argument("--port", type=int, required=True, help="Server port")
     parser.add_argument("--host", default="localhost", help="Server host")
     parser.add_argument("--concurrency", default="16,8,1", help="Comma-separated concurrency levels")

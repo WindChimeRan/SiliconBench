@@ -1,4 +1,4 @@
-# AppleBench Results — Qwen3-8B (chat)
+# SiliconBench Results — Qwen3-8B (chat)
 
 **Model:** Qwen3-8B
 **Split:** chat

@@ -1,8 +1,8 @@
-# AppleBench Results — Qwen3-0.6B (agent)
+# SiliconBench Results — Qwen3-0.6B (agent)
 
 **Model:** Qwen3-0.6B
 **Split:** agent
-**Generated:** 2026-05-20 04:23:29
+**Generated:** 2026-05-22 22:58:26
 
 ## Concurrency: 1
 

@@ -44,7 +44,7 @@ def main():
 
     lines = []
     title_suffix = f" — {model_name}" + (f" ({split})" if split else "")
-    lines.append(f"# AppleBench Results{title_suffix}")
+    lines.append(f"# SiliconBench Results{title_suffix}")
     lines.append("")
     lines.append(f"**Model:** {model_name}")
     if split:

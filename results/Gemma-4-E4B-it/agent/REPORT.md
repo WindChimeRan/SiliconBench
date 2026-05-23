@@ -1,4 +1,4 @@
-# AppleBench Results — Gemma-4-E4B-it (agent)
+# SiliconBench Results — Gemma-4-E4B-it (agent)
 
 **Model:** Gemma-4-E4B-it
 **Split:** agent
