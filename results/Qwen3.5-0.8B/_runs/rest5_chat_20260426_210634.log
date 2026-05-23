@@ -1,0 +1,70 @@
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: true
+ Sun Apr 26 21:06:34 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: mistralrs (port 8003)
+===========================================
+Starting mistralrs server...
+=== Starting mistral.rs server on port 8003 ===
+PID: 18994
+Waiting for server to be ready...
+Error: Server failed to start within 300 seconds
+[2m2026-04-27T02:06:40.770037Z[0m [32m INFO[0m [2mmistralrs_server_core::mistralrs_for_server_builder[0m[2m:[0m avx: false, neon: true, simd128: false, f16c: false
+[2m2026-04-27T02:06:40.770171Z[0m [32m INFO[0m [2mmistralrs_server_core::mistralrs_for_server_builder[0m[2m:[0m Sampling method: penalties -> temperature -> topk -> topp -> minp -> multinomial
+[2m2026-04-27T02:06:40.770302Z[0m [32m INFO[0m [2mmistralrs_server_core::mistralrs_for_server_builder[0m[2m:[0m Model kind is: gguf quantized from gguf (no adapters)
+[2m2026-04-27T02:06:40.770454Z[0m [32m INFO[0m [2mhf_hub[0m[2m:[0m Using token file found "/Users/haorzhang/.cache/huggingface/token"
+[2m2026-04-27T02:06:40.851876Z[0m [33m WARN[0m [2mmistralrs_core::pipeline::hf[0m[2m:[0m Could not get directory listing from Hugging Face for `Qwen/Qwen3.5-0.8B`: request error: https://huggingface.co/api/models/Qwen/Qwen3.5-0.8B/revision/main: Connection Failed: tls connection init failed: invalid peer certificate: UnknownIssuer
+[2m2026-04-27T02:06:40.852020Z[0m [32m INFO[0m [2mhf_hub[0m[2m:[0m Using token file found "/Users/haorzhang/.cache/huggingface/token"
+[2m2026-04-27T02:06:40.852670Z[0m [32m INFO[0m [2mmistralrs_core::pipeline::gguf[0m[2m:[0m GGUF file(s) ["/Users/haorzhang/applebench/.models/Qwen3.5-0.8B-BF16.gguf"]
+[2m2026-04-27T02:06:40.852823Z[0m [32m INFO[0m [2mmistralrs_core::pipeline::gguf[0m[2m:[0m Prompt chunk size is 1024.
+
+thread 'main' (27272114) panicked at mistralrs-core/src/gguf/content.rs:151:22:
+called `Result::unwrap()` on an `Err` value: Unknown GGUF architecture `qwen35`
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
