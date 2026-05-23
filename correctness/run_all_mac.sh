@@ -1,5 +1,5 @@
 #!/bin/bash
-# Correctness eval across all 10 AppleBench frameworks on Mac.
+# Correctness eval across all 10 SiliconBench frameworks on Mac.
 # Mirrors scripts/run_all.sh structure (serve → eval → stop → cleanup →
 # cooldown per framework) but evaluates F1 on GMRID_v3 classification
 # instead of perf.

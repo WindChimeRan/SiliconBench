@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-AppleBench benchmarks 10 local LLM inference frameworks on Apple Silicon side-by-side: llama.cpp, mlx_lm, mistral.rs, vllm-metal, vllm-mlx, omlx, ollama, inferrs, hf_transformers, sglang. All frameworks serve an OpenAI-compatible API; the benchmark hits `/v1/chat/completions` with streaming and measures TTFT, throughput, ITL, and latency at concurrency levels 1/8/16.
+SiliconBench benchmarks 10 local LLM inference frameworks on Apple Silicon side-by-side: llama.cpp, mlx_lm, mistral.rs, vllm-metal, vllm-mlx, omlx, ollama, inferrs, hf_transformers, sglang. All frameworks serve an OpenAI-compatible API; the benchmark hits `/v1/chat/completions` with streaming and measures TTFT, throughput, ITL, and latency at concurrency levels 1/8/16.
 
 ## Key Commands
 
@@ -46,6 +46,8 @@ scripts/stop_llamacpp.sh
 ## Architecture
 
 **Config chain:** `config.sh` sources a model profile from `models/<name>.sh`, which sets repo URLs and filenames. All other scripts source `config.sh` to get derived paths (`$GGUF_MODEL`, `$MLX_MODEL`, `$HF_MODEL`, `$RESULTS_DIR`). The active model is controlled by `APPLEBENCH_MODEL` env var or `--model` CLI flag (default: `qwen3-0.6b`).
+
+**Model tiers:** the **primary** benchmark target is **Qwen3-0.6B** (`qwen3-0.6b`) — every weekly run targets it and the headline results are Qwen3-0.6B. **Also benchmarked** periodically: **Qwen3.5-0.8B** (`qwen3.5-0.8b`) and **Gemma-4-E4B-it** (`gemma-4-e4b-it`) — both downloaded in all three formats. **Additional profiles** (`qwen3-8b`, `qwen3-30b-a3b`) exist for heavier spot checks but are downloaded on demand and not part of the routine weekly.
 
 **Per-framework scripts** follow a strict pattern — each framework has exactly 4 scripts:
 - `install_<fw>.sh` — first-time setup (clone/brew/venv)

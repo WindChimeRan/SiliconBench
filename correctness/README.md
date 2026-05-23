@@ -1,18 +1,18 @@
 # Correctness Eval
 
-Framework-correctness evaluation — separate from AppleBench's perf benchmark.
+Framework-correctness evaluation — separate from SiliconBench's perf benchmark.
 
 Goal: verify that each inference framework produces the same *answers* on a
 labeled classification task. Perf (tok/s, TTFT) says nothing about whether a
 framework's outputs are correct, so a fast-but-broken framework would go
-undetected in the main AppleBench pipeline.
+undetected in the main SiliconBench pipeline.
 
 **Task.** GMRID_v3 supply-chain disruption news classification from
 [inflaton/llms-at-edge](https://github.com/inflaton/llms-at-edge). 1147-row
 test split, 8 classes, single-label. Uses the exact system prompt, few-shot
 examples, and weighted-F1 scorer from their paper (IJCNN 2025).
 
-**Not** AppleBench. Fully self-contained under `correctness/`. The AppleBench
+**Not** SiliconBench. Fully self-contained under `correctness/`. The SiliconBench
 perf pipeline (`scripts/`, `prompts/`, `results/`, `benchmark.py`,
 `run_all.sh`, weekly skill) is untouched.
 
@@ -111,7 +111,7 @@ bash correctness/run_all_mac.sh --overwrite-responses llamacpp
 
 Flags:
 
-- `--model MODEL` — AppleBench model profile (default: `qwen3-0.6b`).
+- `--model MODEL` — SiliconBench model profile (default: `qwen3-0.6b`).
 - `--shots "0 5"` — space-separated shot counts to run (default: `"0 5"`).
 - `--concurrency 8` — parallel API requests (default: 8).
 - `--skip-existing` — per-cell resume. Skips a (framework × shot) cell when
@@ -130,7 +130,7 @@ Outputs land in `correctness/results/`:
 
 The driver sources `scripts/config.sh` for ports + per-framework model-name
 overrides; it's a one-way dependency (deleting `correctness/` still leaves
-AppleBench intact).
+SiliconBench intact).
 
 ## Decoding
 

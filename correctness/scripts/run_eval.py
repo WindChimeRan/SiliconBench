@@ -2,7 +2,7 @@
 """
 Run the correctness eval against an OpenAI-compatible /v1/chat/completions
 endpoint. Framework-agnostic — works for vLLM on NVIDIA today and every
-AppleBench framework on Mac later.
+SiliconBench framework on Mac later.
 
 Reads prompts.jsonl (one JSON object per line; each with `id`, `messages`,
 `max_tokens`). Writes responses.jsonl with one record per prompt:

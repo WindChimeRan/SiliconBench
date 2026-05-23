@@ -1,11 +1,11 @@
 ---
 name: weekly-bench
-description: Run the weekly AppleBench pipeline unattended — update frameworks, benchmark all 10, diagnose and fix per-framework failures, commit fixes as separate commits, sync results. Use this when the user says "run the weekly benchmark" or similar.
+description: Run the weekly SiliconBench pipeline unattended — update frameworks, benchmark all 10, diagnose and fix per-framework failures, commit fixes as separate commits, sync results. Use this when the user says "run the weekly benchmark" or similar.
 ---
 
 # Weekly Bench Orchestrator
 
-You are orchestrating AppleBench's weekly benchmark run. Your job is to execute the full pipeline (`update_all.sh` → `run_all.sh` for each split → `sync_github.sh`) unattended, recover from per-framework failures with targeted fixes when you can, and produce a structured journal so the user can review what happened on Monday morning.
+You are orchestrating SiliconBench's weekly benchmark run. Your job is to execute the full pipeline (`update_all.sh` → `run_all.sh` for each split → `sync_github.sh`) unattended, recover from per-framework failures with targeted fixes when you can, and produce a structured journal so the user can review what happened on Monday morning.
 
 This skill is for this repo only. It assumes `caffeinate`, bash, and all the scripts in `scripts/` exist.
 
@@ -59,7 +59,7 @@ Use `run_in_background: true`. Capture the bash job ID. Then use the `Monitor` t
 While monitoring, watch for these patterns:
 - `"run_all.sh --split chat"` / `"run_all.sh --split agent"` — split boundary
 - `" Benchmarking: <name>"` — a framework run is starting
-- `" AppleBench complete!"` — one split finished cleanly
+- `" SiliconBench complete!"` — one split finished cleanly
 - Framework-level errors (non-zero exits from serve/benchmark — `run_all.sh` uses `|| true` per framework, so it will continue past failures)
 - `"Weekly run finished"` — wrapper finished
 

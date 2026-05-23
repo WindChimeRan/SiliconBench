@@ -1,5 +1,5 @@
 #!/bin/bash
-# AppleBench — Weekly unattended benchmark run
+# SiliconBench — Weekly unattended benchmark run
 #
 # Runs update_all.sh → run_all.sh (chat) → run_all.sh (agent) → sync_github.sh
 # end-to-end, under `caffeinate -i` to prevent sleep, with all output tee'd
@@ -90,7 +90,7 @@ run_step() {
 
 {
     echo "========================================="
-    echo " AppleBench — Weekly Run"
+    echo " SiliconBench — Weekly Run"
     echo " Started: $START_TS"
     echo " Model: $MODEL_NAME"
     echo " Splits: ${SPLITS[*]}"

@@ -1,4 +1,4 @@
-# AppleBench Results — Qwen3.5-0.8B (agent)
+# SiliconBench Results — Qwen3.5-0.8B (agent)
 
 **Model:** Qwen3.5-0.8B
 **Split:** agent

@@ -1,8 +1,8 @@
-# AppleBench Results — Qwen3-0.6B (chat)
+# SiliconBench Results — Qwen3-0.6B (chat)
 
 **Model:** Qwen3-0.6B
 **Split:** chat
-**Generated:** 2026-05-22 19:51:06
+**Generated:** 2026-05-22 22:58:26
 
 ## Concurrency: 1
 
