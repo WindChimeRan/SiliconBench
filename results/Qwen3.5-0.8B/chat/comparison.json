@@ -7,7 +7,8 @@
     "mlx_lm",
     "ollama",
     "vllm_metal",
-    "vllm_mlx"
+    "vllm_mlx",
+    "sglang"
   ],
   "results": {
     "llamacpp": {
@@ -543,6 +544,48 @@
         }
       ],
       "total_duration_s": 130.60193420900032
+    },
+    "sglang": {
+      "framework": "sglang",
+      "model": "/Users/haorzhang/applebench/.models/Qwen3.5-0.8B",
+      "endpoint": "http://localhost:8010",
+      "timestamp": "2026-05-23T00:17:52",
+      "concurrency_results": [
+        {
+          "concurrency": 1,
+          "num_requests": 100,
+          "successful": 0,
+          "failed": 100,
+          "wall_time_s": 0.0,
+          "error": "server failed to start",
+          "error_samples": [
+            "sglang serve failed: ValueError: No attention attribute in layer type <class 'mlx_lm.models.qwen3_5.DecoderLayer'> \u2014 sglang MLX backend does not support the Qwen3.5 architecture; server never started within 300s, all requests failed"
+          ]
+        },
+        {
+          "concurrency": 8,
+          "num_requests": 100,
+          "successful": 0,
+          "failed": 100,
+          "wall_time_s": 0.0,
+          "error": "server failed to start",
+          "error_samples": [
+            "sglang serve failed: ValueError: No attention attribute in layer type <class 'mlx_lm.models.qwen3_5.DecoderLayer'> \u2014 sglang MLX backend does not support the Qwen3.5 architecture; server never started within 300s, all requests failed"
+          ]
+        },
+        {
+          "concurrency": 16,
+          "num_requests": 100,
+          "successful": 0,
+          "failed": 100,
+          "wall_time_s": 0.0,
+          "error": "server failed to start",
+          "error_samples": [
+            "sglang serve failed: ValueError: No attention attribute in layer type <class 'mlx_lm.models.qwen3_5.DecoderLayer'> \u2014 sglang MLX backend does not support the Qwen3.5 architecture; server never started within 300s, all requests failed"
+          ]
+        }
+      ],
+      "total_duration_s": 0.0
     }
   }
 }
