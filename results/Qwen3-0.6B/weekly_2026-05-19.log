@@ -8584,3 +8584,236 @@ Report saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/REPORT.md
 =========================================
 @@@ RUN2 AGENT DONE exit=0 2026-05-20T09:21:34Z
 @@@ ALL RUNS2 FINISHED 2026-05-20T09:21:34Z
+=== [hf_transformers patch] update_hf_transformers.sh start 2026-05-22T23:15:37Z ===
+=== Updating hf_transformers ===
+Using Python 3.12.13 environment at: .venvs/hf_transformers
+Resolved 47 packages in 2.75s
+Downloading openai (1.3MiB)
+ Downloaded openai
+Downloading transformers (10.3MiB)
+ Downloaded transformers
+Prepared 7 packages in 14.69s
+Uninstalled 7 packages in 1.58s
+Installed 7 packages in 193ms
+ - certifi==2026.4.22
+ + certifi==2026.5.20
+ - click==8.4.0
+ + click==8.4.1
+ - huggingface-hub==1.15.0
+ + huggingface-hub==1.16.1
+ - idna==3.15
+ + idna==3.16
+ - openai==2.37.0
+ + openai==2.38.0
+ - starlette==1.0.0
+ + starlette==1.0.1
+ - transformers==5.8.1
+ + transformers==5.9.0
+=== hf_transformers updated ===
+=== exit=0 2026-05-22T23:15:57Z ===
+
+@@@ HF RERUN (transformers 5.9.0, PR#45690) start 2026-05-22T23:17:13Z
+@@@ HFRERUN CHAT START 2026-05-22T23:17:13Z
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+  [ok]   sglang
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3-0.6B-BF16.gguf
+  [ok]   MLX: Qwen3-0.6B-bf16-mlx
+  [ok]   HF: Qwen3-0.6B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3-0.6B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3-0.6B/chat
+ Skip-existing: true
+ Fri May 22 18:17:13 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: hf_transformers (port 8009)
+===========================================
+Starting hf_transformers server...
+=== Starting hf_transformers server on port 8009 ===
+PID: 5509
+Waiting for server to be ready...
+hf_transformers server is ready on port 8009
+
+Framework: hf_transformers
+Model: /Users/haorzhang/applebench/.models/Qwen3-0.6B
+Endpoint: http://localhost:8009
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 31/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.18x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 7445.0ms | Throughput avg: 0.9 tok/s | Output: 0.9 tok/s | ITL avg: 1010.6ms | Wall: 5340.4s
+  ⚠ Wall time (5340s) exceeded limit (3600s). Skipping remaining levels.
+
+--- Concurrency: 8 --- SKIPPED (previous level exceeded 3600s)
+
+--- Concurrency: 16 --- SKIPPED (previous level exceeded 3600s)
+
+Total benchmark duration: 5496.1s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/chat/hf_transformers_20260522_181722.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/chat/hf_transformers_20260522_181722_outputs.jsonl (100 records)
+
+Stopping hf_transformers server...
+hf_transformers server (PID 5509) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/chat/comparison.json
+Frameworks: inferrs, mlx_lm, mistralrs, vllm_mlx, hf_transformers, omlx, ollama, vllm_metal, sglang, llamacpp
+Report saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/chat/REPORT.md
+
+# AppleBench Results — Qwen3-0.6B (chat)
+
+**Model:** Qwen3-0.6B
+**Split:** chat
+**Generated:** 2026-05-22 19:51:06
+
+## Concurrency: 1
+
+| Metric | inferrs | mlx_lm | mistralrs | vllm_mlx | hf_transformers | omlx | ollama | vllm_metal | sglang | llamacpp |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 99 / 1 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 |
+| TTFT avg (ms) | 2136.4 | 308.4 | 356.7 | 188.2 | 7445.0 | 296.1 | 264.4 | 218.6 | 225.8 | 172.8 |
+| TTFT p50 (ms) | 919.0 | 201.2 | 163.2 | 110.7 | 4826.7 | 227.1 | 149.6 | 115.1 | 110.8 | 91.5 |
+| TTFT p99 (ms) | 7860.8 | 993.7 | 1368.8 | 890.7 | 28683.4 | 838.6 | 836.8 | 1148.9 | 823.7 | 857.8 |
+| Throughput avg (tok/s) | 5.1 | 127.7 | 101.7 | 122.7 | 0.9 | 154.8 | 152.3 | 68.1 | 172.5 | 161.5 |
+| Output throughput (tok/s) | 3.5 | 74.7 | 83.1 | 110.8 | 0.9 | 82.7 | 122.0 | 50.2 | 100.0 | 104.9 |
+| Input throughput (tok/s) | N/A | 1544.8 | 534.2 | 2233.0 | 18.7 | 1794.0 | 791.5 | 1075.5 | 2082.5 | 2283.2 |
+| Total token throughput (tok/s) | N/A | 1619.5 | 617.3 | 2343.8 | 19.5 | 1876.7 | 913.6 | 1125.6 | 2182.5 | 2388.1 |
+| ITL avg (ms) | 222.8 | 7.1 | 9.8 | 10.8 | 1010.6 | 5.3 | 6.6 | 14.8 | 5.5 | 5.8 |
+| ITL p50 (ms) | 170.8 | 6.8 | 9.7 | 10.5 | 1006.2 | 5.1 | 6.4 | 12.6 | 5.4 | 5.6 |
+| Latency avg (s) | 15.49 | 0.65 | 1.86 | 0.45 | 53.40 | 0.56 | 1.26 | 0.93 | 0.48 | 0.44 |
+| Latency p99 (s) | 100.93 | 2.09 | 4.12 | 1.85 | 265.04 | 2.00 | 2.67 | 4.59 | 1.87 | 1.73 |
+| Wall time (s) | 1548.9 | 64.5 | 185.8 | 44.6 | 5340.4 | 55.6 | 125.7 | 92.7 | 47.9 | 43.7 |
+
+## Concurrency: 8
+
+| Metric | inferrs | mlx_lm | mistralrs | vllm_mlx | hf_transformers | omlx | ollama | vllm_metal | sglang | llamacpp |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 95 / 5 | 100 / 0 | 56 / 44 | 39 / 61 | SKIPPED (PREVIOUS LEVEL TOO SLOW) | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 |
+| TTFT avg (ms) | 5697.4 | 1707.3 | 5414.2 | 534.0 | 0.0 | 448.9 | 643.1 | 132.7 | 482.1 | 906.6 |
+| TTFT p50 (ms) | 4544.7 | 1382.5 | 3570.1 | 483.8 | 0.0 | 363.9 | 373.0 | 133.3 | 217.0 | 859.5 |
+| TTFT p99 (ms) | 19713.7 | 4187.4 | 14530.3 | 1873.2 | 0.0 | 1796.1 | 2669.8 | 208.3 | 2117.9 | 1833.7 |
+| Throughput avg (tok/s) | 0.5 | 16.6 | 2.8 | 12.7 | 0.0 | 16.7 | 37.1 | 18.5 | 11.2 | 76.4 |
+| Output throughput (tok/s) | 2.8 | 71.1 | 8.4 | 104.6 | 0.0 | 113.1 | 236.3 | 145.5 | 80.1 | 228.2 |
+| Input throughput (tok/s) | N/A | 1492.5 | N/A | 2418.5 | 0.0 | 2456.3 | 1532.8 | 3159.7 | 1716.1 | 4952.5 |
+| Total token throughput (tok/s) | N/A | 1563.6 | N/A | 2523.2 | 0.0 | 2569.3 | 1769.1 | 3305.2 | 1796.2 | 5180.7 |
+| ITL avg (ms) | 2310.9 | 72.3 | 498.0 | 70.9 | 0.0 | 63.3 | 30.3 | 52.1 | 94.9 | 14.6 |
+| ITL p50 (ms) | 2265.0 | 71.7 | 380.8 | 59.1 | 0.0 | 62.6 | 29.1 | 52.1 | 88.7 | 11.9 |
+| Latency avg (s) | 95.80 | 5.29 | 73.91 | 1.91 | 0.00 | 3.19 | 5.09 | 2.44 | 4.57 | 1.58 |
+| Latency p99 (s) | 285.07 | 24.63 | 235.94 | 4.45 | 0.00 | 14.31 | 11.24 | 13.23 | 20.49 | 3.63 |
+| Wall time (s) | 1336.4 | 66.8 | 919.0 | 14.0 | 0.0 | 40.6 | 64.9 | 31.5 | 58.1 | 20.1 |
+
+## Concurrency: 16
+
+| Metric | inferrs | mlx_lm | mistralrs | vllm_mlx | hf_transformers | omlx | ollama | vllm_metal | sglang | llamacpp |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 83 / 17 | 100 / 0 | CRASHED | CRASHED | SKIPPED (PREVIOUS LEVEL TOO SLOW) | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 |
+| TTFT avg (ms) | 10130.5 | 3118.4 | 0.0 | 0.0 | 0.0 | 3236.8 | 1239.4 | 188.1 | 856.0 | 2230.2 |
+| TTFT p50 (ms) | 9392.1 | 2014.3 | 0.0 | 0.0 | 0.0 | 3366.2 | 990.2 | 183.1 | 606.3 | 2301.2 |
+| TTFT p99 (ms) | 29543.5 | 8945.8 | 0.0 | 0.0 | 0.0 | 4907.0 | 3247.4 | 283.1 | 3076.9 | 4101.3 |
+| Throughput avg (tok/s) | 0.2 | 5.8 | 0.0 | 0.0 | 0.0 | 16.8 | 17.7 | 13.4 | 5.6 | 79.6 |
+| Output throughput (tok/s) | 1.7 | 59.5 | 0.0 | 0.0 | 0.0 | 115.7 | 216.5 | 190.8 | 81.1 | 240.6 |
+| Input throughput (tok/s) | N/A | 1292.1 | 0.0 | 0.0 | 0.0 | 2571.5 | 1404.4 | 4127.4 | 1736.8 | 5219.0 |
+| Total token throughput (tok/s) | N/A | 1351.6 | 0.0 | 0.0 | 0.0 | 2687.2 | 1620.9 | 4318.3 | 1817.9 | 5459.6 |
+| ITL avg (ms) | 5102.3 | 227.7 | 0.0 | 0.0 | 0.0 | 62.2 | 64.5 | 71.7 | 188.9 | 14.0 |
+| ITL p50 (ms) | 4610.9 | 222.1 | 0.0 | 0.0 | 0.0 | 58.4 | 70.7 | 72.4 | 184.4 | 11.3 |
+| Latency avg (s) | 104.04 | 12.00 | 0.00 | 0.00 | 0.00 | 5.88 | 10.95 | 3.33 | 8.69 | 2.88 |
+| Latency p99 (s) | 299.27 | 36.25 | 0.00 | 0.00 | 0.00 | 17.93 | 23.32 | 12.89 | 26.36 | 5.09 |
+| Wall time (s) | 1021.4 | 77.1 | 0.0 | 0.0 | 0.0 | 38.8 | 70.8 | 24.1 | 57.4 | 19.1 |
+
+## Total Benchmark Duration
+
+| Framework | inferrs | mlx_lm | mistralrs | vllm_mlx | hf_transformers | omlx | ollama | vllm_metal | sglang | llamacpp |
+|-----------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| Duration | 68.4m | 3.6m | 18.5m | 1.2m | 91.6m | 2.4m | 4.5m | 2.6m | 2.8m | 1.5m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
+@@@ HFRERUN CHAT DONE exit=0 2026-05-23T00:51:06Z
+@@@ HFRERUN AGENT START 2026-05-23T00:51:06Z
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+  [ok]   sglang
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3-0.6B-BF16.gguf
+  [ok]   MLX: Qwen3-0.6B-bf16-mlx
+  [ok]   HF: Qwen3-0.6B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+

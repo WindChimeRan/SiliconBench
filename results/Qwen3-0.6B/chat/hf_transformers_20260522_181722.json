@@ -1,0 +1,53 @@
+{
+  "framework": "hf_transformers",
+  "model": "/Users/haorzhang/applebench/.models/Qwen3-0.6B",
+  "endpoint": "http://localhost:8009",
+  "timestamp": "2026-05-22T18:17:23",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 4557,
+      "total_output_tokens": 4639,
+      "total_input_tokens": 99677,
+      "server_usage_available": true,
+      "ttft_avg_ms": 7445.007153331826,
+      "ttft_p50_ms": 4826.6750420152675,
+      "ttft_p99_ms": 28683.41712502297,
+      "throughput_avg_tps": 0.9223164321378574,
+      "throughput_p50_tps": 0.959782048287134,
+      "itl_avg_ms": 1010.6465698331102,
+      "itl_p50_ms": 1006.2012359946191,
+      "latency_avg_s": 53.403887129980724,
+      "latency_p50_s": 50.06051645800471,
+      "latency_p99_s": 265.0359681660193,
+      "output_throughput_tps": 0.8686618642714399,
+      "input_throughput_tps": 18.664714086006533,
+      "total_token_throughput_tps": 19.533375950277975,
+      "wall_time_s": 5340.39790487499,
+      "error_samples": [],
+      "sanity_warnings": [
+        "31/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.18x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0,
+      "error": "skipped (previous level too slow)"
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0,
+      "error": "skipped (previous level too slow)"
+    }
+  ],
+  "total_duration_s": 5496.090246958018
+}
