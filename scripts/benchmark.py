@@ -63,6 +63,7 @@ async def benchmark_single(
     completion_tokens = None
     content_chunks = []
     reasoning_chunks = []
+    finish_reason = None
 
     async with session.post(
         f"{base_url}/v1/chat/completions",
@@ -86,6 +87,8 @@ async def benchmark_single(
             choices = data.get("choices", [])
             if not choices:
                 continue
+            if fr := choices[0].get("finish_reason"):
+                finish_reason = fr
             delta = choices[0].get("delta", {})
             content_delta = delta.get("content", "")
             reasoning_delta = delta.get("reasoning_content", "") or delta.get("reasoning", "")
@@ -119,12 +122,20 @@ async def benchmark_single(
     else:
         itl = 0.0
 
-    # Detect silent failures: server returned 200 but generated 0-1 tokens
-    if tokens_generated <= 1 and max_tokens > 1:
+    # Detect silent failures: server returned 200 but produced no usable output.
+    # A short completion that stopped naturally (finish_reason="stop", or no
+    # finish_reason reported by the server) is a LEGITIMATE answer — e.g. a
+    # binary-classification prompt correctly answered in a single token ("No").
+    # Capable models answer such prompts concisely, so the old "<=1 token =
+    # failure" rule mis-flagged them. The real silent-failure signature is the
+    # server returning OK with zero tokens, or truncating abnormally
+    # (finish_reason like "length"/"error") on a <=1-token reply.
+    abnormal_stop = finish_reason not in (None, "stop")
+    if max_tokens > 1 and (tokens_generated == 0 or (tokens_generated <= 1 and abnormal_stop)):
         raise RuntimeError(
             f"silent failure: server returned OK but generated only "
             f"{tokens_generated} token(s) for prompt '{prompt['name']}' "
-            f"(requested max_tokens={max_tokens})"
+            f"(requested max_tokens={max_tokens}, finish_reason={finish_reason})"
         )
 
     return RequestResult(

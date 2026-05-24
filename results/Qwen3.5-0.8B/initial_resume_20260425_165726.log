@@ -1,0 +1,1169 @@
+=== PERF chat Sat Apr 25 16:57:26 CDT 2026 ===
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: true
+ Sat Apr 25 16:57:26 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+Skipping llamacpp — recent result exists: llamacpp_20260425_164959.json
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 57958
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64)
+  ⚠ WARNING: server did not report token usage for 98/98 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 305.5ms | Throughput avg: 108.2 tok/s | Output: 68.6 tok/s | ITL avg: 9.0ms | Wall: 83.7s | FAILED: 2
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64)
+  ⚠ WARNING: server did not report token usage for 98/98 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 5825.2ms | Throughput avg: 106.8 tok/s | Output: 68.6 tok/s | ITL avg: 9.2ms | Wall: 83.8s | FAILED: 2
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64)
+  ⚠ WARNING: server did not report token usage for 98/98 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 11443.1ms | Throughput avg: 106.5 tok/s | Output: 68.5 tok/s | ITL avg: 9.2ms | Wall: 83.9s | FAILED: 2
+
+Total benchmark duration: 259.8s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/mlx_lm_20260425_165735.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/mlx_lm_20260425_165735_outputs.jsonl (294 records)
+
+Stopping mlx_lm server...
+mlx_lm server (PID 57958) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 58910
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 18/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 535.1ms | Throughput avg: 62.4 tok/s | Output: 45.5 tok/s | ITL avg: 15.5ms | Wall: 188.0s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.27x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 936.6ms | Throughput avg: 13.2 tok/s | Output: 85.7 tok/s | ITL avg: 82.8ms | Wall: 97.9s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.27x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1599.1ms | Throughput avg: 7.9 tok/s | Output: 101.4 tok/s | ITL avg: 160.9ms | Wall: 86.1s | FAILED: 1
+
+Total benchmark duration: 386.6s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_metal_20260425_170336.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_metal_20260425_170336_outputs.jsonl (297 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 58910) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: omlx (port 8005)
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: Qwen3.5-0.8B-bf16-mlx -> /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 60248
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+Framework: omlx
+Model: Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8005
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  TTFT avg: 195.4ms | Throughput avg: 103.0 tok/s | Output: 89.4 tok/s | ITL avg: 9.0ms | Wall: 100.0s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  TTFT avg: 330.3ms | Throughput avg: 29.5 tok/s | Output: 212.0 tok/s | ITL avg: 32.8ms | Wall: 42.6s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  TTFT avg: 3093.6ms | Throughput avg: 28.6 tok/s | Output: 209.5 tok/s | ITL avg: 34.8ms | Wall: 42.7s | FAILED: 1
+
+Total benchmark duration: 195.1s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/omlx_20260425_171112.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/omlx_20260425_171112_outputs.jsonl (297 records)
+
+Stopping omlx server...
+omlx server (PID 60248) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/comparison.json
+Frameworks: mlx_lm, vllm_metal, llamacpp, omlx
+Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/REPORT.md
+
+# AppleBench Results — Qwen3.5-0.8B (chat)
+
+**Model:** Qwen3.5-0.8B
+**Split:** chat
+**Generated:** 2026-04-25 17:15:35
+
+## Concurrency: 1
+
+| Metric | mlx_lm | vllm_metal | llamacpp | omlx |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 305.5 | 535.1 | 196.1 | 195.4 |
+| TTFT p50 (ms) | 221.4 | 224.0 | 124.7 | 125.9 |
+| TTFT p99 (ms) | 777.1 | 2091.6 | 827.1 | 705.4 |
+| Throughput avg (tok/s) | 108.2 | 62.4 | 110.5 | 103.0 |
+| Output throughput (tok/s) | 68.6 | 45.5 | 92.9 | 89.4 |
+| Input throughput (tok/s) | N/A | 527.8 | 1074.1 | 991.8 |
+| Total token throughput (tok/s) | N/A | 573.3 | 1167.0 | 1081.2 |
+| ITL avg (ms) | 9.0 | 15.5 | 8.6 | 9.0 |
+| ITL p50 (ms) | 8.7 | 14.2 | 8.5 | 9.0 |
+| Latency avg (s) | 0.85 | 1.90 | 0.93 | 1.01 |
+| Latency p99 (s) | 2.44 | 7.55 | 3.02 | 3.06 |
+| Wall time (s) | 83.7 | 188.0 | 92.4 | 100.0 |
+
+## Concurrency: 8
+
+| Metric | mlx_lm | vllm_metal | llamacpp | omlx |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 5825.2 | 936.6 | 1426.7 | 330.3 |
+| TTFT p50 (ms) | 5839.8 | 310.0 | 1271.3 | 218.3 |
+| TTFT p99 (ms) | 9829.6 | 4936.4 | 3419.7 | 1485.3 |
+| Throughput avg (tok/s) | 106.8 | 13.2 | 55.0 | 29.5 |
+| Output throughput (tok/s) | 68.6 | 85.7 | 224.9 | 212.0 |
+| Input throughput (tok/s) | N/A | 1013.2 | 2600.6 | 2330.8 |
+| Total token throughput (tok/s) | N/A | 1098.9 | 2825.5 | 2542.8 |
+| ITL avg (ms) | 9.2 | 82.8 | 17.2 | 32.8 |
+| ITL p50 (ms) | 8.9 | 77.3 | 17.2 | 32.5 |
+| Latency avg (s) | 6.37 | 7.64 | 2.90 | 3.31 |
+| Latency p99 (s) | 10.68 | 24.34 | 6.65 | 9.62 |
+| Wall time (s) | 83.8 | 97.9 | 38.2 | 42.6 |
+
+## Concurrency: 16
+
+| Metric | mlx_lm | vllm_metal | llamacpp | omlx |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 11443.1 | 1599.1 | 3928.1 | 3093.6 |
+| TTFT p50 (ms) | 11856.0 | 802.1 | 4198.2 | 3269.5 |
+| TTFT p99 (ms) | 17614.1 | 6992.5 | 5979.4 | 4817.0 |
+| Throughput avg (tok/s) | 106.5 | 7.9 | 55.5 | 28.6 |
+| Output throughput (tok/s) | 68.5 | 101.4 | 229.0 | 209.5 |
+| Input throughput (tok/s) | N/A | 1152.5 | 2646.8 | 2325.6 |
+| Total token throughput (tok/s) | N/A | 1253.9 | 2875.8 | 2535.1 |
+| ITL avg (ms) | 9.2 | 160.9 | 17.2 | 34.8 |
+| ITL p50 (ms) | 8.9 | 137.1 | 17.0 | 33.5 |
+| Latency avg (s) | 11.99 | 13.15 | 5.38 | 6.10 |
+| Latency p99 (s) | 18.01 | 43.38 | 10.02 | 13.59 |
+| Wall time (s) | 83.9 | 86.1 | 37.5 | 42.7 |
+
+## Total Benchmark Duration
+
+| Framework | mlx_lm | vllm_metal | llamacpp | omlx |
+|-----------|--------|--------|--------|--------|
+| Duration | 4.3m | 6.4m | 2.9m | 3.3m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
+=== PERF agent Sat Apr 25 17:15:35 CDT 2026 ===
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: agent
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent
+ Skip-existing: true
+ Sat Apr 25 17:15:35 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: llamacpp (port 8001)
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 61042
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+Framework: llamacpp
+Model: Qwen3.5-0.8B-BF16.gguf
+Endpoint: http://localhost:8001
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 786.3ms | Throughput avg: 109.3 tok/s | Output: 49.0 tok/s | ITL avg: 8.8ms | Wall: 136.9s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3725.4ms | Throughput avg: 36.2 tok/s | Output: 84.8 tok/s | ITL avg: 38.9ms | Wall: 78.9s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 8941.6ms | Throughput avg: 38.0 tok/s | Output: 90.5 tok/s | ITL avg: 37.1ms | Wall: 74.3s
+
+Total benchmark duration: 303.7s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/llamacpp_20260425_171543.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/llamacpp_20260425_171543_outputs.jsonl (300 records)
+
+Stopping llamacpp server...
+llama.cpp server (PID 61042) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 62161
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a094_vlong_hermes' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 986.1ms | Throughput avg: 94.0 tok/s | Output: 37.9 tok/s | ITL avg: 12.4ms | Wall: 175.9s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a094_vlong_hermes' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 12798.0ms | Throughput avg: 95.6 tok/s | Output: 38.2 tok/s | ITL avg: 12.2ms | Wall: 174.5s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a094_vlong_hermes' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 25350.4ms | Throughput avg: 95.6 tok/s | Output: 38.1 tok/s | ITL avg: 12.2ms | Wall: 174.7s | FAILED: 1
+
+Total benchmark duration: 538.2s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/mlx_lm_20260425_172159.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/mlx_lm_20260425_172159_outputs.jsonl (297 records)
+
+Stopping mlx_lm server...
+mlx_lm server (PID 62161) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 63964
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3541.3ms | Throughput avg: 42.9 tok/s | Output: 11.9 tok/s | ITL avg: 23.9ms | Wall: 489.0s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 6016.8ms | Throughput avg: 3.6 tok/s | Output: 14.6 tok/s | ITL avg: 507.7ms | Wall: 392.4s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 29/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 14010.9ms | Throughput avg: 1.8 tok/s | Output: 14.6 tok/s | ITL avg: 944.0ms | Wall: 381.7s
+
+Total benchmark duration: 1313.8s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/vllm_metal_20260425_173227.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/vllm_metal_20260425_173227_outputs.jsonl (300 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 63964) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: omlx (port 8005)
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: Qwen3.5-0.8B-bf16-mlx -> /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 68721
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+Framework: omlx
+Model: Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8005
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 78/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 692.0ms | Throughput avg: 85.3 tok/s | Output: 48.7 tok/s | ITL avg: 10.8ms | Wall: 131.4s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 80/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 596.2ms | Throughput avg: 17.8 tok/s | Output: 125.4 tok/s | ITL avg: 59.5ms | Wall: 46.2s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 80/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3709.4ms | Throughput avg: 16.8 tok/s | Output: 125.1 tok/s | ITL avg: 63.9ms | Wall: 45.8s
+
+Total benchmark duration: 234.0s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/omlx_20260425_175530.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/omlx_20260425_175530_outputs.jsonl (300 records)
+
+Stopping omlx server...
+omlx server (PID 68721) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/comparison.json
+Frameworks: llamacpp, omlx, vllm_metal, mlx_lm
+Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/REPORT.md
+
+# AppleBench Results — Qwen3.5-0.8B (agent)
+
+**Model:** Qwen3.5-0.8B
+**Split:** agent
+**Generated:** 2026-04-25 18:00:32
+
+## Concurrency: 1
+
+| Metric | llamacpp | omlx | vllm_metal | mlx_lm |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 99 / 1 |
+| TTFT avg (ms) | 786.3 | 692.0 | 3541.3 | 986.1 |
+| TTFT p50 (ms) | 649.4 | 577.1 | 2372.0 | 744.5 |
+| TTFT p99 (ms) | 2732.7 | 2217.7 | 10265.3 | 2238.2 |
+| Throughput avg (tok/s) | 109.3 | 85.3 | 42.9 | 94.0 |
+| Output throughput (tok/s) | 49.0 | 48.7 | 11.9 | 37.9 |
+| Input throughput (tok/s) | 3372.1 | 3515.1 | 944.4 | N/A |
+| Total token throughput (tok/s) | 3421.2 | 3563.8 | 956.2 | N/A |
+| ITL avg (ms) | 8.8 | 10.8 | 23.9 | 12.4 |
+| ITL p50 (ms) | 8.8 | 11.1 | 22.0 | 10.0 |
+| Latency avg (s) | 1.37 | 1.31 | 4.89 | 1.77 |
+| Latency p99 (s) | 3.88 | 3.78 | 12.90 | 3.58 |
+| Wall time (s) | 136.9 | 131.4 | 489.0 | 175.9 |
+
+## Concurrency: 8
+
+| Metric | llamacpp | omlx | vllm_metal | mlx_lm |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 99 / 1 |
+| TTFT avg (ms) | 3725.4 | 596.2 | 6016.8 | 12798.0 |
+| TTFT p50 (ms) | 3795.8 | 399.5 | 4791.4 | 12607.9 |
+| TTFT p99 (ms) | 6906.1 | 2470.4 | 30356.0 | 18061.1 |
+| Throughput avg (tok/s) | 36.2 | 17.8 | 3.6 | 95.6 |
+| Output throughput (tok/s) | 84.8 | 125.4 | 14.6 | 38.2 |
+| Input throughput (tok/s) | 5848.6 | 9998.7 | 1176.8 | N/A |
+| Total token throughput (tok/s) | 5933.4 | 10124.1 | 1191.5 | N/A |
+| ITL avg (ms) | 38.9 | 59.5 | 507.7 | 12.2 |
+| ITL p50 (ms) | 25.2 | 58.9 | 407.0 | 9.8 |
+| Latency avg (s) | 6.21 | 3.52 | 31.09 | 13.57 |
+| Latency p99 (s) | 19.22 | 17.69 | 168.17 | 19.49 |
+| Wall time (s) | 78.9 | 46.2 | 392.4 | 174.5 |
+
+## Concurrency: 16
+
+| Metric | llamacpp | omlx | vllm_metal | mlx_lm |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 99 / 1 |
+| TTFT avg (ms) | 8941.6 | 3709.4 | 14010.9 | 25350.4 |
+| TTFT p50 (ms) | 9762.5 | 3695.4 | 9730.1 | 25695.8 |
+| TTFT p99 (ms) | 14208.3 | 5762.4 | 71406.4 | 34788.8 |
+| Throughput avg (tok/s) | 38.0 | 16.8 | 1.8 | 95.6 |
+| Output throughput (tok/s) | 90.5 | 125.1 | 14.6 | 38.1 |
+| Input throughput (tok/s) | 6214.5 | 10088.3 | 1209.9 | N/A |
+| Total token throughput (tok/s) | 6305.0 | 10213.3 | 1224.5 | N/A |
+| ITL avg (ms) | 37.1 | 63.9 | 944.0 | 12.2 |
+| ITL p50 (ms) | 23.7 | 61.2 | 862.7 | 9.9 |
+| Latency avg (s) | 11.34 | 6.71 | 60.03 | 26.12 |
+| Latency p99 (s) | 22.58 | 20.44 | 271.37 | 35.39 |
+| Wall time (s) | 74.3 | 45.8 | 381.7 | 174.7 |
+
+## Total Benchmark Duration
+
+| Framework | llamacpp | omlx | vllm_metal | mlx_lm |
+|-----------|--------|--------|--------|--------|
+| Duration | 5.1m | 3.9m | 21.9m | 9.0m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
+=== CORRECTNESS Sat Apr 25 18:00:32 CDT 2026 ===
+=========================================
+ Correctness Eval — All Frameworks (Mac)
+ Model: Qwen3.5-0.8B
+ Shots: 0 5
+ Concurrency: 8
+ Skip-existing: true
+ Overwrite-responses: no
+ Eval timeout: 7200s
+ Sat Apr 25 18:00:32 CDT 2026
+=========================================
+
+=== Building 0-shot prompts ===
+Wrote 1146 prompts and labels.
+  prompts: /Users/haorzhang/applebench/correctness/prompts/0shot/prompts.jsonl
+  labels:  /Users/haorzhang/applebench/correctness/prompts/0shot/labels.jsonl
+  skipped 1 rows with empty Headline_Details
+System prompt length: 3820 chars (~955 tokens)
+Thinking mode: OFF (/no_think appended)
+
+=== Building 5-shot prompts ===
+Wrote 1146 prompts and labels.
+  prompts: /Users/haorzhang/applebench/correctness/prompts/5shot/prompts.jsonl
+  labels:  /Users/haorzhang/applebench/correctness/prompts/5shot/labels.jsonl
+  skipped 1 rows with empty Headline_Details
+System prompt length: 6261 chars (~1565 tokens)
+Thinking mode: OFF (/no_think appended)
+
+  Cleaning up all inference processes...
+===========================================
+ vllm_metal (port 8004) — shots needed: 0 5
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 69663
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+--- vllm_metal 0-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8004 (model=/Users/haorzhang/applebench/.models/Qwen3.5-0.8B, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 1.2 req/s
+  [50/1146] 1.4 req/s
+  [75/1146] 1.4 req/s
+  [100/1146] 1.5 req/s
+  [125/1146] 1.5 req/s
+  [150/1146] 1.5 req/s
+  [175/1146] 1.5 req/s
+  [200/1146] 1.5 req/s
+  [225/1146] 1.5 req/s
+  [250/1146] 1.5 req/s
+  [275/1146] 1.5 req/s
+  [300/1146] 1.5 req/s
+  [325/1146] 1.5 req/s
+  [350/1146] 1.5 req/s
+  [375/1146] 1.5 req/s
+  [400/1146] 1.5 req/s
+  [425/1146] 1.5 req/s
+  [450/1146] 1.5 req/s
+  [475/1146] 1.5 req/s
+  [500/1146] 1.5 req/s
+  [525/1146] 1.5 req/s
+  [550/1146] 1.5 req/s
+  [575/1146] 1.5 req/s
+  [600/1146] 1.5 req/s
+  [625/1146] 1.5 req/s
+  [650/1146] 1.5 req/s
+  [675/1146] 1.5 req/s
+  [700/1146] 1.5 req/s
+  [725/1146] 1.5 req/s
+  [750/1146] 1.5 req/s
+  [775/1146] 1.5 req/s
+  [800/1146] 1.5 req/s
+  [825/1146] 1.5 req/s
+  [850/1146] 1.5 req/s
+  [875/1146] 1.5 req/s
+  [900/1146] 1.5 req/s
+  [925/1146] 1.5 req/s
+  [950/1146] 1.5 req/s
+  [975/1146] 1.5 req/s
+  [1000/1146] 1.5 req/s
+  [1025/1146] 1.5 req/s
+  [1050/1146] 1.5 req/s
+  [1075/1146] 1.5 req/s
+  [1100/1146] 1.5 req/s
+  [1125/1146] 1.5 req/s
+  [1146/1146] 1.5 req/s
+
+Done. 1145 succeeded, 1 errored.
+  sample error: ClientResponseError: 400, message='Bad Request', url='http://localhost:8004/v1/chat/completions'
+Responses written to: /Users/haorzhang/applebench/correctness/results/vllm_metal_Qwen3.5-0.8B_0shot/responses.jsonl
+--- vllm_metal 0-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.6865
+  F1 macro:    0.4001
+  Exact-match: 0.6815
+  Request errors:  1
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1140, 'regex_category': 5, 'request_error': 1}
+Wrote /Users/haorzhang/applebench/correctness/results/vllm_metal_Qwen3.5-0.8B_0shot/scores.json
+
+--- vllm_metal 5-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8004 (model=/Users/haorzhang/applebench/.models/Qwen3.5-0.8B, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 0.9 req/s
+  [50/1146] 1.0 req/s
+  [75/1146] 1.0 req/s
+  [100/1146] 1.0 req/s
+  [125/1146] 1.1 req/s
+  [150/1146] 1.1 req/s
+  [175/1146] 1.0 req/s
+  [200/1146] 1.0 req/s
+  [225/1146] 1.1 req/s
+  [250/1146] 1.1 req/s
+  [275/1146] 1.1 req/s
+  [300/1146] 1.1 req/s
+  [325/1146] 1.1 req/s
+  [350/1146] 1.1 req/s
+  [375/1146] 1.1 req/s
+  [400/1146] 1.1 req/s
+  [425/1146] 1.1 req/s
+  [450/1146] 1.1 req/s
+  [475/1146] 1.1 req/s
+  [500/1146] 1.1 req/s
+  [525/1146] 1.1 req/s
+  [550/1146] 1.1 req/s
+  [575/1146] 1.1 req/s
+  [600/1146] 1.1 req/s
+  [625/1146] 1.1 req/s
+  [650/1146] 1.1 req/s
+  [675/1146] 1.1 req/s
+  [700/1146] 1.1 req/s
+  [725/1146] 1.1 req/s
+  [750/1146] 1.1 req/s
+  [775/1146] 1.1 req/s
+  [800/1146] 1.1 req/s
+  [825/1146] 1.1 req/s
+  [850/1146] 1.1 req/s
+  [875/1146] 1.1 req/s
+  [900/1146] 1.1 req/s
+  [925/1146] 1.1 req/s
+  [950/1146] 1.1 req/s
+  [975/1146] 1.1 req/s
+  [1000/1146] 1.1 req/s
+  [1025/1146] 1.1 req/s
+  [1050/1146] 1.1 req/s
+  [1075/1146] 1.1 req/s
+  [1100/1146] 1.1 req/s
+  [1125/1146] 1.1 req/s
+  [1146/1146] 1.1 req/s
+
+Done. 1145 succeeded, 1 errored.
+  sample error: ClientResponseError: 400, message='Bad Request', url='http://localhost:8004/v1/chat/completions'
+Responses written to: /Users/haorzhang/applebench/correctness/results/vllm_metal_Qwen3.5-0.8B_5shot/responses.jsonl
+--- vllm_metal 5-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.6054
+  F1 macro:    0.4136
+  Exact-match: 0.5986
+  Request errors:  1
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1145, 'request_error': 1}
+Wrote /Users/haorzhang/applebench/correctness/results/vllm_metal_Qwen3.5-0.8B_5shot/scores.json
+
+Stopping vllm_metal server...
+vllm-metal server (PID 69663) stopped
+  Cleaning up all inference processes...
+Cooling down 60s...
+
+===========================================
+ llamacpp (port 8001) — shots needed: 0 5
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 70124
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+--- llamacpp 0-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8001 (model=Qwen3.5-0.8B-BF16.gguf, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 3.0 req/s
+  [50/1146] 3.3 req/s
+  [75/1146] 3.4 req/s
+  [100/1146] 3.6 req/s
+  [125/1146] 3.7 req/s
+  [150/1146] 3.7 req/s
+  [175/1146] 3.8 req/s
+  [200/1146] 3.9 req/s
+  [225/1146] 3.9 req/s
+  [250/1146] 4.0 req/s
+  [275/1146] 4.0 req/s
+  [300/1146] 4.0 req/s
+  [325/1146] 4.1 req/s
+  [350/1146] 4.1 req/s
+  [375/1146] 4.1 req/s
+  [400/1146] 4.1 req/s
+  [425/1146] 4.1 req/s
+  [450/1146] 4.2 req/s
+  [475/1146] 4.2 req/s
+  [500/1146] 4.2 req/s
+  [525/1146] 4.2 req/s
+  [550/1146] 4.2 req/s
+  [575/1146] 4.2 req/s
+  [600/1146] 4.2 req/s
+  [625/1146] 4.2 req/s
+  [650/1146] 4.3 req/s
+  [675/1146] 4.3 req/s
+  [700/1146] 4.3 req/s
+  [725/1146] 4.3 req/s
+  [750/1146] 4.3 req/s
+  [775/1146] 4.3 req/s
+  [800/1146] 4.3 req/s
+  [825/1146] 4.4 req/s
+  [850/1146] 4.4 req/s
+  [875/1146] 4.4 req/s
+  [900/1146] 4.4 req/s
+  [925/1146] 4.4 req/s
+  [950/1146] 4.4 req/s
+  [975/1146] 4.4 req/s
+  [1000/1146] 4.4 req/s
+  [1025/1146] 4.4 req/s
+  [1050/1146] 4.4 req/s
+  [1075/1146] 4.4 req/s
+  [1100/1146] 4.5 req/s
+  [1125/1146] 4.5 req/s
+  [1146/1146] 4.5 req/s
+
+Done. 1146 succeeded, 0 errored.
+Responses written to: /Users/haorzhang/applebench/correctness/results/llamacpp_Qwen3.5-0.8B_0shot/responses.jsonl
+--- llamacpp 0-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.7016
+  F1 macro:    0.4081
+  Exact-match: 0.6990
+  Request errors:  0
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1142, 'regex_category': 4}
+Wrote /Users/haorzhang/applebench/correctness/results/llamacpp_Qwen3.5-0.8B_0shot/scores.json
+
+--- llamacpp 5-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8001 (model=Qwen3.5-0.8B-BF16.gguf, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 3.7 req/s
+  [50/1146] 3.9 req/s
+  [75/1146] 4.0 req/s
+  [100/1146] 4.2 req/s
+  [125/1146] 4.3 req/s
+  [150/1146] 4.3 req/s
+  [175/1146] 4.4 req/s
+  [200/1146] 4.4 req/s
+  [225/1146] 4.4 req/s
+  [250/1146] 4.5 req/s
+  [275/1146] 4.5 req/s
+  [300/1146] 4.6 req/s
+  [325/1146] 4.6 req/s
+  [350/1146] 4.7 req/s
+  [375/1146] 4.7 req/s
+  [400/1146] 4.7 req/s
+  [425/1146] 4.8 req/s
+  [450/1146] 4.8 req/s
+  [475/1146] 4.8 req/s
+  [500/1146] 4.9 req/s
+  [525/1146] 4.9 req/s
+  [550/1146] 4.9 req/s
+  [575/1146] 4.9 req/s
+  [600/1146] 4.9 req/s
+  [625/1146] 4.9 req/s
+  [650/1146] 5.0 req/s
+  [675/1146] 5.0 req/s
+  [700/1146] 5.0 req/s
+  [725/1146] 5.0 req/s
+  [750/1146] 5.0 req/s
+  [775/1146] 5.1 req/s
+  [800/1146] 5.1 req/s
+  [825/1146] 5.1 req/s
+  [850/1146] 5.1 req/s
+  [875/1146] 5.1 req/s
+  [900/1146] 5.1 req/s
+  [925/1146] 5.2 req/s
+  [950/1146] 5.2 req/s
+  [975/1146] 5.2 req/s
+  [1000/1146] 5.2 req/s
+  [1025/1146] 5.2 req/s
+  [1050/1146] 5.2 req/s
+  [1075/1146] 5.2 req/s
+  [1100/1146] 5.2 req/s
+  [1125/1146] 5.2 req/s
+  [1146/1146] 5.2 req/s
+
+Done. 1146 succeeded, 0 errored.
+Responses written to: /Users/haorzhang/applebench/correctness/results/llamacpp_Qwen3.5-0.8B_5shot/responses.jsonl
+--- llamacpp 5-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.5965
+  F1 macro:    0.3779
+  Exact-match: 0.5977
+  Request errors:  0
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1146}
+Wrote /Users/haorzhang/applebench/correctness/results/llamacpp_Qwen3.5-0.8B_5shot/scores.json
+
+Stopping llamacpp server...
+llama.cpp server (PID 70124) stopped
+  Cleaning up all inference processes...
+Cooling down 60s...
+
+===========================================
+ mlx_lm (port 8002) — shots needed: 0 5
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 70265
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+--- mlx_lm 0-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8002 (model=/Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 1.7 req/s
+  [50/1146] 1.7 req/s
+  [75/1146] 1.7 req/s
+  [100/1146] 1.7 req/s
+  [125/1146] 1.7 req/s
+  [150/1146] 1.7 req/s
+  [175/1146] 1.7 req/s
+  [200/1146] 1.7 req/s
+  [225/1146] 1.7 req/s
+  [250/1146] 1.7 req/s
+  [275/1146] 1.7 req/s
+  [300/1146] 1.7 req/s
+  [325/1146] 1.7 req/s
+  [350/1146] 1.7 req/s
+  [375/1146] 1.7 req/s
+  [400/1146] 1.7 req/s
+  [425/1146] 1.7 req/s
+  [450/1146] 1.7 req/s
+  [475/1146] 1.7 req/s
+  [500/1146] 1.7 req/s
+  [525/1146] 1.7 req/s
+  [550/1146] 1.7 req/s
+  [575/1146] 1.7 req/s
+  [600/1146] 1.7 req/s
+  [625/1146] 1.7 req/s
+  [650/1146] 1.7 req/s
+  [675/1146] 1.7 req/s
+  [700/1146] 1.7 req/s
+  [725/1146] 1.7 req/s
+  [750/1146] 1.7 req/s
+  [775/1146] 1.7 req/s
+  [800/1146] 1.7 req/s
+  [825/1146] 1.7 req/s
+  [850/1146] 1.7 req/s
+  [875/1146] 1.7 req/s
+  [900/1146] 1.7 req/s
+  [925/1146] 1.7 req/s
+  [950/1146] 1.7 req/s
+  [975/1146] 1.7 req/s
+  [1000/1146] 1.7 req/s
+  [1025/1146] 1.7 req/s
+  [1050/1146] 1.7 req/s
+  [1075/1146] 1.7 req/s
+  [1100/1146] 1.7 req/s
+  [1125/1146] 1.7 req/s
+  [1146/1146] 1.7 req/s
+
+Done. 1146 succeeded, 0 errored.
+Responses written to: /Users/haorzhang/applebench/correctness/results/mlx_lm_Qwen3.5-0.8B_0shot/responses.jsonl
+--- mlx_lm 0-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.6940
+  F1 macro:    0.4031
+  Exact-match: 0.6928
+  Request errors:  0
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1139, 'regex_category': 7}
+Wrote /Users/haorzhang/applebench/correctness/results/mlx_lm_Qwen3.5-0.8B_0shot/scores.json
+
+--- mlx_lm 5-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8002 (model=/Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 1.5 req/s
+  [50/1146] 1.5 req/s
+  [75/1146] 1.5 req/s
+  [100/1146] 1.5 req/s
+  [125/1146] 1.5 req/s
+  [150/1146] 1.5 req/s
+  [175/1146] 1.5 req/s
+  [200/1146] 1.5 req/s
+  [225/1146] 1.5 req/s
+  [250/1146] 1.5 req/s
+  [275/1146] 1.5 req/s
+  [300/1146] 1.5 req/s
+  [325/1146] 1.5 req/s
+  [350/1146] 1.5 req/s
+  [375/1146] 1.5 req/s
+  [400/1146] 1.5 req/s
+  [425/1146] 1.5 req/s
+  [450/1146] 1.5 req/s
+  [475/1146] 1.5 req/s
+  [500/1146] 1.5 req/s
+  [525/1146] 1.5 req/s
+  [550/1146] 1.5 req/s
+  [575/1146] 1.5 req/s
+  [600/1146] 1.5 req/s
+  [625/1146] 1.5 req/s
+  [650/1146] 1.5 req/s
+  [675/1146] 1.5 req/s
+  [700/1146] 1.5 req/s
+  [725/1146] 1.5 req/s
+  [750/1146] 1.5 req/s
+  [775/1146] 1.5 req/s
+  [800/1146] 1.5 req/s
+  [825/1146] 1.5 req/s
+  [850/1146] 1.5 req/s
+  [875/1146] 1.5 req/s
+  [900/1146] 1.5 req/s
+  [925/1146] 1.5 req/s
+  [950/1146] 1.5 req/s
+  [975/1146] 1.5 req/s
+  [1000/1146] 1.5 req/s
+  [1025/1146] 1.5 req/s
+  [1050/1146] 1.5 req/s
+  [1075/1146] 1.5 req/s
+  [1100/1146] 1.5 req/s
+  [1125/1146] 1.5 req/s
+  [1146/1146] 1.5 req/s
+
+Done. 1146 succeeded, 0 errored.
+Responses written to: /Users/haorzhang/applebench/correctness/results/mlx_lm_Qwen3.5-0.8B_5shot/responses.jsonl
+--- mlx_lm 5-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.5907
+  F1 macro:    0.3799
+  Exact-match: 0.5986
+  Request errors:  0
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1146}
+Wrote /Users/haorzhang/applebench/correctness/results/mlx_lm_Qwen3.5-0.8B_5shot/scores.json
+
+Stopping mlx_lm server...
+mlx_lm server (PID 70265) stopped
+  Cleaning up all inference processes...
+Cooling down 60s...
+
+===========================================
+ omlx (port 8005) — shots needed: 0 5
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: Qwen3.5-0.8B-bf16-mlx -> /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 70746
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+--- omlx 0-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8005 (model=Qwen3.5-0.8B-bf16-mlx, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 1.8 req/s
+  [50/1146] 2.3 req/s
+  [75/1146] 2.5 req/s
+  [100/1146] 2.6 req/s
+  [125/1146] 2.7 req/s
+  [150/1146] 2.7 req/s
+  [175/1146] 2.8 req/s
+  [200/1146] 2.8 req/s
+  [225/1146] 2.8 req/s
+  [250/1146] 2.8 req/s
+  [275/1146] 2.8 req/s
+  [300/1146] 2.8 req/s
+  [325/1146] 2.8 req/s
+  [350/1146] 2.8 req/s
+  [375/1146] 2.8 req/s
+  [400/1146] 2.8 req/s
+  [425/1146] 2.8 req/s
+  [450/1146] 2.8 req/s
+  [475/1146] 2.8 req/s
+  [500/1146] 2.8 req/s
+  [525/1146] 2.8 req/s
+  [550/1146] 2.9 req/s
+  [575/1146] 2.8 req/s
+  [600/1146] 2.8 req/s
+  [625/1146] 2.8 req/s
+  [650/1146] 2.9 req/s
+  [675/1146] 2.9 req/s
+  [700/1146] 2.9 req/s
+  [725/1146] 2.9 req/s
+  [750/1146] 2.9 req/s
+  [775/1146] 2.9 req/s
+  [800/1146] 2.9 req/s
+  [825/1146] 2.9 req/s
+  [850/1146] 2.9 req/s
+  [875/1146] 2.9 req/s
+  [900/1146] 2.9 req/s
+  [925/1146] 2.9 req/s
+  [950/1146] 2.9 req/s
+  [975/1146] 2.9 req/s
+  [1000/1146] 2.9 req/s
+  [1025/1146] 2.9 req/s
+  [1050/1146] 2.9 req/s
+  [1075/1146] 2.9 req/s
+  [1100/1146] 2.9 req/s
+  [1125/1146] 2.9 req/s
+  [1146/1146] 2.9 req/s
+
+Done. 1146 succeeded, 0 errored.
+Responses written to: /Users/haorzhang/applebench/correctness/results/omlx_Qwen3.5-0.8B_0shot/responses.jsonl
+--- omlx 0-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.6959
+  F1 macro:    0.4054
+  Exact-match: 0.6946
+  Request errors:  0
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1142, 'regex_category': 4}
+Wrote /Users/haorzhang/applebench/correctness/results/omlx_Qwen3.5-0.8B_0shot/scores.json
+
+--- omlx 5-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8005 (model=Qwen3.5-0.8B-bf16-mlx, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 1.9 req/s
+  [50/1146] 2.1 req/s
+  [75/1146] 2.1 req/s
+  [100/1146] 2.2 req/s
+  [125/1146] 2.2 req/s
+  [150/1146] 2.3 req/s
+  [175/1146] 2.3 req/s
+  [200/1146] 2.3 req/s
+  [225/1146] 2.3 req/s
+  [250/1146] 2.3 req/s
+  [275/1146] 2.3 req/s
+  [300/1146] 2.3 req/s
+  [325/1146] 2.3 req/s
+  [350/1146] 2.3 req/s
+  [375/1146] 2.3 req/s
+  [400/1146] 2.3 req/s
+  [425/1146] 2.3 req/s
+  [450/1146] 2.3 req/s
+  [475/1146] 2.3 req/s
+  [500/1146] 2.3 req/s
+  [525/1146] 2.3 req/s
+  [550/1146] 2.3 req/s
+  [575/1146] 2.3 req/s
+  [600/1146] 2.3 req/s
+  [625/1146] 2.3 req/s
+  [650/1146] 2.3 req/s
+  [675/1146] 2.3 req/s
+  [700/1146] 2.3 req/s
+  [725/1146] 2.3 req/s
+  [750/1146] 2.3 req/s
+  [775/1146] 2.3 req/s
+  [800/1146] 2.3 req/s
+  [825/1146] 2.3 req/s
+  [850/1146] 2.3 req/s
+  [875/1146] 2.3 req/s
+  [900/1146] 2.3 req/s
+  [925/1146] 2.3 req/s
+  [950/1146] 2.3 req/s
+  [975/1146] 2.3 req/s
+  [1000/1146] 2.3 req/s
+  [1025/1146] 2.3 req/s
+  [1050/1146] 2.3 req/s
+  [1075/1146] 2.3 req/s
+  [1100/1146] 2.3 req/s
+  [1125/1146] 2.3 req/s
+  [1146/1146] 2.3 req/s
+
+Done. 1146 succeeded, 0 errored.
+Responses written to: /Users/haorzhang/applebench/correctness/results/omlx_Qwen3.5-0.8B_5shot/responses.jsonl
+--- omlx 5-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.5894
+  F1 macro:    0.3758
+  Exact-match: 0.5969
+  Request errors:  0
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1146}
+Wrote /Users/haorzhang/applebench/correctness/results/omlx_Qwen3.5-0.8B_5shot/scores.json
+
+Stopping omlx server...
+omlx server (PID 70746) stopped
+  Cleaning up all inference processes...
+Cooling down 60s...
+
+===========================================
+ Aggregating scores
+===========================================
+Wrote /Users/haorzhang/applebench/correctness/results/Qwen3.5-0.8B_comparison.json
+Wrote /Users/haorzhang/applebench/correctness/results/Qwen3.5-0.8B_comparison.md
+
+# Correctness eval — Qwen3.5-0.8B
+
+| Framework | 0-shot F1 | 0-shot F1-macro | 0-shot EM | 0-shot errors | 5-shot F1 | 5-shot F1-macro | 5-shot EM | 5-shot errors |
+|---|---|---|---|---|---|---|---|---|
+| llamacpp | 0.7016 | 0.4081 | 0.6990 | 0/0 | 0.5965 | 0.3779 | 0.5977 | 0/0 |
+| mlx_lm | 0.6940 | 0.4031 | 0.6928 | 0/0 | 0.5907 | 0.3799 | 0.5986 | 0/0 |
+| vllm_metal | 0.6865 | 0.4001 | 0.6815 | 1/0 | 0.6054 | 0.4136 | 0.5986 | 1/0 |
+| omlx | 0.6959 | 0.4054 | 0.6946 | 0/0 | 0.5894 | 0.3758 | 0.5969 | 0/0 |
+
+errors column = request_errors / parse_failures
+
+
+=========================================
+ Correctness eval complete
+=========================================
+=== CHAIN DONE Sat Apr 25 19:23:01 CDT 2026 ===

@@ -1,0 +1,806 @@
+@@@ Qwen3.5-0.8B fresh rerun (7 fw, skip inferrs/hf/mistralrs) start 2026-05-23T04:46:11Z
+@@@ Q35 CHAT START 2026-05-23T04:46:11Z
+=== SiliconBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+  [ok]   sglang
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ SiliconBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: false
+ Fri May 22 23:46:11 CDT 2026
+=========================================
+
+Cleaning old result files...
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: llamacpp (port 8001)
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 29080
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+Framework: llamacpp
+Model: Qwen3.5-0.8B-BF16.gguf
+Endpoint: http://localhost:8001
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 204.7ms | Throughput avg: 111.2 tok/s | Output: 92.3 tok/s | ITL avg: 8.6ms | Wall: 93.0s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1438.7ms | Throughput avg: 54.5 tok/s | Output: 224.4 tok/s | ITL avg: 17.7ms | Wall: 38.3s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3955.1ms | Throughput avg: 54.9 tok/s | Output: 224.1 tok/s | ITL avg: 17.3ms | Wall: 38.3s | FAILED: 1
+
+Total benchmark duration: 175.8s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/llamacpp_20260522_234628.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/llamacpp_20260522_234628_outputs.jsonl (297 records)
+
+Stopping llamacpp server...
+llama.cpp server (PID 29080) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 29798
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64)
+  ⚠ WARNING: server did not report token usage for 98/98 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 307.4ms | Throughput avg: 108.8 tok/s | Output: 68.7 tok/s | ITL avg: 9.0ms | Wall: 83.7s | FAILED: 2
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64)
+  ⚠ WARNING: server did not report token usage for 98/98 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 5812.9ms | Throughput avg: 108.7 tok/s | Output: 68.9 tok/s | ITL avg: 9.0ms | Wall: 83.5s | FAILED: 2
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64)
+  ⚠ WARNING: server did not report token usage for 98/98 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 11355.8ms | Throughput avg: 108.8 tok/s | Output: 69.1 tok/s | ITL avg: 9.0ms | Wall: 83.1s | FAILED: 2
+
+Total benchmark duration: 257.9s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/mlx_lm_20260522_235138.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/mlx_lm_20260522_235138_outputs.jsonl (294 records)
+
+Stopping mlx_lm server...
+mlx_lm server (PID 29798) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 30772
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.27x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 429.1ms | Throughput avg: 74.2 tok/s | Output: 54.6 tok/s | ITL avg: 13.1ms | Wall: 157.6s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.27x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 688.2ms | Throughput avg: 16.2 tok/s | Output: 106.8 tok/s | ITL avg: 66.2ms | Wall: 80.1s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.27x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1248.7ms | Throughput avg: 9.7 tok/s | Output: 124.1 tok/s | ITL avg: 120.2ms | Wall: 67.7s | FAILED: 1
+
+Total benchmark duration: 320.3s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_metal_20260522_235850.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_metal_20260522_235850_outputs.jsonl (297 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 30772) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: omlx (port 8005)
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: Qwen3.5-0.8B-bf16-mlx -> /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 32120
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+Framework: omlx
+Model: Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8005
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  TTFT avg: 198.5ms | Throughput avg: 149.9 tok/s | Output: 117.7 tok/s | ITL avg: 6.1ms | Wall: 72.6s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  TTFT avg: 333.2ms | Throughput avg: 31.9 tok/s | Output: 221.6 tok/s | ITL avg: 31.2ms | Wall: 39.0s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  TTFT avg: 2846.5ms | Throughput avg: 30.6 tok/s | Output: 224.0 tok/s | ITL avg: 34.0ms | Wall: 38.4s | FAILED: 1
+
+Total benchmark duration: 158.9s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/omlx_20260523_000621.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/omlx_20260523_000621_outputs.jsonl (297 records)
+
+Stopping omlx server...
+omlx server (PID 32120) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: ollama (port 8006)
+===========================================
+Starting ollama server...
+=== Starting Ollama server on port 8006 ===
+PID: 32751
+Waiting for server to be ready...
+Ollama server is ready on port 8006
+
+Framework: ollama
+Model: qwen3.5-0.8b-bf16
+Endpoint: http://localhost:8006
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 1...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.1s | FAILED: 100
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 8...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 16...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+Total benchmark duration: 0.2s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/ollama_20260523_001108.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/ollama_20260523_001108_outputs.jsonl (0 records)
+
+Stopping ollama server...
+Ollama server (PID 32751) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: vllm_mlx (port 8008)
+===========================================
+Starting vllm_mlx server...
+=== Starting vllm-mlx server on port 8008 ===
+PID: 32889
+Waiting for server to be ready...
+vllm-mlx server is ready on port 8008
+
+Framework: vllm_mlx
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8008
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 22/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 198.2ms | Throughput avg: 101.5 tok/s | Output: 87.3 tok/s | ITL avg: 8.9ms | Wall: 88.5s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  4/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p050_long_out64' (requested max_tokens=64)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p000_short_out64' (requested max_tokens=64)
+  ⚠ WARNING: 39/96 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.21x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 204.2ms | Throughput avg: 29.3 tok/s | Output: 228.4 tok/s | ITL avg: 26.5ms | Wall: 19.8s | FAILED: 4
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 38/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.25x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 275.9ms | Throughput avg: 22.1 tok/s | Output: 332.1 tok/s | ITL avg: 38.2ms | Wall: 17.1s | FAILED: 1
+
+Total benchmark duration: 130.6s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_mlx_20260523_001323.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_mlx_20260523_001323_outputs.jsonl (294 records)
+
+Stopping vllm_mlx server...
+vllm-mlx server (PID 32889) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: sglang (port 8010)
+===========================================
+Starting sglang server...
+=== Starting sglang server on port 8010 ===
+PID: 33453
+Waiting for server to be ready...
+/Users/haorzhang/applebench/scripts/serve_sglang.sh: line 37: 33453 Killed: 9               SGLANG_USE_MLX=1 python -m sglang.launch_server --model-path "$HF_MODEL" --host 0.0.0.0 --port "$SGLANG_PORT" --trust-remote-code --disable-radix-cache --disable-cuda-graph --tp-size 1 >&"$PROJECT_DIR/.frameworks/sglang_server.log"
+Error: Server failed to start within 300 seconds
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/launch_server.py:54: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+[2026-05-23 00:17:52] Failed to load generation config for /Users/haorzhang/applebench/.models/Qwen3.5-0.8B: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B does not appear to have a file named generation_config.json. Checkout 'https://huggingface.co//Users/haorzhang/applebench/.models/Qwen3.5-0.8B/tree/main' for available files.. Proceeding without generation config.
+[2026-05-23 00:17:52] Attention backend not specified. Use torch_native backend by default.
+[2026-05-23 00:17:52] Cuda graph is disabled because of using torch native attention backend
+[2026-05-23 00:17:52] Fail to set RLIMIT_STACK: current limit exceeds maximum limit
+[2026-05-23 00:17:52] server_args=ServerArgs(model_path='/Users/haorzhang/applebench/.models/Qwen3.5-0.8B', tokenizer_path='/Users/haorzhang/applebench/.models/Qwen3.5-0.8B', tokenizer_mode='auto', tokenizer_backend='huggingface', tokenizer_worker_num=1, detokenizer_worker_num=1, skip_tokenizer_init=False, load_format='auto', model_loader_extra_config='{}', trust_remote_code=True, context_length=None, is_embedding=False, prefill_only_disable_kv_cache=False, enable_multimodal=None, revision=None, model_impl='auto', model_config_parser='auto', host='0.0.0.0', port=8010, fastapi_root_path='', grpc_mode=False, skip_server_warmup=False, warmups=None, nccl_port=None, checkpoint_engine_wait_weights_before_ready=False, ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_keyfile_password=None, enable_ssl_refresh=False, enable_http2=False, dtype='auto', quantization=None, quantization_param_path=None, kv_cache_dtype='auto', enable_fp32_lm_head=False, modelopt_quant=None, modelopt_checkpoint_restore_path=None, modelopt_checkpoint_save_path=None, modelopt_export_path=None, quantize_and_serve=False, rl_quant_profile=None, mem_fraction_static=0.8725749999999999, max_running_requests=None, max_queued_requests=None, max_total_tokens=None, chunked_prefill_size=4096, enable_dynamic_chunking=False, max_prefill_tokens=16384, prefill_max_requests=None, schedule_policy='fcfs', enable_priority_scheduling=False, disable_priority_preemption=False, default_priority_value=None, abort_on_priority_when_disabled=False, schedule_low_priority_values_first=False, priority_scheduling_preemption_threshold=10, schedule_conservativeness=1.0, page_size=1, swa_full_tokens_ratio=0.8, disable_hybrid_swa_memory=False, radix_eviction_policy='lru', enable_prefill_delayer=False, prefill_delayer_max_delay_passes=30, prefill_delayer_token_usage_low_watermark=None, prefill_delayer_forward_passes_buckets=None, prefill_delayer_wait_seconds_buckets=None, prefill_delayer_queue_min_ratio=None, prefill_delayer_max_delay_ms=None, device='mps', tp_size=1, pp_size=1, pp_max_micro_batch_size=None, pp_async_batch_depth=0, stream_interval=1, batch_notify_size=16, stream_response_default_include_usage=False, incremental_streaming_output=False, enable_streaming_session=False, random_seed=3378543, constrained_json_whitespace_pattern=None, constrained_json_disable_any_whitespace=False, watchdog_timeout=300, soft_watchdog_timeout=None, dist_timeout=None, download_dir=None, model_checksum=None, base_gpu_id=0, gpu_id_step=1, sleep_on_idle=False, use_ray=False, custom_sigquit_handler=None, log_level='info', log_level_http=None, log_requests=False, log_requests_level=2, log_requests_format='text', log_requests_target=None, uvicorn_access_log_exclude_prefixes=[], crash_dump_folder=None, show_time_cost=False, enable_metrics=False, grpc_http_sidecar_port=None, enable_mfu_metrics=False, enable_metrics_for_all_schedulers=False, tokenizer_metrics_custom_labels_header='x-custom-labels', tokenizer_metrics_allowed_custom_labels=None, extra_metric_labels=None, bucket_time_to_first_token=None, bucket_inter_token_latency=None, bucket_e2e_request_latency=None, prompt_tokens_buckets=None, generation_tokens_buckets=None, gc_warning_threshold_secs=0.0, decode_log_interval=40, enable_request_time_stats_logging=False, kv_events_config=None, enable_forward_pass_metrics=False, forward_pass_metrics_worker_id='', forward_pass_metrics_ipc_name=None, enable_trace=False, otlp_traces_endpoint='localhost:4317', export_metrics_to_file=False, export_metrics_to_file_dir=None, api_key=None, admin_api_key=None, served_model_name='/Users/haorzhang/applebench/.models/Qwen3.5-0.8B', weight_version='default', chat_template=None, hf_chat_template_name=None, completion_template=None, file_storage_path='sglang_storage', enable_cache_report=False, reasoning_parser=None, strip_thinking_cache=False, enable_strict_thinking=False, tool_call_parser=None, tool_server=None, sampling_defaults='model', dp_size=1, load_balance_method='round_robin', attn_cp_size=1, moe_dp_size=1, dist_init_addr=None, nnodes=1, node_rank=0, json_model_override_args='{}', preferred_sampling_params=None, enable_lora=None, enable_lora_overlap_loading=None, max_lora_rank=None, lora_target_modules=None, lora_paths=None, max_loaded_loras=None, max_loras_per_batch=8, lora_eviction_policy='lru', lora_backend='csgmv', max_lora_chunk_size=16, experts_shared_outer_loras=None, lora_use_virtual_experts=False, lora_strict_loading=False, lora_drain_wait_threshold=0.0, attention_backend='torch_native', decode_attention_backend=None, prefill_attention_backend=None, sampling_backend='pytorch', grammar_backend='xgrammar', mm_attention_backend=None, fp8_gemm_runner_backend='auto', fp4_gemm_runner_backend='auto', nsa_prefill_backend=None, nsa_decode_backend=None, disable_flashinfer_autotune=False, mamba_backend='triton', speculative_algorithm=None, speculative_draft_model_path=None, speculative_draft_model_revision=None, speculative_draft_load_format=None, speculative_num_steps=None, speculative_eagle_topk=None, speculative_num_draft_tokens=None, speculative_dflash_block_size=None, speculative_accept_threshold_single=1.0, speculative_accept_threshold_acc=1.0, speculative_token_map=None, speculative_attention_mode='prefill', speculative_draft_attention_backend=None, speculative_draft_window_size=None, speculative_moe_runner_backend='auto', speculative_moe_a2a_backend=None, speculative_draft_model_quantization=None, speculative_adaptive=False, speculative_adaptive_config=None, speculative_skip_dp_mlp_sync=False, speculative_ngram_min_bfs_breadth=1, speculative_ngram_max_bfs_breadth=10, speculative_ngram_match_type='BFS', speculative_ngram_max_trie_depth=18, speculative_ngram_capacity=10000000, speculative_ngram_external_corpus_path=None, speculative_ngram_external_sam_budget=0, speculative_ngram_external_corpus_max_tokens=10000000, enable_multi_layer_eagle=False, ep_size=1, moe_a2a_backend='none', moe_runner_backend='auto', flashinfer_mxfp4_moe_precision='default', enable_flashinfer_allreduce_fusion=False, enforce_disable_flashinfer_allreduce_fusion=False, enable_aiter_allreduce_fusion=False, deepep_mode='auto', deepep_dispatcher_output_dtype='auto', ep_num_redundant_experts=0, ep_dispatch_algorithm=None, init_expert_location='trivial', enable_eplb=False, eplb_algorithm='auto', eplb_rebalance_num_iterations=1000, eplb_rebalance_layers_per_chunk=None, eplb_min_rebalancing_utilization_threshold=1.0, expert_distribution_recorder_mode=None, expert_distribution_recorder_buffer_size=1000, enable_expert_distribution_metrics=False, deepep_config=None, moe_dense_tp_size=None, elastic_ep_backend=None, enable_elastic_expert_backup=False, mooncake_ib_device=None, enable_deepep_waterfill=False, elastic_ep_rejoin=False, max_mamba_cache_size=None, mamba_ssm_dtype=None, mamba_full_memory_ratio=0.9, mamba_scheduler_strategy='no_buffer', mamba_track_interval=256, linear_attn_backend='triton', linear_attn_decode_backend=None, linear_attn_prefill_backend=None, enable_hierarchical_cache=False, hicache_ratio=2.0, hicache_size=0, hicache_write_policy='write_through', hicache_io_backend='kernel', hicache_mem_layout='layer_first', hicache_storage_backend=None, hicache_storage_prefetch_policy='timeout', hicache_storage_backend_extra_config=None, enable_hisparse=False, hisparse_config=None, enable_lmcache=False, kt_weight_path=None, kt_method='AMXINT4', kt_cpuinfer=None, kt_threadpool_count=2, kt_num_gpu_experts=None, kt_max_deferred_experts_per_token=None, dllm_algorithm=None, dllm_algorithm_config=None, cpu_offload_gb=0, offload_group_size=-1, offload_num_in_group=1, offload_prefetch_step=1, offload_mode='cpu', enable_mis=False, disable_radix_cache=True, cuda_graph_max_bs=160, cuda_graph_bs=[1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160], disable_cuda_graph=True, disable_cuda_graph_padding=False, enable_breakable_cuda_graph=False, enable_profile_cuda_graph=False, enable_cudagraph_gc=False, debug_cuda_graph=False, enable_layerwise_nvtx_marker=False, enable_nccl_nvls=False, enable_symm_mem=False, disable_flashinfer_cutlass_moe_fp4_allgather=False, enable_tokenizer_batch_encode=False, disable_tokenizer_batch_decode=False, disable_outlines_disk_cache=False, disable_custom_all_reduce=False, enable_mscclpp=False, enable_torch_symm_mem=False, pre_warm_nccl=False, disable_overlap_schedule=False, enable_mixed_chunk=False, enable_dp_attention=False, enable_dp_attention_local_control_broadcast=False, enable_dp_lm_head=False, enable_two_batch_overlap=False, enable_single_batch_overlap=False, tbo_token_distribution_threshold=0.48, enable_torch_compile=False, disable_piecewise_cuda_graph=True, enforce_piecewise_cuda_graph=False, enable_torch_compile_debug_mode=False, torch_compile_max_bs=32, piecewise_cuda_graph_max_tokens=4096, piecewise_cuda_graph_tokens=[4, 8, 12, 16, 20, 24, 28, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1280, 1536, 1792, 2048, 2304, 2560, 2816, 3072, 3328, 3584, 3840, 4096], piecewise_cuda_graph_compiler='eager', torchao_config='', enable_nan_detection=False, enable_p2p_check=False, triton_attention_reduce_in_fp32=False, triton_attention_num_kv_splits=8, triton_attention_split_tile_size=None, num_continuous_decode_steps=1, delete_ckpt_after_loading=False, enable_memory_saver=False, enable_weights_cpu_backup=False, enable_draft_weights_cpu_backup=False, allow_auto_truncate=False, enable_custom_logit_processor=False, flashinfer_mla_disable_ragged=False, disable_shared_experts_fusion=False, enforce_shared_experts_fusion=False, disable_chunked_prefix_cache=False, disable_fast_image_processor=False, keep_mm_feature_on_device=False, enable_return_hidden_states=False, enable_return_routed_experts=False, enable_return_indexer_topk=False, scheduler_recv_interval=1, numa_node=None, enable_deterministic_inference=False, rl_on_policy_target=None, enable_attn_tp_input_scattered=False, gc_threshold=None, enable_nsa_prefill_context_parallel=False, nsa_prefill_cp_mode='round-robin-split', enable_fused_qk_norm_rope=False, enable_precise_embedding_interpolation=False, enable_fused_moe_sum_all_reduce=False, enable_prefill_context_parallel=False, prefill_cp_mode='in-seq-split', enable_dynamic_batch_tokenizer=False, dynamic_batch_tokenizer_batch_size=32, dynamic_batch_tokenizer_batch_timeout=0.002, debug_tensor_dump_output_folder=None, debug_tensor_dump_layers=None, debug_tensor_dump_input_file=None, debug_tensor_dump_inject=False, disaggregation_mode='null', disaggregation_transfer_backend='mooncake', disaggregation_bootstrap_port=8998, disaggregation_ib_device=None, disaggregation_decode_enable_radix_cache=False, disaggregation_decode_enable_offload_kvcache=False, num_reserved_decode_tokens=512, disaggregation_decode_polling_interval=1, encoder_only=False, language_only=False, encoder_transfer_backend='zmq_to_scheduler', encoder_urls=[], enable_adaptive_dispatch_to_encoder=False, custom_weight_loader=[], weight_loader_disable_mmap=False, weight_loader_prefetch_checkpoints=False, weight_loader_prefetch_num_threads=4, weight_loader_drop_cache_after_load=False, remote_instance_weight_loader_seed_instance_ip=None, remote_instance_weight_loader_seed_instance_service_port=None, remote_instance_weight_loader_send_weights_group_ports=None, remote_instance_weight_loader_backend='nccl', remote_instance_weight_loader_start_seed_via_transfer_engine=False, engine_info_bootstrap_port=6789, modelexpress_config=None, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, enable_mm_global_cache=False, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None, enable_quant_communications=False, msprobe_dump_config=None)
+[2026-05-23 00:17:52] Ignore import error when loading sglang.srt.multimodal.processors.mimo_v2: No module named 'torchcodec'
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[2026-05-23 00:17:53] Ignore import error when loading sglang.srt.models.bailing_moe_linear: No module named 'vllm'
+[2026-05-23 00:17:53] Ignore import error when loading sglang.srt.models.bailing_moe_nextn: No module named 'vllm'
+[2026-05-23 00:17:53] Using default HuggingFace chat template with detected content format: openai
+[2026-05-23 00:17:53] Detected reasoning parser 'deepseek-r1' from template rule 'deepseek_r1_think_tags'.
+[2026-05-23 00:17:53] Auto-detected reasoning parser: deepseek-r1
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+kill_itself_when_parent_died is only supported in linux.
+kill_itself_when_parent_died is only supported in linux.
+[2026-05-23 00:17:55] Failed to load generation config for /Users/haorzhang/applebench/.models/Qwen3.5-0.8B: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B does not appear to have a file named generation_config.json. Checkout 'https://huggingface.co//Users/haorzhang/applebench/.models/Qwen3.5-0.8B/tree/main' for available files.. Proceeding without generation config.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[2026-05-23 00:17:56] Ignore import error when loading sglang.srt.multimodal.processors.mimo_v2: No module named 'torchcodec'
+[2026-05-23 00:17:56] Initializing MlxModelRunner for end-to-end MLX inference
+[2026-05-23 00:17:56] Loading MLX model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+[2026-05-23 00:17:57] MLX model loaded in 0.61s
+[2026-05-23 00:17:57] Wired memory limit set to 51.8 GB
+[2026-05-23 00:17:57] Scheduler hit an exception: Traceback (most recent call last):
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 3770, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 417, in __init__
+    self.init_model_worker()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 904, in init_model_worker
+    self.init_tp_model_worker()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 855, in init_tp_model_worker
+    self.tp_worker = MlxTpModelWorker(**worker_kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/tp_worker.py", line 262, in __init__
+    self._init_model_runner()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/tp_worker.py", line 60, in _init_model_runner
+    self._mlx_runner = MlxModelRunner(**init_kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/model_runner.py", line 136, in __init__
+    patch_model_attention(self.model)
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/kv_cache/model_patching.py", line 32, in patch_model_attention
+    layer_list, attn_attr = find_attention_layers(model)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/kv_cache/model_patching.py", line 22, in find_attention_layers
+    raise ValueError(f"No attention attribute in layer type {type(sample)}")
+ValueError: No attention attribute in layer type <class 'mlx_lm.models.qwen3_5.DecoderLayer'>
+
+[2026-05-23 00:17:57] Received sigquit from a child process. It usually means the child failed.
+@@@ Q35 CHAT DONE exit=1 2026-05-23T05:22:57Z
+@@@ Q35 AGENT START 2026-05-23T05:22:57Z
+=== SiliconBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+  [ok]   sglang
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ SiliconBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: agent
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent
+ Skip-existing: false
+ Sat May 23 00:22:57 CDT 2026
+=========================================
+
+Cleaning old result files...
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: llamacpp (port 8001)
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 34200
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+Framework: llamacpp
+Model: Qwen3.5-0.8B-BF16.gguf
+Endpoint: http://localhost:8001
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 793.0ms | Throughput avg: 114.0 tok/s | Output: 49.4 tok/s | ITL avg: 8.5ms | Wall: 136.0s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3794.8ms | Throughput avg: 39.3 tok/s | Output: 84.2 tok/s | ITL avg: 35.0ms | Wall: 79.9s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 8951.9ms | Throughput avg: 40.2 tok/s | Output: 89.4 tok/s | ITL avg: 33.7ms | Wall: 73.7s
+
+Total benchmark duration: 302.6s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/llamacpp_20260523_002305.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/llamacpp_20260523_002305_outputs.jsonl (300 records)
+
+Stopping llamacpp server...
+llama.cpp server (PID 34200) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 35413
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a094_vlong_hermes' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 986.6ms | Throughput avg: 96.1 tok/s | Output: 38.2 tok/s | ITL avg: 12.1ms | Wall: 174.3s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a094_vlong_hermes' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 12926.6ms | Throughput avg: 96.0 tok/s | Output: 37.9 tok/s | ITL avg: 12.2ms | Wall: 176.0s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a094_vlong_hermes' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 25355.1ms | Throughput avg: 96.2 tok/s | Output: 38.1 tok/s | ITL avg: 12.1ms | Wall: 174.7s | FAILED: 1
+
+Total benchmark duration: 538.0s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/mlx_lm_20260523_003019.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/mlx_lm_20260523_003019_outputs.jsonl (297 records)
+
+Stopping mlx_lm server...
+mlx_lm server (PID 35413) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 37263
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 27/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 2187.3ms | Throughput avg: 50.0 tok/s | Output: 17.4 tok/s | ITL avg: 20.7ms | Wall: 336.9s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 27/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3663.7ms | Throughput avg: 4.7 tok/s | Output: 22.3 tok/s | ITL avg: 345.0ms | Wall: 252.2s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 9507.6ms | Throughput avg: 2.4 tok/s | Output: 22.3 tok/s | ITL avg: 623.5ms | Wall: 246.8s
+
+Total benchmark duration: 869.0s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/vllm_metal_20260523_004148.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/vllm_metal_20260523_004148_outputs.jsonl (300 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 37263) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: omlx (port 8005)
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: Qwen3.5-0.8B-bf16-mlx -> /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 40218
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+Framework: omlx
+Model: Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8005
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 80/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 696.9ms | Throughput avg: 126.1 tok/s | Output: 55.5 tok/s | ITL avg: 7.3ms | Wall: 110.3s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 79/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 595.1ms | Throughput avg: 19.3 tok/s | Output: 135.6 tok/s | ITL avg: 54.2ms | Wall: 46.4s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 79/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3848.2ms | Throughput avg: 18.9 tok/s | Output: 137.4 tok/s | ITL avg: 57.3ms | Wall: 46.4s
+
+Total benchmark duration: 213.2s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/omlx_20260523_005826.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/omlx_20260523_005826_outputs.jsonl (300 records)
+
+Stopping omlx server...
+omlx server (PID 40218) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: ollama (port 8006)
+===========================================
+Starting ollama server...
+=== Starting Ollama server on port 8006 ===
+PID: 41017
+Waiting for server to be ready...
+Ollama server is ready on port 8006
+
+Framework: ollama
+Model: qwen3.5-0.8b-bf16
+Endpoint: http://localhost:8006
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 1...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.2s | FAILED: 100
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 8...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.1s | FAILED: 100
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 16...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+Total benchmark duration: 0.3s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/ollama_20260523_010408.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/ollama_20260523_010408_outputs.jsonl (0 records)
+
+Stopping ollama server...
+Ollama server (PID 41017) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: vllm_mlx (port 8008)
+===========================================
+Starting vllm_mlx server...
+=== Starting vllm-mlx server on port 8008 ===
+PID: 41257
+Waiting for server to be ready...
+vllm-mlx server is ready on port 8008
+
+Framework: vllm_mlx
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8008
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 981.1ms | Throughput avg: 102.3 tok/s | Output: 47.0 tok/s | ITL avg: 9.2ms | Wall: 172.2s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 31/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 241.8ms | Throughput avg: 29.6 tok/s | Output: 222.1 tok/s | ITL avg: 30.8ms | Wall: 32.1s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 26/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 426.5ms | Throughput avg: 19.8 tok/s | Output: 276.0 tok/s | ITL avg: 47.1ms | Wall: 24.9s
+
+Total benchmark duration: 236.8s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/vllm_mlx_20260523_010619.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/vllm_mlx_20260523_010619_outputs.jsonl (300 records)
+
+Stopping vllm_mlx server...
+vllm-mlx server (PID 41257) stopped
+  Cleaning up all inference processes...
+Cooling down for 120s...
+
+===========================================
+ Benchmarking: sglang (port 8010)
+===========================================
+Starting sglang server...
+=== Starting sglang server on port 8010 ===
+PID: 42135
+Waiting for server to be ready...
+/Users/haorzhang/applebench/scripts/serve_sglang.sh: line 37: 42135 Killed: 9               SGLANG_USE_MLX=1 python -m sglang.launch_server --model-path "$HF_MODEL" --host 0.0.0.0 --port "$SGLANG_PORT" --trust-remote-code --disable-radix-cache --disable-cuda-graph --tp-size 1 >&"$PROJECT_DIR/.frameworks/sglang_server.log"
+Error: Server failed to start within 300 seconds
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/launch_server.py:54: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+[2026-05-23 01:12:31] Failed to load generation config for /Users/haorzhang/applebench/.models/Qwen3.5-0.8B: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B does not appear to have a file named generation_config.json. Checkout 'https://huggingface.co//Users/haorzhang/applebench/.models/Qwen3.5-0.8B/tree/main' for available files.. Proceeding without generation config.
+[2026-05-23 01:12:31] Attention backend not specified. Use torch_native backend by default.
+[2026-05-23 01:12:31] Cuda graph is disabled because of using torch native attention backend
+[2026-05-23 01:12:31] Fail to set RLIMIT_STACK: current limit exceeds maximum limit
+[2026-05-23 01:12:31] server_args=ServerArgs(model_path='/Users/haorzhang/applebench/.models/Qwen3.5-0.8B', tokenizer_path='/Users/haorzhang/applebench/.models/Qwen3.5-0.8B', tokenizer_mode='auto', tokenizer_backend='huggingface', tokenizer_worker_num=1, detokenizer_worker_num=1, skip_tokenizer_init=False, load_format='auto', model_loader_extra_config='{}', trust_remote_code=True, context_length=None, is_embedding=False, prefill_only_disable_kv_cache=False, enable_multimodal=None, revision=None, model_impl='auto', model_config_parser='auto', host='0.0.0.0', port=8010, fastapi_root_path='', grpc_mode=False, skip_server_warmup=False, warmups=None, nccl_port=None, checkpoint_engine_wait_weights_before_ready=False, ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_keyfile_password=None, enable_ssl_refresh=False, enable_http2=False, dtype='auto', quantization=None, quantization_param_path=None, kv_cache_dtype='auto', enable_fp32_lm_head=False, modelopt_quant=None, modelopt_checkpoint_restore_path=None, modelopt_checkpoint_save_path=None, modelopt_export_path=None, quantize_and_serve=False, rl_quant_profile=None, mem_fraction_static=0.8725749999999999, max_running_requests=None, max_queued_requests=None, max_total_tokens=None, chunked_prefill_size=4096, enable_dynamic_chunking=False, max_prefill_tokens=16384, prefill_max_requests=None, schedule_policy='fcfs', enable_priority_scheduling=False, disable_priority_preemption=False, default_priority_value=None, abort_on_priority_when_disabled=False, schedule_low_priority_values_first=False, priority_scheduling_preemption_threshold=10, schedule_conservativeness=1.0, page_size=1, swa_full_tokens_ratio=0.8, disable_hybrid_swa_memory=False, radix_eviction_policy='lru', enable_prefill_delayer=False, prefill_delayer_max_delay_passes=30, prefill_delayer_token_usage_low_watermark=None, prefill_delayer_forward_passes_buckets=None, prefill_delayer_wait_seconds_buckets=None, prefill_delayer_queue_min_ratio=None, prefill_delayer_max_delay_ms=None, device='mps', tp_size=1, pp_size=1, pp_max_micro_batch_size=None, pp_async_batch_depth=0, stream_interval=1, batch_notify_size=16, stream_response_default_include_usage=False, incremental_streaming_output=False, enable_streaming_session=False, random_seed=638762759, constrained_json_whitespace_pattern=None, constrained_json_disable_any_whitespace=False, watchdog_timeout=300, soft_watchdog_timeout=None, dist_timeout=None, download_dir=None, model_checksum=None, base_gpu_id=0, gpu_id_step=1, sleep_on_idle=False, use_ray=False, custom_sigquit_handler=None, log_level='info', log_level_http=None, log_requests=False, log_requests_level=2, log_requests_format='text', log_requests_target=None, uvicorn_access_log_exclude_prefixes=[], crash_dump_folder=None, show_time_cost=False, enable_metrics=False, grpc_http_sidecar_port=None, enable_mfu_metrics=False, enable_metrics_for_all_schedulers=False, tokenizer_metrics_custom_labels_header='x-custom-labels', tokenizer_metrics_allowed_custom_labels=None, extra_metric_labels=None, bucket_time_to_first_token=None, bucket_inter_token_latency=None, bucket_e2e_request_latency=None, prompt_tokens_buckets=None, generation_tokens_buckets=None, gc_warning_threshold_secs=0.0, decode_log_interval=40, enable_request_time_stats_logging=False, kv_events_config=None, enable_forward_pass_metrics=False, forward_pass_metrics_worker_id='', forward_pass_metrics_ipc_name=None, enable_trace=False, otlp_traces_endpoint='localhost:4317', export_metrics_to_file=False, export_metrics_to_file_dir=None, api_key=None, admin_api_key=None, served_model_name='/Users/haorzhang/applebench/.models/Qwen3.5-0.8B', weight_version='default', chat_template=None, hf_chat_template_name=None, completion_template=None, file_storage_path='sglang_storage', enable_cache_report=False, reasoning_parser=None, strip_thinking_cache=False, enable_strict_thinking=False, tool_call_parser=None, tool_server=None, sampling_defaults='model', dp_size=1, load_balance_method='round_robin', attn_cp_size=1, moe_dp_size=1, dist_init_addr=None, nnodes=1, node_rank=0, json_model_override_args='{}', preferred_sampling_params=None, enable_lora=None, enable_lora_overlap_loading=None, max_lora_rank=None, lora_target_modules=None, lora_paths=None, max_loaded_loras=None, max_loras_per_batch=8, lora_eviction_policy='lru', lora_backend='csgmv', max_lora_chunk_size=16, experts_shared_outer_loras=None, lora_use_virtual_experts=False, lora_strict_loading=False, lora_drain_wait_threshold=0.0, attention_backend='torch_native', decode_attention_backend=None, prefill_attention_backend=None, sampling_backend='pytorch', grammar_backend='xgrammar', mm_attention_backend=None, fp8_gemm_runner_backend='auto', fp4_gemm_runner_backend='auto', nsa_prefill_backend=None, nsa_decode_backend=None, disable_flashinfer_autotune=False, mamba_backend='triton', speculative_algorithm=None, speculative_draft_model_path=None, speculative_draft_model_revision=None, speculative_draft_load_format=None, speculative_num_steps=None, speculative_eagle_topk=None, speculative_num_draft_tokens=None, speculative_dflash_block_size=None, speculative_accept_threshold_single=1.0, speculative_accept_threshold_acc=1.0, speculative_token_map=None, speculative_attention_mode='prefill', speculative_draft_attention_backend=None, speculative_draft_window_size=None, speculative_moe_runner_backend='auto', speculative_moe_a2a_backend=None, speculative_draft_model_quantization=None, speculative_adaptive=False, speculative_adaptive_config=None, speculative_skip_dp_mlp_sync=False, speculative_ngram_min_bfs_breadth=1, speculative_ngram_max_bfs_breadth=10, speculative_ngram_match_type='BFS', speculative_ngram_max_trie_depth=18, speculative_ngram_capacity=10000000, speculative_ngram_external_corpus_path=None, speculative_ngram_external_sam_budget=0, speculative_ngram_external_corpus_max_tokens=10000000, enable_multi_layer_eagle=False, ep_size=1, moe_a2a_backend='none', moe_runner_backend='auto', flashinfer_mxfp4_moe_precision='default', enable_flashinfer_allreduce_fusion=False, enforce_disable_flashinfer_allreduce_fusion=False, enable_aiter_allreduce_fusion=False, deepep_mode='auto', deepep_dispatcher_output_dtype='auto', ep_num_redundant_experts=0, ep_dispatch_algorithm=None, init_expert_location='trivial', enable_eplb=False, eplb_algorithm='auto', eplb_rebalance_num_iterations=1000, eplb_rebalance_layers_per_chunk=None, eplb_min_rebalancing_utilization_threshold=1.0, expert_distribution_recorder_mode=None, expert_distribution_recorder_buffer_size=1000, enable_expert_distribution_metrics=False, deepep_config=None, moe_dense_tp_size=None, elastic_ep_backend=None, enable_elastic_expert_backup=False, mooncake_ib_device=None, enable_deepep_waterfill=False, elastic_ep_rejoin=False, max_mamba_cache_size=None, mamba_ssm_dtype=None, mamba_full_memory_ratio=0.9, mamba_scheduler_strategy='no_buffer', mamba_track_interval=256, linear_attn_backend='triton', linear_attn_decode_backend=None, linear_attn_prefill_backend=None, enable_hierarchical_cache=False, hicache_ratio=2.0, hicache_size=0, hicache_write_policy='write_through', hicache_io_backend='kernel', hicache_mem_layout='layer_first', hicache_storage_backend=None, hicache_storage_prefetch_policy='timeout', hicache_storage_backend_extra_config=None, enable_hisparse=False, hisparse_config=None, enable_lmcache=False, kt_weight_path=None, kt_method='AMXINT4', kt_cpuinfer=None, kt_threadpool_count=2, kt_num_gpu_experts=None, kt_max_deferred_experts_per_token=None, dllm_algorithm=None, dllm_algorithm_config=None, cpu_offload_gb=0, offload_group_size=-1, offload_num_in_group=1, offload_prefetch_step=1, offload_mode='cpu', enable_mis=False, disable_radix_cache=True, cuda_graph_max_bs=160, cuda_graph_bs=[1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160], disable_cuda_graph=True, disable_cuda_graph_padding=False, enable_breakable_cuda_graph=False, enable_profile_cuda_graph=False, enable_cudagraph_gc=False, debug_cuda_graph=False, enable_layerwise_nvtx_marker=False, enable_nccl_nvls=False, enable_symm_mem=False, disable_flashinfer_cutlass_moe_fp4_allgather=False, enable_tokenizer_batch_encode=False, disable_tokenizer_batch_decode=False, disable_outlines_disk_cache=False, disable_custom_all_reduce=False, enable_mscclpp=False, enable_torch_symm_mem=False, pre_warm_nccl=False, disable_overlap_schedule=False, enable_mixed_chunk=False, enable_dp_attention=False, enable_dp_attention_local_control_broadcast=False, enable_dp_lm_head=False, enable_two_batch_overlap=False, enable_single_batch_overlap=False, tbo_token_distribution_threshold=0.48, enable_torch_compile=False, disable_piecewise_cuda_graph=True, enforce_piecewise_cuda_graph=False, enable_torch_compile_debug_mode=False, torch_compile_max_bs=32, piecewise_cuda_graph_max_tokens=4096, piecewise_cuda_graph_tokens=[4, 8, 12, 16, 20, 24, 28, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1280, 1536, 1792, 2048, 2304, 2560, 2816, 3072, 3328, 3584, 3840, 4096], piecewise_cuda_graph_compiler='eager', torchao_config='', enable_nan_detection=False, enable_p2p_check=False, triton_attention_reduce_in_fp32=False, triton_attention_num_kv_splits=8, triton_attention_split_tile_size=None, num_continuous_decode_steps=1, delete_ckpt_after_loading=False, enable_memory_saver=False, enable_weights_cpu_backup=False, enable_draft_weights_cpu_backup=False, allow_auto_truncate=False, enable_custom_logit_processor=False, flashinfer_mla_disable_ragged=False, disable_shared_experts_fusion=False, enforce_shared_experts_fusion=False, disable_chunked_prefix_cache=False, disable_fast_image_processor=False, keep_mm_feature_on_device=False, enable_return_hidden_states=False, enable_return_routed_experts=False, enable_return_indexer_topk=False, scheduler_recv_interval=1, numa_node=None, enable_deterministic_inference=False, rl_on_policy_target=None, enable_attn_tp_input_scattered=False, gc_threshold=None, enable_nsa_prefill_context_parallel=False, nsa_prefill_cp_mode='round-robin-split', enable_fused_qk_norm_rope=False, enable_precise_embedding_interpolation=False, enable_fused_moe_sum_all_reduce=False, enable_prefill_context_parallel=False, prefill_cp_mode='in-seq-split', enable_dynamic_batch_tokenizer=False, dynamic_batch_tokenizer_batch_size=32, dynamic_batch_tokenizer_batch_timeout=0.002, debug_tensor_dump_output_folder=None, debug_tensor_dump_layers=None, debug_tensor_dump_input_file=None, debug_tensor_dump_inject=False, disaggregation_mode='null', disaggregation_transfer_backend='mooncake', disaggregation_bootstrap_port=8998, disaggregation_ib_device=None, disaggregation_decode_enable_radix_cache=False, disaggregation_decode_enable_offload_kvcache=False, num_reserved_decode_tokens=512, disaggregation_decode_polling_interval=1, encoder_only=False, language_only=False, encoder_transfer_backend='zmq_to_scheduler', encoder_urls=[], enable_adaptive_dispatch_to_encoder=False, custom_weight_loader=[], weight_loader_disable_mmap=False, weight_loader_prefetch_checkpoints=False, weight_loader_prefetch_num_threads=4, weight_loader_drop_cache_after_load=False, remote_instance_weight_loader_seed_instance_ip=None, remote_instance_weight_loader_seed_instance_service_port=None, remote_instance_weight_loader_send_weights_group_ports=None, remote_instance_weight_loader_backend='nccl', remote_instance_weight_loader_start_seed_via_transfer_engine=False, engine_info_bootstrap_port=6789, modelexpress_config=None, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, enable_mm_global_cache=False, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None, enable_quant_communications=False, msprobe_dump_config=None)
+[2026-05-23 01:12:31] Ignore import error when loading sglang.srt.multimodal.processors.mimo_v2: No module named 'torchcodec'
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[2026-05-23 01:12:32] Ignore import error when loading sglang.srt.models.bailing_moe_linear: No module named 'vllm'
+[2026-05-23 01:12:32] Ignore import error when loading sglang.srt.models.bailing_moe_nextn: No module named 'vllm'
+[2026-05-23 01:12:32] Using default HuggingFace chat template with detected content format: openai
+[2026-05-23 01:12:32] Detected reasoning parser 'deepseek-r1' from template rule 'deepseek_r1_think_tags'.
+[2026-05-23 01:12:32] Auto-detected reasoning parser: deepseek-r1
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+kill_itself_when_parent_died is only supported in linux.
+kill_itself_when_parent_died is only supported in linux.
+[2026-05-23 01:12:34] Failed to load generation config for /Users/haorzhang/applebench/.models/Qwen3.5-0.8B: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B does not appear to have a file named generation_config.json. Checkout 'https://huggingface.co//Users/haorzhang/applebench/.models/Qwen3.5-0.8B/tree/main' for available files.. Proceeding without generation config.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[2026-05-23 01:12:35] Ignore import error when loading sglang.srt.multimodal.processors.mimo_v2: No module named 'torchcodec'
+[2026-05-23 01:12:35] Initializing MlxModelRunner for end-to-end MLX inference
+[2026-05-23 01:12:35] Loading MLX model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+[2026-05-23 01:12:36] MLX model loaded in 0.60s
+[2026-05-23 01:12:36] Wired memory limit set to 51.8 GB
+[2026-05-23 01:12:36] Scheduler hit an exception: Traceback (most recent call last):
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 3770, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 417, in __init__
+    self.init_model_worker()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 904, in init_model_worker
+    self.init_tp_model_worker()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 855, in init_tp_model_worker
+    self.tp_worker = MlxTpModelWorker(**worker_kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/tp_worker.py", line 262, in __init__
+    self._init_model_runner()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/tp_worker.py", line 60, in _init_model_runner
+    self._mlx_runner = MlxModelRunner(**init_kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/model_runner.py", line 136, in __init__
+    patch_model_attention(self.model)
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/kv_cache/model_patching.py", line 32, in patch_model_attention
+    layer_list, attn_attr = find_attention_layers(model)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/kv_cache/model_patching.py", line 22, in find_attention_layers
+    raise ValueError(f"No attention attribute in layer type {type(sample)}")
+ValueError: No attention attribute in layer type <class 'mlx_lm.models.qwen3_5.DecoderLayer'>
+
+[2026-05-23 01:12:36] Received sigquit from a child process. It usually means the child failed.
+@@@ Q35 AGENT DONE exit=1 2026-05-23T06:17:42Z
+@@@ Q35 ALL DONE 2026-05-23T06:17:42Z

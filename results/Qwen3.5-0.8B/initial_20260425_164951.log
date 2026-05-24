@@ -1,0 +1,116 @@
+=== PERF chat Sat Apr 25 16:49:51 CDT 2026 ===
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: false
+ Sat Apr 25 16:49:51 CDT 2026
+=========================================
+
+Cleaning old result files...
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: llamacpp (port 8001)
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 56806
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+Framework: llamacpp
+Model: Qwen3.5-0.8B-BF16.gguf
+Endpoint: http://localhost:8001
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 196.1ms | Throughput avg: 110.5 tok/s | Output: 92.9 tok/s | ITL avg: 8.6ms | Wall: 92.4s | FAILED: 1
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1426.7ms | Throughput avg: 55.0 tok/s | Output: 224.9 tok/s | ITL avg: 17.2ms | Wall: 38.2s | FAILED: 1
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  1/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p039_medium_out256' (requested max_tokens=256)
+  ⚠ WARNING: 17/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.26x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3928.1ms | Throughput avg: 55.5 tok/s | Output: 229.0 tok/s | ITL avg: 17.2ms | Wall: 37.5s | FAILED: 1
+
+Total benchmark duration: 174.4s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/llamacpp_20260425_164959.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/llamacpp_20260425_164959_outputs.jsonl (297 records)
+
+Stopping llamacpp server...
+llama.cpp server (PID 56806) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 57432
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: 500, message='Internal Server Error', url='http://localhost:8002/v1/chat/completions'
+  Warmup error: 500, message='Internal Server Error', url='http://localhost:8002/v1/chat/completions'
+  Warmup error: 500, message='Internal Server Error', url='http://localhost:8002/v1/chat/completions'
+  Running 100 requests at concurrency 1...

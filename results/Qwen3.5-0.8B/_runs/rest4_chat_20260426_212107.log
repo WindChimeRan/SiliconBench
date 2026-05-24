@@ -1,0 +1,678 @@
+
+############################################
+# Framework: vllm_mlx
+############################################
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: true
+ Sun Apr 26 21:21:07 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: vllm_mlx (port 8008)
+===========================================
+Starting vllm_mlx server...
+=== Starting vllm-mlx server on port 8008 ===
+PID: 19859
+Waiting for server to be ready...
+vllm-mlx server is ready on port 8008
+
+Framework: vllm_mlx
+Model: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Endpoint: http://localhost:8008
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: silent failure: server returned OK but generated only 0 token(s) for prompt 'p025_medium_out64' (requested max_tokens=64)
+  Warmup error: Response payload is not completed: <TransferEncodingError: 400, message='Not enough data to satisfy transfer length header.'>
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  Running 100 requests at concurrency 1...
+  100/100 requests FAILED
+    > Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]
+    > Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  Running 100 requests at concurrency 8...
+  100/100 requests FAILED
+    > Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]
+    > Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]
+  Warmup error: Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  Running 100 requests at concurrency 16...
+  100/100 requests FAILED
+    > Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8008), [Errno 61] Connect call failed ('::1', 8008, 0, 0)]
+    > Cannot connect to host localhost:8008 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8008, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8008)]
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+Total benchmark duration: 0.5s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_mlx_20260426_212121.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/vllm_mlx_20260426_212121_outputs.jsonl (0 records)
+
+Stopping vllm_mlx server...
+vllm-mlx server (PID 19859) was not running
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/comparison.json
+Frameworks: mlx_lm, vllm_metal, vllm_mlx, llamacpp, omlx
+Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/REPORT.md
+
+# AppleBench Results — Qwen3.5-0.8B (chat)
+
+**Model:** Qwen3.5-0.8B
+**Split:** chat
+**Generated:** 2026-04-26 21:22:28
+
+## Concurrency: 1
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 305.5 | 535.1 | 0.0 | 196.1 | 195.4 |
+| TTFT p50 (ms) | 221.4 | 224.0 | 0.0 | 124.7 | 125.9 |
+| TTFT p99 (ms) | 777.1 | 2091.6 | 0.0 | 827.1 | 705.4 |
+| Throughput avg (tok/s) | 108.2 | 62.4 | 0.0 | 110.5 | 103.0 |
+| Output throughput (tok/s) | 68.6 | 45.5 | 0.0 | 92.9 | 89.4 |
+| Input throughput (tok/s) | N/A | 527.8 | 0.0 | 1074.1 | 991.8 |
+| Total token throughput (tok/s) | N/A | 573.3 | 0.0 | 1167.0 | 1081.2 |
+| ITL avg (ms) | 9.0 | 15.5 | 0.0 | 8.6 | 9.0 |
+| ITL p50 (ms) | 8.7 | 14.2 | 0.0 | 8.5 | 9.0 |
+| Latency avg (s) | 0.85 | 1.90 | 0.00 | 0.93 | 1.01 |
+| Latency p99 (s) | 2.44 | 7.55 | 0.00 | 3.02 | 3.06 |
+| Wall time (s) | 83.7 | 188.0 | 0.0 | 92.4 | 100.0 |
+
+## Concurrency: 8
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 5825.2 | 936.6 | 0.0 | 1426.7 | 330.3 |
+| TTFT p50 (ms) | 5839.8 | 310.0 | 0.0 | 1271.3 | 218.3 |
+| TTFT p99 (ms) | 9829.6 | 4936.4 | 0.0 | 3419.7 | 1485.3 |
+| Throughput avg (tok/s) | 106.8 | 13.2 | 0.0 | 55.0 | 29.5 |
+| Output throughput (tok/s) | 68.6 | 85.7 | 0.0 | 224.9 | 212.0 |
+| Input throughput (tok/s) | N/A | 1013.2 | 0.0 | 2600.6 | 2330.8 |
+| Total token throughput (tok/s) | N/A | 1098.9 | 0.0 | 2825.5 | 2542.8 |
+| ITL avg (ms) | 9.2 | 82.8 | 0.0 | 17.2 | 32.8 |
+| ITL p50 (ms) | 8.9 | 77.3 | 0.0 | 17.2 | 32.5 |
+| Latency avg (s) | 6.37 | 7.64 | 0.00 | 2.90 | 3.31 |
+| Latency p99 (s) | 10.68 | 24.34 | 0.00 | 6.65 | 9.62 |
+| Wall time (s) | 83.8 | 97.9 | 0.0 | 38.2 | 42.6 |
+
+## Concurrency: 16
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 11443.1 | 1599.1 | 0.0 | 3928.1 | 3093.6 |
+| TTFT p50 (ms) | 11856.0 | 802.1 | 0.0 | 4198.2 | 3269.5 |
+| TTFT p99 (ms) | 17614.1 | 6992.5 | 0.0 | 5979.4 | 4817.0 |
+| Throughput avg (tok/s) | 106.5 | 7.9 | 0.0 | 55.5 | 28.6 |
+| Output throughput (tok/s) | 68.5 | 101.4 | 0.0 | 229.0 | 209.5 |
+| Input throughput (tok/s) | N/A | 1152.5 | 0.0 | 2646.8 | 2325.6 |
+| Total token throughput (tok/s) | N/A | 1253.9 | 0.0 | 2875.8 | 2535.1 |
+| ITL avg (ms) | 9.2 | 160.9 | 0.0 | 17.2 | 34.8 |
+| ITL p50 (ms) | 8.9 | 137.1 | 0.0 | 17.0 | 33.5 |
+| Latency avg (s) | 11.99 | 13.15 | 0.00 | 5.38 | 6.10 |
+| Latency p99 (s) | 18.01 | 43.38 | 0.00 | 10.02 | 13.59 |
+| Wall time (s) | 83.9 | 86.1 | 0.0 | 37.5 | 42.7 |
+
+## Total Benchmark Duration
+
+| Framework | mlx_lm | vllm_metal | vllm_mlx | llamacpp | omlx |
+|-----------|--------|--------|--------|--------|--------|
+| Duration | 4.3m | 6.4m | 0.5s | 2.9m | 3.3m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
+
+############################################
+# Framework: ollama
+############################################
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: true
+ Sun Apr 26 21:22:28 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: ollama (port 8006)
+===========================================
+Starting ollama server...
+=== Starting Ollama server on port 8006 ===
+PID: 20008
+Waiting for server to be ready...
+Ollama server is ready on port 8006
+
+Framework: ollama
+Model: qwen3.5-0.8b-bf16
+Endpoint: http://localhost:8006
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 1...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.1s | FAILED: 100
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 8...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 16...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+Total benchmark duration: 0.2s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/ollama_20260426_212235.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/ollama_20260426_212235_outputs.jsonl (0 records)
+
+Stopping ollama server...
+Ollama server (PID 20008) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/comparison.json
+Frameworks: mlx_lm, vllm_metal, vllm_mlx, ollama, llamacpp, omlx
+Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/REPORT.md
+
+# AppleBench Results — Qwen3.5-0.8B (chat)
+
+**Model:** Qwen3.5-0.8B
+**Split:** chat
+**Generated:** 2026-04-26 21:23:41
+
+## Concurrency: 1
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | ollama | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 305.5 | 535.1 | 0.0 | 0.0 | 196.1 | 195.4 |
+| TTFT p50 (ms) | 221.4 | 224.0 | 0.0 | 0.0 | 124.7 | 125.9 |
+| TTFT p99 (ms) | 777.1 | 2091.6 | 0.0 | 0.0 | 827.1 | 705.4 |
+| Throughput avg (tok/s) | 108.2 | 62.4 | 0.0 | 0.0 | 110.5 | 103.0 |
+| Output throughput (tok/s) | 68.6 | 45.5 | 0.0 | 0.0 | 92.9 | 89.4 |
+| Input throughput (tok/s) | N/A | 527.8 | 0.0 | 0.0 | 1074.1 | 991.8 |
+| Total token throughput (tok/s) | N/A | 573.3 | 0.0 | 0.0 | 1167.0 | 1081.2 |
+| ITL avg (ms) | 9.0 | 15.5 | 0.0 | 0.0 | 8.6 | 9.0 |
+| ITL p50 (ms) | 8.7 | 14.2 | 0.0 | 0.0 | 8.5 | 9.0 |
+| Latency avg (s) | 0.85 | 1.90 | 0.00 | 0.00 | 0.93 | 1.01 |
+| Latency p99 (s) | 2.44 | 7.55 | 0.00 | 0.00 | 3.02 | 3.06 |
+| Wall time (s) | 83.7 | 188.0 | 0.0 | 0.1 | 92.4 | 100.0 |
+
+## Concurrency: 8
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | ollama | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 5825.2 | 936.6 | 0.0 | 0.0 | 1426.7 | 330.3 |
+| TTFT p50 (ms) | 5839.8 | 310.0 | 0.0 | 0.0 | 1271.3 | 218.3 |
+| TTFT p99 (ms) | 9829.6 | 4936.4 | 0.0 | 0.0 | 3419.7 | 1485.3 |
+| Throughput avg (tok/s) | 106.8 | 13.2 | 0.0 | 0.0 | 55.0 | 29.5 |
+| Output throughput (tok/s) | 68.6 | 85.7 | 0.0 | 0.0 | 224.9 | 212.0 |
+| Input throughput (tok/s) | N/A | 1013.2 | 0.0 | 0.0 | 2600.6 | 2330.8 |
+| Total token throughput (tok/s) | N/A | 1098.9 | 0.0 | 0.0 | 2825.5 | 2542.8 |
+| ITL avg (ms) | 9.2 | 82.8 | 0.0 | 0.0 | 17.2 | 32.8 |
+| ITL p50 (ms) | 8.9 | 77.3 | 0.0 | 0.0 | 17.2 | 32.5 |
+| Latency avg (s) | 6.37 | 7.64 | 0.00 | 0.00 | 2.90 | 3.31 |
+| Latency p99 (s) | 10.68 | 24.34 | 0.00 | 0.00 | 6.65 | 9.62 |
+| Wall time (s) | 83.8 | 97.9 | 0.0 | 0.0 | 38.2 | 42.6 |
+
+## Concurrency: 16
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | ollama | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 11443.1 | 1599.1 | 0.0 | 0.0 | 3928.1 | 3093.6 |
+| TTFT p50 (ms) | 11856.0 | 802.1 | 0.0 | 0.0 | 4198.2 | 3269.5 |
+| TTFT p99 (ms) | 17614.1 | 6992.5 | 0.0 | 0.0 | 5979.4 | 4817.0 |
+| Throughput avg (tok/s) | 106.5 | 7.9 | 0.0 | 0.0 | 55.5 | 28.6 |
+| Output throughput (tok/s) | 68.5 | 101.4 | 0.0 | 0.0 | 229.0 | 209.5 |
+| Input throughput (tok/s) | N/A | 1152.5 | 0.0 | 0.0 | 2646.8 | 2325.6 |
+| Total token throughput (tok/s) | N/A | 1253.9 | 0.0 | 0.0 | 2875.8 | 2535.1 |
+| ITL avg (ms) | 9.2 | 160.9 | 0.0 | 0.0 | 17.2 | 34.8 |
+| ITL p50 (ms) | 8.9 | 137.1 | 0.0 | 0.0 | 17.0 | 33.5 |
+| Latency avg (s) | 11.99 | 13.15 | 0.00 | 0.00 | 5.38 | 6.10 |
+| Latency p99 (s) | 18.01 | 43.38 | 0.00 | 0.00 | 10.02 | 13.59 |
+| Wall time (s) | 83.9 | 86.1 | 0.0 | 0.0 | 37.5 | 42.7 |
+
+## Total Benchmark Duration
+
+| Framework | mlx_lm | vllm_metal | vllm_mlx | ollama | llamacpp | omlx |
+|-----------|--------|--------|--------|--------|--------|--------|
+| Duration | 4.3m | 6.4m | 0.5s | 0.2s | 2.9m | 3.3m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
+
+############################################
+# Framework: inferrs
+############################################
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: true
+ Sun Apr 26 21:23:41 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: inferrs (port 8007)
+===========================================
+Starting inferrs server...
+=== Starting inferrs server on port 8007 ===
+PID: 20129
+Waiting for server to be ready...
+inferrs server is ready on port 8007
+
+Framework: inferrs
+Model: Qwen/Qwen3-0.6B
+Endpoint: http://localhost:8007
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  90/100 requests FAILED
+    > 
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p008_short_out64' (requested max_tokens=64)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p064_long_out256' (requested max_tokens=256)
+  ⚠ WARNING: server did not report token usage for 10/10 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 11270.1ms | Throughput avg: 0.3 tok/s | Output: 0.1 tok/s | ITL avg: 4008.3ms | Wall: 10281.7s | FAILED: 90
+  ⚠ Wall time (10282s) exceeded limit (3600s). Skipping remaining levels.
+
+--- Concurrency: 8 --- SKIPPED (previous level exceeded 3600s)
+
+--- Concurrency: 16 --- SKIPPED (previous level exceeded 3600s)
+
+Total benchmark duration: 10894.4s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/inferrs_20260426_212348.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/inferrs_20260426_212348_outputs.jsonl (10 records)
+
+Stopping inferrs server...
+inferrs server (PID 20129) was not running
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/comparison.json
+Frameworks: mlx_lm, vllm_metal, vllm_mlx, inferrs, ollama, llamacpp, omlx
+Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/REPORT.md
+
+# AppleBench Results — Qwen3.5-0.8B (chat)
+
+**Model:** Qwen3.5-0.8B
+**Split:** chat
+**Generated:** 2026-04-27 00:26:29
+
+## Concurrency: 1
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | inferrs | ollama | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | 10 / 90 | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 305.5 | 535.1 | 0.0 | 11270.1 | 0.0 | 196.1 | 195.4 |
+| TTFT p50 (ms) | 221.4 | 224.0 | 0.0 | 5986.5 | 0.0 | 124.7 | 125.9 |
+| TTFT p99 (ms) | 777.1 | 2091.6 | 0.0 | 57166.8 | 0.0 | 827.1 | 705.4 |
+| Throughput avg (tok/s) | 108.2 | 62.4 | 0.0 | 0.3 | 0.0 | 110.5 | 103.0 |
+| Output throughput (tok/s) | 68.6 | 45.5 | 0.0 | 0.1 | 0.0 | 92.9 | 89.4 |
+| Input throughput (tok/s) | N/A | 527.8 | 0.0 | N/A | 0.0 | 1074.1 | 991.8 |
+| Total token throughput (tok/s) | N/A | 573.3 | 0.0 | N/A | 0.0 | 1167.0 | 1081.2 |
+| ITL avg (ms) | 9.0 | 15.5 | 0.0 | 4008.3 | 0.0 | 8.6 | 9.0 |
+| ITL p50 (ms) | 8.7 | 14.2 | 0.0 | 3057.3 | 0.0 | 8.5 | 9.0 |
+| Latency avg (s) | 0.85 | 1.90 | 0.00 | 178.91 | 0.00 | 0.93 | 1.01 |
+| Latency p99 (s) | 2.44 | 7.55 | 0.00 | 270.87 | 0.00 | 3.02 | 3.06 |
+| Wall time (s) | 83.7 | 188.0 | 0.0 | 10281.7 | 0.1 | 92.4 | 100.0 |
+
+## Concurrency: 8
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | inferrs | ollama | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | SKIPPED (PREVIOUS LEVEL TOO SLOW) | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 5825.2 | 936.6 | 0.0 | 0.0 | 0.0 | 1426.7 | 330.3 |
+| TTFT p50 (ms) | 5839.8 | 310.0 | 0.0 | 0.0 | 0.0 | 1271.3 | 218.3 |
+| TTFT p99 (ms) | 9829.6 | 4936.4 | 0.0 | 0.0 | 0.0 | 3419.7 | 1485.3 |
+| Throughput avg (tok/s) | 106.8 | 13.2 | 0.0 | 0.0 | 0.0 | 55.0 | 29.5 |
+| Output throughput (tok/s) | 68.6 | 85.7 | 0.0 | 0.0 | 0.0 | 224.9 | 212.0 |
+| Input throughput (tok/s) | N/A | 1013.2 | 0.0 | 0.0 | 0.0 | 2600.6 | 2330.8 |
+| Total token throughput (tok/s) | N/A | 1098.9 | 0.0 | 0.0 | 0.0 | 2825.5 | 2542.8 |
+| ITL avg (ms) | 9.2 | 82.8 | 0.0 | 0.0 | 0.0 | 17.2 | 32.8 |
+| ITL p50 (ms) | 8.9 | 77.3 | 0.0 | 0.0 | 0.0 | 17.2 | 32.5 |
+| Latency avg (s) | 6.37 | 7.64 | 0.00 | 0.00 | 0.00 | 2.90 | 3.31 |
+| Latency p99 (s) | 10.68 | 24.34 | 0.00 | 0.00 | 0.00 | 6.65 | 9.62 |
+| Wall time (s) | 83.8 | 97.9 | 0.0 | 0.0 | 0.0 | 38.2 | 42.6 |
+
+## Concurrency: 16
+
+| Metric | mlx_lm | vllm_metal | vllm_mlx | inferrs | ollama | llamacpp | omlx |
+|--------|--------|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 99 / 1 | CRASHED | SKIPPED (PREVIOUS LEVEL TOO SLOW) | CRASHED | 99 / 1 | 99 / 1 |
+| TTFT avg (ms) | 11443.1 | 1599.1 | 0.0 | 0.0 | 0.0 | 3928.1 | 3093.6 |
+| TTFT p50 (ms) | 11856.0 | 802.1 | 0.0 | 0.0 | 0.0 | 4198.2 | 3269.5 |
+| TTFT p99 (ms) | 17614.1 | 6992.5 | 0.0 | 0.0 | 0.0 | 5979.4 | 4817.0 |
+| Throughput avg (tok/s) | 106.5 | 7.9 | 0.0 | 0.0 | 0.0 | 55.5 | 28.6 |
+| Output throughput (tok/s) | 68.5 | 101.4 | 0.0 | 0.0 | 0.0 | 229.0 | 209.5 |
+| Input throughput (tok/s) | N/A | 1152.5 | 0.0 | 0.0 | 0.0 | 2646.8 | 2325.6 |
+| Total token throughput (tok/s) | N/A | 1253.9 | 0.0 | 0.0 | 0.0 | 2875.8 | 2535.1 |
+| ITL avg (ms) | 9.2 | 160.9 | 0.0 | 0.0 | 0.0 | 17.2 | 34.8 |
+| ITL p50 (ms) | 8.9 | 137.1 | 0.0 | 0.0 | 0.0 | 17.0 | 33.5 |
+| Latency avg (s) | 11.99 | 13.15 | 0.00 | 0.00 | 0.00 | 5.38 | 6.10 |
+| Latency p99 (s) | 18.01 | 43.38 | 0.00 | 0.00 | 0.00 | 10.02 | 13.59 |
+| Wall time (s) | 83.9 | 86.1 | 0.0 | 0.0 | 0.0 | 37.5 | 42.7 |
+
+## Total Benchmark Duration
+
+| Framework | mlx_lm | vllm_metal | vllm_mlx | inferrs | ollama | llamacpp | omlx |
+|-----------|--------|--------|--------|--------|--------|--------|--------|
+| Duration | 4.3m | 6.4m | 0.5s | 181.6m | 0.2s | 2.9m | 3.3m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
+
+############################################
+# Framework: hf_transformers
+############################################
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3.5-0.8B-BF16.gguf
+  [ok]   MLX: Qwen3.5-0.8B-bf16-mlx
+  [ok]   HF: Qwen3.5-0.8B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Qwen3.5-0.8B
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat
+ Skip-existing: true
+ Mon Apr 27 00:26:29 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: hf_transformers (port 8009)
+===========================================
+Starting hf_transformers server...
+=== Starting hf_transformers server on port 8009 ===
+PID: 57776
+Waiting for server to be ready...
+Error: Server failed to start within 300 seconds
+A new version of transformers (5.6.2) is available! You are using version 5.6.0.
+
+[transformers] Loading /Users/haorzhang/applebench/.models/Qwen3.5-0.8B@main
+[transformers] `Qwen2VLImageProcessorFast` is deprecated. The `Fast` suffix for image processors has been removed; use `Qwen2VLImageProcessor` instead.
+Traceback (most recent call last):
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/bin/transformers", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/transformers.py", line 37, in main
+    app()
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/main.py", line 1152, in __call__
+    raise e
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/main.py", line 1135, in __call__
+    return get_command(self)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 1514, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/core.py", line 794, in main
+    return _main(
+           ^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/core.py", line 188, in _main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/huggingface_hub/cli/_cli_utils.py", line 131, in invoke
+    return super().invoke(ctx)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 1902, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 1298, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 853, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/main.py", line 1514, in wrapper
+    return callback(**use_params)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serve.py", line 101, in __init__
+    self._model_manager = ModelManager(
+                          ^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serving/model_manager.py", line 146, in __init__
+    self.load_model_and_processor(self.process_model_name(force_model))
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serving/model_manager.py", line 274, in load_model_and_processor
+    processor = self._load_processor(model_id_and_revision)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serving/model_manager.py", line 208, in _load_processor
+    return AutoProcessor.from_pretrained(model_id, revision=revision, trust_remote_code=self.trust_remote_code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 431, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/processing_utils.py", line 1429, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/processing_utils.py", line 1558, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 629, in from_pretrained
+    return image_processor_class.from_pretrained(pretrained_model_name_or_path, *inputs, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2040, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2026, in requires_backends
+    raise ImportError("".join(failed))
+ImportError: 
+Qwen2VLImageProcessor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+Qwen2VLImageProcessor requires the Torchvision library but it was not found in your environment. Check out the instructions on the
+installation page: https://pytorch.org/get-started/locally/ and follow the ones that match your environment.
+Please note that you may need to restart your runtime after installation.
+
+[hf_transformers] run_all.sh exited non-zero — continuing to next framework
+
+############################################
+# Per-framework loop COMPLETE
+############################################

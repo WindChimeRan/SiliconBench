@@ -1,0 +1,42 @@
+{
+  "framework": "ollama",
+  "model": "qwen3.5-0.8b-bf16",
+  "endpoint": "http://localhost:8006",
+  "timestamp": "2026-05-23T01:04:08",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.17126412500510924,
+      "error": "no successful requests",
+      "error_samples": [
+        "404, message='Not Found', url='http://localhost:8006/v1/chat/completions'"
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.05232945899479091,
+      "error": "no successful requests",
+      "error_samples": [
+        "404, message='Not Found', url='http://localhost:8006/v1/chat/completions'"
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.040109291003318503,
+      "error": "no successful requests",
+      "error_samples": [
+        "404, message='Not Found', url='http://localhost:8006/v1/chat/completions'"
+      ]
+    }
+  ],
+  "total_duration_s": 0.28657225001370534
+}
