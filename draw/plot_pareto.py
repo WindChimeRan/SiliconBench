@@ -44,6 +44,39 @@ CONCURRENCIES = [1, 8, 16]
 THROUGHPUT_KEY = "output_throughput_tps"
 MEMORY_KEY = "mem_used_gb"
 
+# Throughput gate: only plot a (framework, concurrency) cell whose success rate
+# is >= MIN_SUCCESS_RATE. A partial-success throughput is measured over a
+# non-representative (usually easier) subset of prompts and isn't comparable, so
+# such cells are dropped. The 95% margin keeps near-complete cells — including
+# those whose only "failures" are false positives from the pre-2026-05-24
+# short-answer detector bug (<=5/100; see benchmark.py) — while dropping
+# genuinely-degraded cells (e.g. mlx_lm agent ~70%, mistralrs c8 ~56%, crashes).
+MIN_SUCCESS_RATE = 0.95
+
+
+def gated_clean(split_dir: Path) -> dict[str, dict[int, bool]]:
+    """Per (framework, concurrency): True iff success rate >= MIN_SUCCESS_RATE,
+    read from the latest result JSON's concurrency_results counts."""
+    by_fw: dict[str, tuple[str, dict[int, bool]]] = {}
+    for path in sorted(split_dir.glob("*.json")):
+        if path.name == "comparison.json" or "metalstat" in path.name:
+            continue
+        try:
+            data = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue
+        fw, ts = data.get("framework"), data.get("timestamp")
+        if not fw or not ts or (fw in by_fw and by_fw[fw][0] >= ts):
+            continue
+        cells: dict[int, bool] = {}
+        for r in data.get("concurrency_results", []):
+            c = r.get("concurrency")
+            total = r.get("successful", 0) + r.get("failed", 0)
+            if c is not None:
+                cells[int(c)] = total > 0 and r.get("successful", 0) / total >= MIN_SUCCESS_RATE
+        by_fw[fw] = (ts, cells)
+    return {fw: cells for fw, (_, cells) in by_fw.items()}
+
 
 def load_throughput(split_dir: Path) -> dict[str, dict[int, float]]:
     by_fw: dict[str, tuple[str, dict[int, float]]] = {}
@@ -136,6 +169,10 @@ def main() -> None:
     if not tput:
         raise SystemExit(f"No benchmark result JSONs under {split_dir}")
 
+    # Success-rate gate: a partial-success cell's throughput is measured over a
+    # non-representative subset, so only plot cells >= MIN_SUCCESS_RATE.
+    clean = gated_clean(split_dir)
+
     all_fw = sorted(set(tput) | set(mem))
     colors = {fw: CVD_COLORS[i % len(CVD_COLORS)] for i, fw in enumerate(all_fw)}
 
@@ -162,6 +199,8 @@ def main() -> None:
             y = mem.get(fw, {}).get(c)
             if x is None or y is None or x <= 0:
                 continue
+            if not clean.get(fw, {}).get(c, False):
+                continue  # gate out partial-success cells (meaningless throughput)
             xs.append(x)
             ys.append(y)
             fws.append(fw)
