@@ -1,0 +1,176 @@
+=== AppleBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   inferrs
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: gemma-4-E4B-it-BF16.gguf
+  [ok]   MLX: gemma-4-e4b-it-bf16-mlx
+  [ok]   HF: Gemma-4-E4B-it
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ AppleBench — Full Benchmark Run
+ Model: Gemma-4-E4B-it
+ Split: chat
+ Output: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/chat
+ Skip-existing: true
+ Sun Apr 26 15:26:11 CDT 2026
+=========================================
+
+Resume mode — keeping existing results.
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 93039
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Gemma-4-E4B-it
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p063_long_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p040_long_out64' (requested max_tokens=64)
+  ⚠ WARNING: 22/98 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.21x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1815.6ms | Throughput avg: 19.4 tok/s | Output: 12.9 tok/s | ITL avg: 52.9ms | Wall: 593.0s | FAILED: 2
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p063_long_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p040_long_out64' (requested max_tokens=64)
+  ⚠ WARNING: 22/98 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.21x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 299.6ms | Throughput avg: 6.7 tok/s | Output: 51.4 tok/s | ITL avg: 140.9ms | Wall: 149.3s | FAILED: 2
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  2/100 requests FAILED
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p063_long_out256' (requested max_tokens=256)
+    > silent failure: server returned OK but generated only 1 token(s) for prompt 'p040_long_out64' (requested max_tokens=64)
+  ⚠ WARNING: 22/98 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.21x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 387.5ms | Throughput avg: 5.2 tok/s | Output: 74.1 tok/s | ITL avg: 181.4ms | Wall: 104.3s | FAILED: 2
+
+Total benchmark duration: 884.6s
+Results saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/chat/vllm_metal_20260426_152634.json
+Outputs saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/chat/vllm_metal_20260426_152634_outputs.jsonl (294 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 93039) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/chat/comparison.json
+Frameworks: mlx_lm, omlx, vllm_metal, llamacpp
+Report saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/chat/REPORT.md
+
+# AppleBench Results — Gemma-4-E4B-it (chat)
+
+**Model:** Gemma-4-E4B-it
+**Split:** chat
+**Generated:** 2026-04-26 15:42:26
+
+## Concurrency: 1
+
+| Metric | mlx_lm | omlx | vllm_metal | llamacpp |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 98 / 2 | 98 / 2 | 98 / 2 |
+| TTFT avg (ms) | 1041.7 | 617.5 | 1815.6 | 1075.3 |
+| TTFT p50 (ms) | 806.0 | 409.3 | 737.3 | 593.0 |
+| TTFT p99 (ms) | 2762.0 | 2514.0 | 11389.7 | 5132.5 |
+| Throughput avg (tok/s) | 20.9 | 25.2 | 19.4 | 29.8 |
+| Output throughput (tok/s) | 14.5 | 22.3 | 12.9 | 22.1 |
+| Input throughput (tok/s) | N/A | 281.0 | 164.9 | 281.2 |
+| Total token throughput (tok/s) | N/A | 303.3 | 177.9 | 303.4 |
+| ITL avg (ms) | 48.6 | 37.1 | 52.9 | 31.8 |
+| ITL p50 (ms) | 48.0 | 37.1 | 44.1 | 31.7 |
+| Latency avg (s) | 3.49 | 3.54 | 6.03 | 3.53 |
+| Latency p99 (s) | 10.33 | 10.24 | 22.17 | 9.55 |
+| Wall time (s) | 343.4 | 348.0 | 593.0 | 347.8 |
+
+## Concurrency: 8
+
+| Metric | mlx_lm | omlx | vllm_metal | llamacpp |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 98 / 2 | 98 / 2 | 98 / 2 |
+| TTFT avg (ms) | 23544.0 | 845.5 | 299.6 | 3087.9 |
+| TTFT p50 (ms) | 23546.1 | 683.5 | 300.8 | 2936.9 |
+| TTFT p99 (ms) | 39129.7 | 2837.2 | 395.8 | 6204.6 |
+| Throughput avg (tok/s) | 20.9 | 7.7 | 6.7 | 23.2 |
+| Output throughput (tok/s) | 14.5 | 59.3 | 51.4 | 90.3 |
+| Input throughput (tok/s) | N/A | 675.0 | 654.9 | 1148.5 |
+| Total token throughput (tok/s) | N/A | 734.3 | 706.3 | 1238.8 |
+| ITL avg (ms) | 48.6 | 128.9 | 140.9 | 41.3 |
+| ITL p50 (ms) | 48.0 | 117.5 | 143.7 | 40.1 |
+| Latency avg (s) | 25.99 | 10.66 | 11.21 | 6.27 |
+| Latency p99 (s) | 44.15 | 32.95 | 37.77 | 16.93 |
+| Wall time (s) | 343.4 | 138.6 | 149.3 | 85.2 |
+
+## Concurrency: 16
+
+| Metric | mlx_lm | omlx | vllm_metal | llamacpp |
+|--------|--------|--------|--------|--------|
+| Successful / Failed | 98 / 2 | 98 / 2 | 98 / 2 | 98 / 2 |
+| TTFT avg (ms) | 46946.3 | 10383.9 | 387.5 | 8411.5 |
+| TTFT p50 (ms) | 49597.2 | 9835.3 | 365.4 | 8606.3 |
+| TTFT p99 (ms) | 68445.8 | 26526.8 | 569.3 | 14111.8 |
+| Throughput avg (tok/s) | 20.9 | 7.8 | 5.2 | 23.4 |
+| Output throughput (tok/s) | 14.5 | 61.0 | 74.1 | 92.4 |
+| Input throughput (tok/s) | N/A | 630.4 | 937.5 | 1174.8 |
+| Total token throughput (tok/s) | N/A | 691.4 | 1011.6 | 1267.1 |
+| ITL avg (ms) | 48.6 | 118.5 | 181.4 | 40.7 |
+| ITL p50 (ms) | 47.9 | 118.3 | 182.9 | 39.8 |
+| Latency avg (s) | 49.39 | 21.18 | 14.29 | 11.56 |
+| Latency p99 (s) | 70.17 | 59.08 | 47.37 | 24.69 |
+| Wall time (s) | 343.3 | 148.4 | 104.3 | 83.3 |
+
+## Total Benchmark Duration
+
+| Framework | mlx_lm | omlx | vllm_metal | llamacpp |
+|-----------|--------|--------|--------|--------|
+| Duration | 17.6m | 11.1m | 14.7m | 8.9m |
+
+
+=========================================
+ AppleBench complete!
+=========================================
