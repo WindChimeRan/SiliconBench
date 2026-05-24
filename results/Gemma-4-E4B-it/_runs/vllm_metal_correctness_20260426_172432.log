@@ -1,0 +1,189 @@
+=========================================
+ Correctness Eval — All Frameworks (Mac)
+ Model: Gemma-4-E4B-it
+ Shots: 0 5
+ Concurrency: 8
+ Skip-existing: true
+ Overwrite-responses: no
+ Eval timeout: 7200s
+ Sun Apr 26 17:24:32 CDT 2026
+=========================================
+
+=== Building 0-shot prompts ===
+Wrote 1146 prompts and labels.
+  prompts: /Users/haorzhang/applebench/correctness/prompts/0shot/prompts.jsonl
+  labels:  /Users/haorzhang/applebench/correctness/prompts/0shot/labels.jsonl
+  skipped 1 rows with empty Headline_Details
+System prompt length: 3820 chars (~955 tokens)
+Thinking mode: OFF (/no_think appended)
+
+=== Building 5-shot prompts ===
+Wrote 1146 prompts and labels.
+  prompts: /Users/haorzhang/applebench/correctness/prompts/5shot/prompts.jsonl
+  labels:  /Users/haorzhang/applebench/correctness/prompts/5shot/labels.jsonl
+  skipped 1 rows with empty Headline_Details
+System prompt length: 6261 chars (~1565 tokens)
+Thinking mode: OFF (/no_think appended)
+
+  Cleaning up all inference processes...
+===========================================
+ vllm_metal (port 8004) — shots needed: 0 5
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 14797
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+--- vllm_metal 0-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8004 (model=/Users/haorzhang/applebench/.models/Gemma-4-E4B-it, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 0.7 req/s
+  [50/1146] 0.8 req/s
+  [75/1146] 0.8 req/s
+  [100/1146] 0.9 req/s
+  [125/1146] 0.9 req/s
+  [150/1146] 0.9 req/s
+  [175/1146] 0.9 req/s
+  [200/1146] 0.9 req/s
+  [225/1146] 0.9 req/s
+  [250/1146] 0.9 req/s
+  [275/1146] 0.9 req/s
+  [300/1146] 0.9 req/s
+  [325/1146] 0.9 req/s
+  [350/1146] 0.9 req/s
+  [375/1146] 0.9 req/s
+  [400/1146] 0.9 req/s
+  [425/1146] 0.9 req/s
+  [450/1146] 0.9 req/s
+  [475/1146] 0.9 req/s
+  [500/1146] 0.9 req/s
+  [525/1146] 0.9 req/s
+  [550/1146] 0.9 req/s
+  [575/1146] 0.9 req/s
+  [600/1146] 0.9 req/s
+  [625/1146] 0.9 req/s
+  [650/1146] 0.9 req/s
+  [675/1146] 0.9 req/s
+  [700/1146] 0.9 req/s
+  [725/1146] 0.9 req/s
+  [750/1146] 0.9 req/s
+  [775/1146] 0.9 req/s
+  [800/1146] 0.9 req/s
+  [825/1146] 0.9 req/s
+  [850/1146] 0.9 req/s
+  [875/1146] 0.9 req/s
+  [900/1146] 0.9 req/s
+  [925/1146] 0.9 req/s
+  [950/1146] 0.9 req/s
+  [975/1146] 0.9 req/s
+  [1000/1146] 0.9 req/s
+  [1025/1146] 0.9 req/s
+  [1050/1146] 0.9 req/s
+  [1075/1146] 0.9 req/s
+  [1100/1146] 0.9 req/s
+  [1125/1146] 0.9 req/s
+  [1146/1146] 0.9 req/s
+
+Done. 1145 succeeded, 1 errored.
+  sample error: ClientResponseError: 400, message='Bad Request', url='http://localhost:8004/v1/chat/completions'
+Responses written to: /Users/haorzhang/applebench/correctness/results/vllm_metal_Gemma-4-E4B-it_0shot/responses.jsonl
+--- vllm_metal 0-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.8201
+  F1 macro:    0.6702
+  Exact-match: 0.8220
+  Request errors:  1
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1145, 'request_error': 1}
+Wrote /Users/haorzhang/applebench/correctness/results/vllm_metal_Gemma-4-E4B-it_0shot/scores.json
+
+--- vllm_metal 5-shot eval (timeout 7200s) ---
+Sending 1146 prompts to http://localhost:8004 (model=/Users/haorzhang/applebench/.models/Gemma-4-E4B-it, concurrency=8, temp=0.0, top_p=1.0)
+  [25/1146] 0.7 req/s
+  [50/1146] 0.7 req/s
+  [75/1146] 0.8 req/s
+  [100/1146] 0.8 req/s
+  [125/1146] 0.8 req/s
+  [150/1146] 0.8 req/s
+  [175/1146] 0.8 req/s
+  [200/1146] 0.8 req/s
+  [225/1146] 0.8 req/s
+  [250/1146] 0.8 req/s
+  [275/1146] 0.8 req/s
+  [300/1146] 0.8 req/s
+  [325/1146] 0.8 req/s
+  [350/1146] 0.8 req/s
+  [375/1146] 0.8 req/s
+  [400/1146] 0.8 req/s
+  [425/1146] 0.8 req/s
+  [450/1146] 0.8 req/s
+  [475/1146] 0.8 req/s
+  [500/1146] 0.8 req/s
+  [525/1146] 0.8 req/s
+  [550/1146] 0.8 req/s
+  [575/1146] 0.8 req/s
+  [600/1146] 0.8 req/s
+  [625/1146] 0.8 req/s
+  [650/1146] 0.9 req/s
+  [675/1146] 0.9 req/s
+  [700/1146] 0.9 req/s
+  [725/1146] 0.9 req/s
+  [750/1146] 0.9 req/s
+  [775/1146] 0.9 req/s
+  [800/1146] 0.9 req/s
+  [825/1146] 0.9 req/s
+  [850/1146] 0.9 req/s
+  [875/1146] 0.9 req/s
+  [900/1146] 0.9 req/s
+  [925/1146] 0.9 req/s
+  [950/1146] 0.9 req/s
+  [975/1146] 0.9 req/s
+  [1000/1146] 0.9 req/s
+  [1025/1146] 0.9 req/s
+  [1050/1146] 0.8 req/s
+  [1075/1146] 0.8 req/s
+  [1100/1146] 0.8 req/s
+  [1125/1146] 0.8 req/s
+  [1146/1146] 0.9 req/s
+
+Done. 1145 succeeded, 1 errored.
+  sample error: ClientResponseError: 400, message='Bad Request', url='http://localhost:8004/v1/chat/completions'
+Responses written to: /Users/haorzhang/applebench/correctness/results/vllm_metal_Gemma-4-E4B-it_5shot/responses.jsonl
+--- vllm_metal 5-shot score ---
+Scored: 1146 (responses missing: 0, extra: 0)
+  F1 weighted: 0.8889
+  F1 macro:    0.6873
+  Exact-match: 0.8857
+  Request errors:  1
+  Parse failures:  0
+  OOV after parse: 0
+  Extraction methods: {'json': 1145, 'request_error': 1}
+Wrote /Users/haorzhang/applebench/correctness/results/vllm_metal_Gemma-4-E4B-it_5shot/scores.json
+
+Stopping vllm_metal server...
+vllm-metal server (PID 14797) stopped
+  Cleaning up all inference processes...
+Cooling down 60s...
+
+===========================================
+ Aggregating scores
+===========================================
+Wrote /Users/haorzhang/applebench/correctness/results/Gemma-4-E4B-it_comparison.json
+Wrote /Users/haorzhang/applebench/correctness/results/Gemma-4-E4B-it_comparison.md
+
+# Correctness eval — Gemma-4-E4B-it
+
+| Framework | 0-shot F1 | 0-shot F1-macro | 0-shot EM | 0-shot errors | 5-shot F1 | 5-shot F1-macro | 5-shot EM | 5-shot errors |
+|---|---|---|---|---|---|---|---|---|
+| llamacpp | 0.8497 | 0.6797 | 0.8482 | 0/0 | 0.9107 | 0.6907 | 0.9058 | 0/0 |
+| mlx_lm | 0.7497 | 0.6465 | 0.7618 | 0/0 | 0.8856 | 0.6979 | 0.8848 | 0/0 |
+| vllm_metal | 0.8201 | 0.6702 | 0.8220 | 1/0 | 0.8889 | 0.6873 | 0.8857 | 1/0 |
+| omlx | 0.5524 | 0.3182 | 0.4625 | 0/378 | 0.0453 | 0.0284 | 0.0236 | 0/1103 |
+
+errors column = request_errors / parse_failures
+
+
+=========================================
+ Correctness eval complete
+=========================================
