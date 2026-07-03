@@ -6,6 +6,12 @@ Run the whole weekly pipeline — update, benchmark, diagnose failures, fix, pub
 
 Latest results (primary model, Qwen3-0.6B): **[chat REPORT](results/Qwen3-0.6B/chat/REPORT.md)** · **[agent REPORT](results/Qwen3-0.6B/agent/REPORT.md)**
 
+## Platforms
+
+**Apple Silicon** is the primary track (macOS, all 9 frameworks below, re-run weekly). **NVIDIA DGX Spark** (Grace CPU + Blackwell GB10 GPU, Linux) is a secondary track covering the 3 frameworks common to both: llama.cpp, vllm, sglang — the latter two built from source against nightly CUDA-13 PyTorch, since no stable CUDA-13 wheel exists yet for either. Results live in separate trees: `results/<MODEL>/{chat,agent}/` for Apple, `results/<MODEL>/dgxspark/{chat,agent}/` for DGX Spark.
+
+`scripts/run_all.sh`/`install_all.sh`/`update_all.sh`/`env_check.sh` auto-detect which platform they're running on (`uname`-based, override with `--platform apple|dgxspark`) and dispatch to a full, independent `_apple`/`_dgxspark` script — the two platforms share no control flow, so a change on one side can't affect the other. See [CLAUDE.md](CLAUDE.md) for the DGX Spark setup details and current caveats.
+
 ## Frameworks
 
 | Framework | Backend | Model Format |
@@ -104,4 +110,7 @@ Invoke it with `/weekly-bench` from Claude Code in this repo. Or for the happy-p
 
 ## Requirements
 
-macOS 15+ on Apple Silicon. Developer setup, script layout, known framework quirks, and extension guides live in [CLAUDE.md](CLAUDE.md).
+**Apple Silicon track**: macOS 15+ on Apple Silicon.
+**DGX Spark track**: DGX OS (Ubuntu-based Linux), CUDA 13.x toolkit, GB10 GPU (compute capability sm_121).
+
+Developer setup, script layout, known framework quirks, and extension guides live in [CLAUDE.md](CLAUDE.md).
