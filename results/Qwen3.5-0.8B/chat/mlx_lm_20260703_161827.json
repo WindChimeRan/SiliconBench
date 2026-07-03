@@ -1,0 +1,93 @@
+{
+  "framework": "mlx_lm",
+  "model": "/Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx",
+  "endpoint": "http://localhost:8002",
+  "timestamp": "2026-07-03T16:18:27",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 5749,
+      "total_output_tokens": 5749,
+      "total_input_tokens": null,
+      "server_usage_available": false,
+      "ttft_avg_ms": 308.94289749000563,
+      "ttft_p50_ms": 224.02504099954967,
+      "ttft_p99_ms": 765.2085419995274,
+      "throughput_avg_tps": 104.99845748975295,
+      "throughput_p50_tps": 107.41559199392755,
+      "itl_avg_ms": 9.129245833185648,
+      "itl_p50_ms": 8.829249999995758,
+      "latency_avg_s": 0.843522015419967,
+      "latency_p50_s": 0.6769675000005009,
+      "latency_p99_s": 2.445950332999928,
+      "output_throughput_tps": 68.14772653778898,
+      "input_throughput_tps": null,
+      "total_token_throughput_tps": null,
+      "wall_time_s": 84.36084800000026,
+      "error_samples": [],
+      "sanity_warnings": [
+        "server did not report token usage for 100/100 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 5749,
+      "total_output_tokens": 5749,
+      "total_input_tokens": null,
+      "server_usage_available": false,
+      "ttft_avg_ms": 5821.35067084997,
+      "ttft_p50_ms": 5868.522499999926,
+      "ttft_p99_ms": 9843.23058300015,
+      "throughput_avg_tps": 105.03062814712008,
+      "throughput_p50_tps": 107.30537839970998,
+      "itl_avg_ms": 9.121297523755743,
+      "itl_p50_ms": 8.843159560977412,
+      "latency_avg_s": 6.355894096260036,
+      "latency_p50_s": 6.2720417499995165,
+      "latency_p99_s": 10.662662875000024,
+      "output_throughput_tps": 68.56789854150635,
+      "input_throughput_tps": null,
+      "total_token_throughput_tps": null,
+      "wall_time_s": 83.84389958400061,
+      "error_samples": [],
+      "sanity_warnings": [
+        "server did not report token usage for 100/100 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 5749,
+      "total_output_tokens": 5749,
+      "total_input_tokens": null,
+      "server_usage_available": false,
+      "ttft_avg_ms": 11405.558791179956,
+      "ttft_p50_ms": 11848.707708999427,
+      "ttft_p99_ms": 17422.7410830008,
+      "throughput_avg_tps": 104.96058575731413,
+      "throughput_p50_tps": 107.65309184715021,
+      "itl_avg_ms": 9.136199271718585,
+      "itl_p50_ms": 8.838526426832065,
+      "latency_avg_s": 11.940301219120029,
+      "latency_p50_s": 12.214406750000308,
+      "latency_p99_s": 17.814337125000748,
+      "output_throughput_tps": 68.7127236704899,
+      "input_throughput_tps": null,
+      "total_token_throughput_tps": null,
+      "wall_time_s": 83.66718262499944,
+      "error_samples": [],
+      "sanity_warnings": [
+        "server did not report token usage for 100/100 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
+      ]
+    }
+  ],
+  "total_duration_s": 259.5671748749992
+}

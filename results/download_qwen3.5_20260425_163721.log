@@ -1,0 +1,19 @@
+=== Downloading Qwen3.5-0.8B models ===
+Downloading GGUF model from unsloth/Qwen3.5-0.8B-GGUF...
+A new version of huggingface_hub (1.12.0) is available! You are using version 1.9.0.
+
+/Users/haorzhang/applebench/.models/Qwen3.5-0.8B-BF16.gguf
+GGUF model downloaded: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-BF16.gguf
+Downloading MLX model from mlx-community/Qwen3.5-0.8B-bf16...
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:   8%|▊         | 1/12 [00:00<00:03,  3.10it/s]Fetching 12 files:  42%|████▏     | 5/12 [01:44<02:35, 22.28s/it]Fetching 12 files: 100%|██████████| 12/12 [01:44<00:00,  8.74s/it]
+/Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+MLX model downloaded: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B-bf16-mlx
+Downloading HF model from Qwen/Qwen3.5-0.8B...
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Still waiting to acquire lock on /Users/haorzhang/applebench/.models/Qwen3.5-0.8B/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /Users/haorzhang/applebench/.models/Qwen3.5-0.8B/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /Users/haorzhang/applebench/.models/Qwen3.5-0.8B/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+No local file found. Retrying..
+Fetching 13 files:   8%|▊         | 1/13 [00:00<00:03,  3.19it/s]Fetching 13 files:  15%|█▌        | 2/13 [00:00<00:02,  4.79it/s]Fetching 13 files:  46%|████▌     | 6/13 [00:01<00:01,  4.98it/s]Fetching 13 files:  54%|█████▍    | 7/13 [08:21<10:49, 108.19s/it]Fetching 13 files: 100%|██████████| 13/13 [08:21<00:00, 38.60s/it]
+/Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+HF model downloaded: /Users/haorzhang/applebench/.models/Qwen3.5-0.8B
+=== All models downloaded ===

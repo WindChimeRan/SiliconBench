@@ -1,0 +1,79 @@
+{
+  "framework": "mistralrs",
+  "model": "default",
+  "endpoint": "http://localhost:8003",
+  "timestamp": "2026-07-03T14:40:59",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 15304,
+      "total_output_tokens": 15436,
+      "total_input_tokens": 99277,
+      "server_usage_available": true,
+      "ttft_avg_ms": 353.6238662599999,
+      "ttft_p50_ms": 160.45450000001438,
+      "ttft_p99_ms": 1341.9039580001026,
+      "throughput_avg_tps": 102.73316603447144,
+      "throughput_p50_tps": 104.1380556705738,
+      "itl_avg_ms": 9.751271721928891,
+      "itl_p50_ms": 9.61483737096607,
+      "latency_avg_s": 1.8376233337300072,
+      "latency_p50_s": 1.9638744999999744,
+      "latency_p99_s": 4.106039250000094,
+      "output_throughput_tps": 83.99561907046812,
+      "input_throughput_tps": 540.2198156555366,
+      "total_token_throughput_tps": 624.2154347260048,
+      "wall_time_s": 183.77148916600004,
+      "error_samples": []
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 66,
+      "failed": 34,
+      "total_tokens_generated": 8246,
+      "total_output_tokens": 8316,
+      "total_input_tokens": 62352,
+      "server_usage_available": true,
+      "ttft_avg_ms": 6142.109953272731,
+      "ttft_p50_ms": 4134.323209000286,
+      "ttft_p99_ms": 20232.418667000275,
+      "throughput_avg_tps": 2.2222438434207863,
+      "throughput_p50_tps": 1.7197077327256525,
+      "itl_avg_ms": 1073.4964050106837,
+      "itl_p50_ms": 595.5666661636369,
+      "latency_avg_s": 96.75425706503034,
+      "latency_p50_s": 71.5126848750001,
+      "latency_p99_s": 292.73759500000006,
+      "output_throughput_tps": 3.8458384041685627,
+      "input_throughput_tps": 28.835463705714073,
+      "total_token_throughput_tps": 32.68130210988264,
+      "wall_time_s": 2162.3373439160005,
+      "error_samples": [
+        ""
+      ],
+      "sanity_warnings": [
+        "2/66 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.58x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 603.8604923329995,
+      "error": "no successful requests",
+      "error_samples": [
+        "",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p050_long_out64' (requested max_tokens=64, finish_reason=None)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p078_vlong_out64' (requested max_tokens=64, finish_reason=None)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p081_vlong_out64' (requested max_tokens=64, finish_reason=None)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p093_vlong_out256' (requested max_tokens=256, finish_reason=None)"
+      ]
+    }
+  ],
+  "total_duration_s": 2974.673252667
+}
