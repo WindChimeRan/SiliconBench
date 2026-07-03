@@ -1,33 +1,37 @@
 #!/bin/bash
-# SiliconBench — Update all frameworks to latest versions
+# SiliconBench — platform dispatcher. Picks apple or dgxspark and execs the
+# matching full script; all real logic lives in update_all_<platform>.sh.
+# Usage: bash scripts/update_all.sh [--platform apple|dgxspark]
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-echo "========================================="
-echo " SiliconBench — Updating all frameworks"
-echo " $(date)"
-echo "========================================="
-echo ""
-
-for script in \
-    update_llamacpp.sh \
-    update_mlx_lm.sh \
-    update_mistralrs.sh \
-    update_vllm_metal.sh \
-    update_omlx.sh \
-    update_ollama.sh \
-    update_vllm_mlx.sh \
-    update_hf_transformers.sh \
-    update_sglang.sh; do
-    echo "==========================================="
-    echo " Running $script"
-    echo "==========================================="
-    bash "$SCRIPT_DIR/$script" || {
-        echo "WARNING: $script failed, continuing..."
-    }
-    echo ""
+PLATFORM="${APPLEBENCH_PLATFORM:-}"
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --platform)
+            PLATFORM="$2"
+            shift 2
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
 done
 
-echo "========================================="
-echo " All updates complete!"
-echo "========================================="
+if [ -z "$PLATFORM" ]; then
+    if [ "$(uname -s)" = "Linux" ]; then
+        PLATFORM="dgxspark"
+    else
+        PLATFORM="apple"
+    fi
+fi
+
+TARGET="$SCRIPT_DIR/update_all_${PLATFORM}.sh"
+if [ ! -f "$TARGET" ]; then
+    echo "Error: unknown platform '$PLATFORM' (no $TARGET)"
+    exit 1
+fi
+
+exec bash "$TARGET" "${ARGS[@]}"
