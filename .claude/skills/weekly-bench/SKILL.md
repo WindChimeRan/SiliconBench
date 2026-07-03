@@ -7,7 +7,7 @@ description: Run the weekly SiliconBench pipeline unattended — update framewor
 
 You are orchestrating SiliconBench's weekly benchmark run. Your job is to execute the full pipeline (`update_all.sh` → `run_all.sh` for each split → `sync_github.sh`) unattended, recover from per-framework failures with targeted fixes when you can, and produce a structured journal so the user can review what happened on Monday morning.
 
-This skill is for this repo only. It assumes `caffeinate`, bash, and all the scripts in `scripts/` exist.
+This skill is for this repo only. It assumes `caffeinate`, bash, and all the scripts in `scripts/` exist. It targets the **Apple Silicon** track: `run_all.sh` / `update_all.sh` / `env_check.sh` are thin platform dispatchers that `exec` into the `*_apple.sh` variants on macOS, where all the real logic lives — so `run_all.sh` invocations below still work unchanged, but the running process shows up as `run_all_apple.sh`.
 
 ## Splits
 
@@ -73,7 +73,7 @@ While monitoring, watch for these patterns:
 
 Use `ScheduleWakeup` to check the log every 30 minutes. On each check, tail the log and compare to the previous check:
 - If a new framework has started or completed → progress is normal, continue waiting.
-- If the log is unchanged past the threshold for the active split → it is hung. Kill the `benchmark.py` process for that framework (`kill <PID>`), which will unblock `run_all.sh` to continue. Do **not** kill the orchestrator (`run_all.sh` / `weekly_bench.sh`).
+- If the log is unchanged past the threshold for the active split → it is hung. Kill the `benchmark.py` process for that framework (`kill <PID>`), which will unblock the orchestrator to continue. Do **not** kill the orchestrator itself (`weekly_bench.sh`, or `run_all_apple.sh` — the `run_all.sh` dispatcher `exec`s into it, so in `ps` it appears as `run_all_apple.sh`, not `run_all.sh`).
 - If the whole run has been silent for >20 minutes with no output, tail the log file (`results/<MODEL>/weekly_<DATE>.log`) via Read to check state. If truly hung (no process activity), fall back to Phase 3 (post-mortem).
 
 ### Phase 2 — Identify failures
@@ -163,7 +163,7 @@ Apply only when **all** of these are true:
 **Do not edit**:
 - `scripts/benchmark.py`, `scripts/collect_results.py`, `scripts/generate_report.py` (framework-agnostic, load-bearing)
 - `scripts/config.sh` (shared config, high blast radius)
-- `scripts/run_all.sh`, `scripts/weekly_bench.sh` (orchestration)
+- `scripts/run_all.sh` / `scripts/run_all_apple.sh` (the dispatcher and its Apple variant), `scripts/weekly_bench.sh` (orchestration)
 - Anything inside `.frameworks/` (upstream source trees)
 - `prompts/` (dataset — unrelated to framework fixes)
 
