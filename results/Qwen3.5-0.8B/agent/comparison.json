@@ -43,7 +43,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 28.4
         },
         {
           "concurrency": 8,
@@ -71,7 +72,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "31/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 31.83
         },
         {
           "concurrency": 16,
@@ -99,7 +101,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "26/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 34.59
         }
       ],
       "total_duration_s": 236.78120012499858
@@ -136,7 +139,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "80/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 21.4
         },
         {
           "concurrency": 8,
@@ -164,7 +168,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "79/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 26.74
         },
         {
           "concurrency": 16,
@@ -192,7 +197,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "79/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.16x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 25.8
         }
       ],
       "total_duration_s": 213.23636066599283
@@ -315,7 +321,8 @@
           ],
           "sanity_warnings": [
             "server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
-          ]
+          ],
+          "mem_used_gb": 21.35
         },
         {
           "concurrency": 8,
@@ -345,7 +352,8 @@
           ],
           "sanity_warnings": [
             "server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
-          ]
+          ],
+          "mem_used_gb": 21.56
         },
         {
           "concurrency": 16,
@@ -375,7 +383,8 @@
           ],
           "sanity_warnings": [
             "server did not report token usage for 99/99 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
-          ]
+          ],
+          "mem_used_gb": 21.36
         }
       ],
       "total_duration_s": 537.9897398329922
@@ -412,7 +421,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "27/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 46.48
         },
         {
           "concurrency": 8,
@@ -440,7 +450,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "27/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 45.99
         },
         {
           "concurrency": 16,
@@ -468,7 +479,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 46.83
         }
       ],
       "total_duration_s": 869.0173357090098
@@ -505,7 +517,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 23.56
         },
         {
           "concurrency": 8,
@@ -533,7 +546,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 24.19
         },
         {
           "concurrency": 16,
@@ -561,7 +575,8 @@
           "error_samples": [],
           "sanity_warnings": [
             "28/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ]
+          ],
+          "mem_used_gb": 24.62
         }
       ],
       "total_duration_s": 302.5611386250239
