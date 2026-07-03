@@ -1,38 +1,37 @@
 #!/bin/bash
-# SiliconBench — Install all frameworks, models, and benchmark dependencies
+# SiliconBench — platform dispatcher. Picks apple or dgxspark and execs the
+# matching full script; all real logic lives in install_all_<platform>.sh.
+# Usage: bash scripts/install_all.sh [--platform apple|dgxspark]
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-echo "========================================="
-echo " SiliconBench — Installing everything"
-echo " $(date)"
-echo "========================================="
-echo ""
-
-for script in \
-    install_bench.sh \
-    install_llamacpp.sh \
-    install_mlx_lm.sh \
-    install_mistralrs.sh \
-    install_vllm_metal.sh \
-    install_omlx.sh \
-    install_ollama.sh \
-    install_vllm_mlx.sh \
-    install_hf_transformers.sh \
-    install_sglang.sh; do
-    echo "==========================================="
-    echo " Running $script"
-    echo "==========================================="
-    bash "$SCRIPT_DIR/$script"
-    echo ""
+PLATFORM="${APPLEBENCH_PLATFORM:-}"
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --platform)
+            PLATFORM="$2"
+            shift 2
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
 done
 
-echo "==========================================="
-echo " Downloading models"
-echo "==========================================="
-bash "$SCRIPT_DIR/download_model.sh"
-echo ""
+if [ -z "$PLATFORM" ]; then
+    if [ "$(uname -s)" = "Linux" ]; then
+        PLATFORM="dgxspark"
+    else
+        PLATFORM="apple"
+    fi
+fi
 
-echo "========================================="
-echo " All installations complete!"
-echo "========================================="
+TARGET="$SCRIPT_DIR/install_all_${PLATFORM}.sh"
+if [ ! -f "$TARGET" ]; then
+    echo "Error: unknown platform '$PLATFORM' (no $TARGET)"
+    exit 1
+fi
+
+exec bash "$TARGET" "${ARGS[@]}"

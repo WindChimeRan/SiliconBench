@@ -58,6 +58,10 @@ def _peak_memory_per_level(result_path, concurrency_results):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--results-dir", default=None, help="Results directory")
+    parser.add_argument("--model-name", default=None,
+                         help="Explicit model name, overriding directory-name inference "
+                              "(needed when results-dir has an extra platform-name segment, "
+                              "e.g. results/<MODEL>/dgxspark/<split>)")
     args = parser.parse_args()
 
     if args.results_dir:
@@ -108,12 +112,15 @@ def main():
 
     # If results_dir is a split subdir (results/<MODEL>/<split>), the model
     # name lives one level up. Otherwise the dir name is the model name.
-    if results_dir.name in ("chat", "agent"):
+    # --model-name overrides this inference entirely (needed when an extra
+    # platform-name segment sits between model and split).
+    split = results_dir.name if results_dir.name in ("chat", "agent") else None
+    if args.model_name:
+        model_name = args.model_name
+    elif results_dir.name in ("chat", "agent"):
         model_name = results_dir.parent.name
-        split = results_dir.name
     else:
         model_name = results_dir.name
-        split = None
 
     comparison = {
         "model_name": model_name,

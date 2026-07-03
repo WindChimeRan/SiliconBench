@@ -11,14 +11,20 @@
 # skill when retrying a single failed (framework, split) cell).
 #
 # Usage: bash scripts/weekly_bench.sh [--skip-update] [--model MODEL]
+#                                     [--platform apple|dgxspark]
 #                                     [--split SPLIT] [--skip-existing]
 #                                     [framework ...]
+#
+# --platform is forwarded to update_all.sh/run_all.sh, which are themselves
+# platform dispatchers (default: auto-detect via uname). Omit it on either
+# machine and this script just works.
 #
 # Examples:
 #   bash scripts/weekly_bench.sh                         # full weekly run (chat + agent)
 #   bash scripts/weekly_bench.sh --skip-update           # skip update_all.sh
 #   bash scripts/weekly_bench.sh --skip-existing         # resume today's run
 #   bash scripts/weekly_bench.sh --model qwen3-30b-a3b   # specific model
+#   bash scripts/weekly_bench.sh --platform dgxspark     # force the DGX Spark track
 #   bash scripts/weekly_bench.sh --split chat            # only the chat split
 #   bash scripts/weekly_bench.sh --split agent llamacpp  # retry one (fw, split)
 
@@ -40,6 +46,11 @@ while [[ $# -gt 0 ]]; do
             RUN_ALL_ARGS+=("$1" "$2")
             shift 2
             ;;
+        --platform)
+            export APPLEBENCH_PLATFORM="$2"
+            RUN_ALL_ARGS+=("$1" "$2")
+            shift 2
+            ;;
         --split)
             SPLITS=("$2")
             shift 2
@@ -56,6 +67,23 @@ done
 export APPLEBENCH_METALSTAT="${APPLEBENCH_METALSTAT:-1}"
 
 source "$SCRIPT_DIR/config.sh"
+
+# Determine platform the same way run_all.sh/update_all.sh's dispatchers do,
+# so the weekly log/journal lands in the matching results tree (dgxspark's
+# results already live under a separate results/<MODEL>/dgxspark/ subtree —
+# without this, two machines running the same weekly date would both write
+# results/<MODEL>/weekly_<date>.log and collide on push).
+PLATFORM_FOR_LOG="${APPLEBENCH_PLATFORM:-}"
+if [ -z "$PLATFORM_FOR_LOG" ]; then
+    if [ "$(uname -s)" = "Linux" ]; then
+        PLATFORM_FOR_LOG="dgxspark"
+    else
+        PLATFORM_FOR_LOG="apple"
+    fi
+fi
+if [ "$PLATFORM_FOR_LOG" = "dgxspark" ]; then
+    source "$SCRIPT_DIR/config_dgxspark.sh"
+fi
 
 DATE=$(date +%Y-%m-%d)
 START_TS=$(date +%Y-%m-%dT%H:%M:%S)
