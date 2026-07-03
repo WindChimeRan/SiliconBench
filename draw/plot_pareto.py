@@ -30,7 +30,6 @@ LABEL_SHORT = {
     "vllm_metal": "vllm-metal",
     "vllm_mlx": "vllm-mlx",
     "mlx_lm": "mlx_lm",
-    "inferrs": "inferrs",
     "omlx": "omlx",
     "ollama": "ollama",
     "sglang": "sglang",
@@ -52,6 +51,12 @@ MEMORY_KEY = "mem_used_gb"
 # short-answer detector bug (<=5/100; see benchmark.py) — while dropping
 # genuinely-degraded cells (e.g. mlx_lm agent ~70%, mistralrs c8 ~56%, crashes).
 MIN_SUCCESS_RATE = 0.95
+
+# Frameworks dropped from the active roster have their historical result and
+# metalstat files excluded here so old traces do not resurface in a
+# regenerated figure. inferrs was removed 2026-07-03 after 69 days with no
+# upstream activity and an unanswered maintainer ping.
+RETIRED_FRAMEWORKS = {"inferrs"}
 
 
 def gated_clean(split_dir: Path) -> dict[str, dict[int, bool]]:
@@ -173,7 +178,7 @@ def main() -> None:
     # non-representative subset, so only plot cells >= MIN_SUCCESS_RATE.
     clean = gated_clean(split_dir)
 
-    all_fw = sorted(set(tput) | set(mem))
+    all_fw = sorted((set(tput) | set(mem)) - RETIRED_FRAMEWORKS)
     colors = {fw: CVD_COLORS[i % len(CVD_COLORS)] for i, fw in enumerate(all_fw)}
 
     tput_vals = [v for ccs in tput.values() for v in ccs.values() if v > 0]

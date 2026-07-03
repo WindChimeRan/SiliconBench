@@ -7,7 +7,8 @@ source "$SCRIPT_DIR/config.sh"
 REPO_DIR="$FRAMEWORKS_DIR/mistral.rs"
 
 # Ensure cargo is on PATH (rustup installs to ~/.cargo/bin but unattended /
-# nohup'd shells don't source ~/.zshrc). Matches update_inferrs.sh:11.
+# nohup'd shells don't source ~/.zshrc). Same cargo-PATH fix used by other
+# cargo-based frameworks' update scripts.
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
 echo "=== Updating mistral.rs ==="

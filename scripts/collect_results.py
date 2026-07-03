@@ -8,6 +8,13 @@ import json
 import sys
 from pathlib import Path
 
+# Frameworks dropped from the active roster. Their historical result files
+# stay on disk untouched for provenance, but aggregation skips them here so
+# comparison.json and REPORT.md never resurface a framework that has stopped
+# being run. inferrs was removed 2026-07-03 after 69 days with no upstream
+# commits or releases and an unanswered maintainer ping.
+RETIRED_FRAMEWORKS = {"inferrs"}
+
 
 def _peak_memory_per_level(result_path, concurrency_results):
     """Peak ``mem_used_gb`` per concurrency from the result's metalstat sidecar.
@@ -76,6 +83,8 @@ def main():
         if "framework" not in data or "concurrency_results" not in data:
             continue
         fw = data["framework"]
+        if fw in RETIRED_FRAMEWORKS:
+            continue
         mtime = f.stat().st_mtime
         if fw not in frameworks or mtime > latest_mtime[fw]:
             frameworks[fw] = data

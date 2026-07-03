@@ -1,6 +1,6 @@
 # SiliconBench
 
-Benchmarks 10 local LLM inference frameworks on Apple Silicon side-by-side, re-run weekly by a Claude Code agent so the numbers don't rot. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
+Benchmarks 9 local LLM inference frameworks on Apple Silicon side-by-side, re-run weekly by a Claude Code agent so the numbers don't rot. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
 
 Run the whole weekly pipeline — update, benchmark, diagnose failures, fix, publish — with one command: **`/weekly-bench`** in Claude Code.
 
@@ -17,7 +17,6 @@ Latest results (primary model, Qwen3-0.6B): **[chat REPORT](results/Qwen3-0.6B/c
 | [vllm-mlx](https://github.com/waybarrios/vllm-mlx) | Python / MLX (vLLM plugin) | MLX BF16 |
 | [omlx](https://github.com/jundot/omlx) | MLX / Metal | MLX BF16 |
 | [ollama](https://github.com/ollama/ollama) | Go + Metal | GGUF |
-| [inferrs](https://github.com/ericcurtin/inferrs) | Rust + Candle / Metal | Safetensors |
 | [transformers](https://github.com/huggingface/transformers) | PyTorch / MPS | Safetensors |
 | [sglang](https://github.com/sgl-project/sglang) | Python / SGLang (MLX) | Safetensors |
 
@@ -64,7 +63,7 @@ Because agent prompts reach ~8.8K tokens, `run_all.sh` bumps the context window 
 |--------|--------|---------|
 | GGUF BF16 | [unsloth/Qwen3-0.6B-GGUF](https://huggingface.co/unsloth/Qwen3-0.6B-GGUF) | llama.cpp, mistral.rs, ollama |
 | MLX BF16 | [mlx-community/Qwen3-0.6B-bf16](https://huggingface.co/mlx-community/Qwen3-0.6B-bf16) | mlx_lm, omlx, vllm-mlx |
-| Safetensors BF16 | [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) | vllm-metal, inferrs |
+| Safetensors BF16 | [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) | vllm-metal |
 
 **Also benchmarked** — run periodically alongside the primary, same three formats each (GGUF / MLX / Safetensors via their `models/*.sh` profiles):
 
@@ -92,7 +91,7 @@ Tested at concurrency 1, 8, 16. Each level runs 100 requests with 3 warmup. A 60
 SiliconBench is re-run weekly by a Claude Code agent. The agent:
 
 1. **Updates** each framework from upstream (`update_all.sh`)
-2. **Runs** the full benchmark across all 10 frameworks (`run_all.sh`, resumable via `--skip-existing`)
+2. **Runs** the full benchmark across all 9 frameworks (`run_all.sh`, resumable via `--skip-existing`)
 3. **Diagnoses** per-framework failures by reading the error, the framework's upstream changelog, and prior journals
 4. **Fixes** adapter scripts when it can (a renamed CLI flag, a new required parameter) within a tightly scoped write allowlist — never touching `benchmark.py`, `config.sh`, or framework source
 5. **Verifies** each fix in isolation by starting the server and running a few requests before committing

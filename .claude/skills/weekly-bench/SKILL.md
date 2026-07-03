@@ -1,6 +1,6 @@
 ---
 name: weekly-bench
-description: Run the weekly SiliconBench pipeline unattended — update frameworks, benchmark all 10, diagnose and fix per-framework failures, commit fixes as separate commits, sync results. Use this when the user says "run the weekly benchmark" or similar.
+description: Run the weekly SiliconBench pipeline unattended — update frameworks, benchmark all 9, diagnose and fix per-framework failures, commit fixes as separate commits, sync results. Use this when the user says "run the weekly benchmark" or similar.
 ---
 
 # Weekly Bench Orchestrator
@@ -54,7 +54,7 @@ Run `scripts/weekly_bench.sh` as a background process:
 bash scripts/weekly_bench.sh 2>&1
 ```
 
-Use `run_in_background: true`. Capture the bash job ID. Then use the `Monitor` tool to stream output. The wrapper runs **two full passes** of `run_all.sh` — one per split (chat, then agent) — so expect ~20 framework cycles total (10 frameworks × 2 splits) before `Weekly run finished`.
+Use `run_in_background: true`. Capture the bash job ID. Then use the `Monitor` tool to stream output. The wrapper runs **two full passes** of `run_all.sh` — one per split (chat, then agent) — so expect ~18 framework cycles total (9 frameworks × 2 splits) before `Weekly run finished`.
 
 While monitoring, watch for these patterns:
 - `"run_all.sh --split chat"` / `"run_all.sh --split agent"` — split boundary
@@ -84,7 +84,7 @@ When Phase 1 finishes, inventory what succeeded and what didn't, **per (framewor
 # A (framework, split) cell succeeded if a result file from the last 24h exists
 # in results/<MODEL>/<split>/
 for split in chat agent; do
-    for fw in llamacpp mlx_lm mistralrs vllm_metal vllm_mlx omlx ollama inferrs hf_transformers; do
+    for fw in llamacpp mlx_lm mistralrs vllm_metal vllm_mlx omlx ollama hf_transformers sglang; do
         recent=$(find "results/<MODEL>/$split" -maxdepth 1 -name "${fw}_*.json" -mtime -1 2>/dev/null | head -1)
         if [ -n "$recent" ]; then
             echo "ok      $split $fw $(basename $recent)"
@@ -95,7 +95,7 @@ for split in chat agent; do
 done
 ```
 
-For each of the 10 frameworks × 2 splits = 20 cells, classify:
+For each of the 9 frameworks × 2 splits = 18 cells, classify:
 - **ok** — has a result file from the last 24h in the split's subdirectory
 - **failed** — no recent result file in that split's subdirectory
 
@@ -124,8 +124,8 @@ git log --oneline scripts/*<fw>*.sh
 #    looks identical to a plain crash in our logs, but the fix is different:
 #    it's OOM, not a bug. Correlate any hits below by timestamp with when
 #    this framework ran. Process names to grep for: python (mlx_lm, omlx,
-#    vllm_metal, vllm_mlx, hf_transformers), llama-server (llamacpp),
-#    ollama, mistralrs, inferrs.
+#    vllm_metal, vllm_mlx, hf_transformers, sglang), llama-server (llamacpp),
+#    ollama, mistralrs.
 log show --last 24h --predicate 'eventMessage CONTAINS "jetsam"' 2>/dev/null | head -50
 
 # 7. Metalstat sidecar artifacts for this (framework, split) cell, if the run had
@@ -290,7 +290,7 @@ Cell status values: `ok` (benchmarked), `fixed` (auto-fix applied and verified),
 | vllm_mlx | ok | — |
 | omlx | ok | — |
 | ollama | ok | — |
-| inferrs | ok | — |
+| sglang | ok | — |
 | hf_transformers | ok | — |
 
 ## Frameworks — agent split
@@ -303,7 +303,7 @@ Cell status values: `ok` (benchmarked), `fixed` (auto-fix applied and verified),
 | vllm_mlx | ok | — |
 | omlx | ok | — |
 | ollama | ok | — |
-| inferrs | skipped | needs --paged-attention for 4K prompts |
+| sglang | ok | — |
 | hf_transformers | ok | — |
 
 ## Fixes Applied
@@ -368,6 +368,6 @@ Stop the whole workflow and surface a clear message to the user if:
 - The bench venv is broken and `install_bench.sh` fails
 - `caffeinate` is not available (running on non-macOS)
 - `weekly_bench.sh` fails to start at all (script permissions, missing file, etc.)
-- All 10 frameworks fail in Phase 1 (something systemic is wrong — maybe the model download, maybe a shared dep)
+- All 9 frameworks fail in Phase 1 (something systemic is wrong — maybe the model download, maybe a shared dep)
 
 In these cases, the right answer is to stop and tell the user what's wrong, not to keep trying.

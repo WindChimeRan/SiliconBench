@@ -70,7 +70,7 @@ def main():
     # Order frameworks in the canonical SiliconBench order
     canonical_order = [
         "llamacpp", "mlx_lm", "mistralrs", "vllm_metal", "omlx",
-        "ollama", "inferrs", "vllm_mlx", "hf_transformers",
+        "ollama", "vllm_mlx", "hf_transformers",
     ]
     known = [f for f in canonical_order if f in comparison["frameworks"]]
     extras = sorted(set(comparison["frameworks"]) - set(canonical_order))

@@ -17,7 +17,6 @@ for script in \
     install_vllm_metal.sh \
     install_omlx.sh \
     install_ollama.sh \
-    install_inferrs.sh \
     install_vllm_mlx.sh \
     install_hf_transformers.sh \
     install_sglang.sh; do

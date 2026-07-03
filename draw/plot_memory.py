@@ -32,6 +32,12 @@ METRIC = "mem_used_gb"
 # unique through the first 36 frameworks.
 CVD_LINESTYLES = ["-", "--", "-.", ":"]
 
+# Frameworks dropped from the active roster; historical result/metalstat
+# files stay on disk but are excluded here so old inferrs traces don't
+# resurface in a regenerated figure. Removed 2026-07-03 (69 days with no
+# upstream activity, unanswered maintainer ping).
+RETIRED_FRAMEWORKS = {"inferrs"}
+
 
 def load_fallback_series(model: str, split: str) -> dict[str, dict[int, list[tuple[float, float]]]]:
     """Per-framework (phase_pct, mem_GB) lists for cells without a metalstat sidecar.
@@ -71,7 +77,7 @@ def main() -> None:
         "ytick.labelsize": 7,
     })
     fig, axes = plt.subplots(1, 3, figsize=(6.8, 2.0), sharey=True)
-    frameworks = sorted(set(traces) | set(fallback))
+    frameworks = sorted((set(traces) | set(fallback)) - RETIRED_FRAMEWORKS)
     colors = {fw: CVD_COLORS[i % len(CVD_COLORS)] for i, fw in enumerate(frameworks)}
     styles = {fw: CVD_LINESTYLES[i % len(CVD_LINESTYLES)] for i, fw in enumerate(frameworks)}
 

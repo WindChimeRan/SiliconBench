@@ -16,6 +16,6 @@ HF_DIR_NAME="Qwen3.5-0.8B"
 # mlx_lm framework slot through mlx_vlm.server instead — same pattern as
 # gemma-4-e4b-it.
 export MLX_BACKEND="mlx_vlm"
-# Ollama and the slow engines (mistralrs, inferrs, vllm_mlx, hf_transformers)
+# Ollama and the slow engines (mistralrs, vllm_mlx, hf_transformers)
 # are out of scope for this profile — the user asked for the four fast Mac
 # engines only. No OLLAMA_MODEL_NAME set.
