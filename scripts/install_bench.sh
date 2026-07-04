@@ -16,7 +16,17 @@ fi
 
 source "$VENV_DIR/bin/activate"
 # adjustText is used by draw/plot_pareto.py to repel overlapping framework
-# labels in the cluster region; matplotlib comes in transitively via metalstat.
-uv pip install aiohttp metalstat adjustText
+# labels in the cluster region; installed alongside matplotlib explicitly
+# (not relying on a transitive pull) so this works the same regardless of
+# whether metalstat is installed below.
+uv pip install aiohttp adjustText matplotlib
+
+# metalstat (Apple's Metal memory-sidecar tool, used only by
+# run_all_apple.sh) depends on pyobjc-framework-metal, which requires macOS
+# (`sw_vers`) to build — skip it on Linux, where there's no Metal to profile
+# and run_all_dgxspark.sh never references APPLEBENCH_METALSTAT anyway.
+if [ "$(uname -s)" = "Darwin" ]; then
+    uv pip install metalstat
+fi
 
 echo "=== Benchmark environment installed ==="

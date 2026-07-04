@@ -127,9 +127,19 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo " Benchmarking: $name (port $port)"
     echo "==========================================="
 
-    # Start server
+    # Start server. Guarded: under `set -e`, an unguarded non-zero exit here
+    # (server never becomes ready — bad build, unsupported model arch, port
+    # conflict, etc.) would otherwise kill this whole script and silently
+    # skip every remaining framework, not just this one.
     echo "Starting $name server..."
-    bash "$SCRIPT_DIR/$serve"
+    if ! bash "$SCRIPT_DIR/$serve"; then
+        echo "ERROR: $name server failed to start — skipping this framework"
+        cleanup
+        echo "Cooling down for ${COOLDOWN_SECONDS}s..."
+        sleep "$COOLDOWN_SECONDS"
+        echo ""
+        continue
+    fi
     echo ""
 
     # Run benchmark
