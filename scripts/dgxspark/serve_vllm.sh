@@ -5,10 +5,14 @@ SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 source "$SCRIPT_DIR/config.sh"
 source "$SCRIPT_DIR/config_dgxspark.sh"
 
-VENV_DIR="$VENVS_DIR/vllm_dgxspark"
+# Default to the project-managed venv, but allow pointing at an existing
+# working vllm install (e.g. a local dev checkout's venv) via
+# VLLM_DGXSPARK_VENV — handy on a box that already has vllm built, to skip a
+# 20-minute from-source rebuild.
+VENV_DIR="${VLLM_DGXSPARK_VENV:-$VENVS_DIR/vllm_dgxspark}"
 
 if [ ! -d "$VENV_DIR" ]; then
-    echo "Error: vllm venv not found. Run scripts/dgxspark/install_vllm.sh first."
+    echo "Error: vllm venv not found at $VENV_DIR. Run scripts/dgxspark/install_vllm.sh first (or set VLLM_DGXSPARK_VENV)."
     exit 1
 fi
 

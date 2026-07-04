@@ -28,26 +28,24 @@ if [[ ",$FORMATS," == *",gguf,"* ]]; then
     fi
 fi
 
-# MLX format for mlx_lm
+# MLX format for mlx_lm. No directory-existence pre-check here (unlike the
+# single-file GGUF case above) — a multi-file download directory can exist
+# yet be incomplete if a prior run was interrupted mid-download (e.g. a
+# flaky network timeout after only the small metadata files landed), and a
+# bare `[ -d ... ]` check would then permanently skip retrying the missing
+# large files. `hf download` already does its own per-file existence/hash
+# check and only fetches what's actually missing, so just always call it.
 if [[ ",$FORMATS," == *",mlx,"* ]]; then
-    if [ ! -d "$MLX_MODEL" ]; then
-        echo "Downloading MLX model from $MLX_REPO..."
-        hf download "$MLX_REPO" --local-dir "$MLX_MODEL"
-        echo "MLX model downloaded: $MLX_MODEL"
-    else
-        echo "MLX model already exists: $MLX_MODEL"
-    fi
+    echo "Downloading MLX model from $MLX_REPO..."
+    hf download "$MLX_REPO" --local-dir "$MLX_MODEL"
+    echo "MLX model ready: $MLX_MODEL"
 fi
 
-# Safetensors for vllm-metal / vllm / sglang
+# Safetensors for vllm-metal / vllm / sglang — same reasoning as MLX above.
 if [[ ",$FORMATS," == *",hf,"* ]]; then
-    if [ ! -d "$HF_MODEL" ]; then
-        echo "Downloading HF model from $HF_REPO..."
-        hf download "$HF_REPO" --local-dir "$HF_MODEL"
-        echo "HF model downloaded: $HF_MODEL"
-    else
-        echo "HF model already exists: $HF_MODEL"
-    fi
+    echo "Downloading HF model from $HF_REPO..."
+    hf download "$HF_REPO" --local-dir "$HF_MODEL"
+    echo "HF model ready: $HF_MODEL"
 fi
 
 echo "=== All models downloaded ==="
