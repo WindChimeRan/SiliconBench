@@ -4,8 +4,10 @@
 # sglang's default upstream build target — no swap needed.
 #
 # DGX Spark (GB10, sm_121a) support is tracked as an open, actively-changing
-# effort upstream: https://github.com/sgl-project/sglang/issues/11658
-# Treat this as a best-effort scaffold — expect adjustment on real hardware.
+# effort upstream: https://github.com/sgl-project/sglang/issues/11658 — this
+# script has been verified end-to-end on real GB10 hardware (installed,
+# served, benchmarked with no fixes needed), but re-check that issue before
+# assuming a future run will go as smoothly.
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 source "$SCRIPT_DIR/config.sh"
