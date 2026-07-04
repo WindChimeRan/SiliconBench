@@ -1,0 +1,93 @@
+{
+  "framework": "sglang",
+  "model": "/home/ran/workspace/applebench/.models/Qwen3.5-0.8B",
+  "endpoint": "http://localhost:8010",
+  "timestamp": "2026-07-03T23:52:41",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 8477,
+      "total_output_tokens": 8536,
+      "total_input_tokens": 99407,
+      "server_usage_available": true,
+      "ttft_avg_ms": 107.10139173083007,
+      "ttft_p50_ms": 91.02444001473486,
+      "ttft_p99_ms": 422.4999351426959,
+      "throughput_avg_tps": 99.08688497399258,
+      "throughput_p50_tps": 105.5023597016376,
+      "itl_avg_ms": 9.311246150101702,
+      "itl_p50_ms": 9.337471125440466,
+      "latency_avg_s": 0.8985794062307104,
+      "latency_p50_s": 0.6926698628813028,
+      "latency_p99_s": 2.697590972064063,
+      "output_throughput_tps": 94.97547580835487,
+      "input_throughput_tps": 1106.0481635052872,
+      "total_token_throughput_tps": 1201.0236393136422,
+      "wall_time_s": 89.87583297002129,
+      "error_samples": [],
+      "sanity_warnings": [
+        "19/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.34x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 8541,
+      "total_output_tokens": 8598,
+      "total_input_tokens": 99407,
+      "server_usage_available": true,
+      "ttft_avg_ms": 74.76670773234218,
+      "ttft_p50_ms": 52.848106948658824,
+      "ttft_p99_ms": 260.90389979071915,
+      "throughput_avg_tps": 76.83461866099493,
+      "throughput_p50_tps": 77.84566957218439,
+      "itl_avg_ms": 12.33620697960445,
+      "itl_p50_ms": 12.100229505449533,
+      "latency_avg_s": 1.121396909134928,
+      "latency_p50_s": 0.8714378841686994,
+      "latency_p99_s": 3.6130381179973483,
+      "output_throughput_tps": 580.2229786644715,
+      "input_throughput_tps": 6708.330500127835,
+      "total_token_throughput_tps": 7288.553478792306,
+      "wall_time_s": 14.818441041046754,
+      "error_samples": [],
+      "sanity_warnings": [
+        "18/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.31x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 8350,
+      "total_output_tokens": 8409,
+      "total_input_tokens": 99407,
+      "server_usage_available": true,
+      "ttft_avg_ms": 73.22321204934269,
+      "ttft_p50_ms": 49.94101310148835,
+      "ttft_p99_ms": 226.6007219441235,
+      "throughput_avg_tps": 65.8688160769746,
+      "throughput_p50_tps": 66.52706181582231,
+      "itl_avg_ms": 14.396233885651887,
+      "itl_p50_ms": 14.720826746068068,
+      "latency_avg_s": 1.2406964470469393,
+      "latency_p50_s": 1.004848537966609,
+      "latency_p99_s": 3.9867913930211216,
+      "output_throughput_tps": 935.2718970674212,
+      "input_throughput_tps": 11056.317454130234,
+      "total_token_throughput_tps": 11991.589351197656,
+      "wall_time_s": 8.99096832307987,
+      "error_samples": [],
+      "sanity_warnings": [
+        "18/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.31x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    }
+  ],
+  "total_duration_s": 129.50007416284643
+}
