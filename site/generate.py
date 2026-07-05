@@ -125,41 +125,48 @@ def classify(lv):
     return "clean"
 
 
+TIER = {"clean": 3, "partial": 2, "skip": 1, "crash": 0, "missing": 0}
+
+
 def tput_cell(lv):
     cls = classify(lv)
+    t = TIER[cls]
     if cls == "missing":
-        return '<td class="num muted">–</td>'
+        return f'<td class="num muted" data-t="{t}" data-v="0">–</td>'
     if cls == "crash":
-        return '<td class="num crash" title="fewer than 5/100 requests succeeded">✕</td>'
+        return (f'<td class="num crash" data-t="{t}" data-v="0" '
+                f'title="fewer than 5/100 requests succeeded">✕</td>')
     if cls == "skip":
-        return '<td class="num muted" title="budget-skipped: previous level too slow">skip</td>'
+        return (f'<td class="num muted" data-t="{t}" data-v="0" '
+                f'title="budget-skipped: previous level too slow">skip</td>')
     v = lv.get("output_throughput_tps")
+    num = v if isinstance(v, (int, float)) else 0
     txt = f"{v:.1f}" if isinstance(v, (int, float)) else "–"
     if cls == "partial":
         ok = lv.get("successful", 0)
-        return (f'<td class="num partial" title="partial run: throughput over '
+        return (f'<td class="num partial" data-t="{t}" data-v="{num}" '
+                f'title="partial run: throughput over '
                 f'completed requests only">{txt}<sup>{ok}/100</sup></td>')
-    return f'<td class="num">{txt}</td>'
+    return f'<td class="num" data-t="{t}" data-v="{num}">{txt}</td>'
 
 
 def ms_cell(lv):
-    if classify(lv) not in ("clean", "partial"):
-        return '<td class="num muted">–</td>'
-    v = lv.get("ttft_p50_ms")
-    if not isinstance(v, (int, float)):
-        return '<td class="num muted">–</td>'
+    cls = classify(lv)
+    v = lv.get("ttft_p50_ms") if lv else None
+    if cls not in ("clean", "partial") or not isinstance(v, (int, float)):
+        return '<td class="num muted" data-t="0" data-v="0">–</td>'
     txt = f"{v/1000:.2f} s" if v >= 1000 else f"{v:.0f} ms"
-    return f'<td class="num">{txt}</td>'
+    return f'<td class="num" data-t="{TIER[cls]}" data-v="{v}">{txt}</td>'
 
 
 def mem_cell(row, has_memory):
     if not has_memory:
-        return '<td class="num muted">–</td>'
+        return '<td class="num muted" data-t="0" data-v="0">–</td>'
     vals = [lv.get("mem_used_gb") for lv in row["cells"].values()
             if isinstance(lv.get("mem_used_gb"), (int, float))]
     if not vals:
-        return '<td class="num muted">–</td>'
-    return f'<td class="num">{max(vals):.1f}</td>'
+        return '<td class="num muted" data-t="0" data-v="0">–</td>'
+    return f'<td class="num" data-t="3" data-v="{max(vals)}">{max(vals):.1f}</td>'
 
 
 
@@ -214,19 +221,24 @@ def spark_svg(cells, key, log=False, title=""):
 
 
 def split_table(rows, has_memory):
-    head = ("<tr><th>Stack</th>"
-            + "".join(f'<th class="num">tok/s c={c}</th>' for c in LEVELS)
+    head = ('<tr><th data-sort="text" data-dir="asc" '
+            'title="click to sort">Stack</th>'
+            + "".join(f'<th class="num" data-sort="num" data-dir="desc" '
+                      f'title="click to sort">tok/s c={c}</th>'
+                      for c in LEVELS)
             + '<th class="spark">trend</th>'
-            + '<th class="num">TTFT p50 c=16</th>'
+            + '<th class="num" data-sort="num" data-dir="asc" '
+              'title="click to sort">TTFT p50 c=16</th>'
             + '<th class="spark">TTFT trend</th>'
-            + '<th class="num">peak mem GB</th></tr>')
+            + '<th class="num" data-sort="num" data-dir="asc" '
+              'title="click to sort">peak mem GB</th></tr>')
     body = []
     for fw in sorted(rows, key=lambda f: NAMES.get(f, f).lower()):
         row = rows[fw]
         tds = "".join(tput_cell(row["cells"].get(c)) for c in LEVELS)
         name = NAMES.get(fw, fw)
         body.append(
-            f'<tr><td class="stack">{esc(name)}</td>{tds}'
+            f'<tr><td class="stack" data-v="{esc(name.lower())}">{esc(name)}</td>{tds}'
             + spark_svg(row["cells"], "output_throughput_tps",
                         title=f"{name}: output tok/s across c=1/8/16")
             + ms_cell(row["cells"].get(16))
@@ -237,8 +249,12 @@ def split_table(rows, has_memory):
 
 
 def fidelity_table(fid):
-    head = ('<tr><th>Stack</th><th class="num">0-shot F1</th>'
-            '<th class="num">5-shot F1</th></tr>')
+    head = ('<tr><th data-sort="text" data-dir="asc" '
+            'title="click to sort">Stack</th>'
+            '<th class="num" data-sort="num" data-dir="desc" '
+            'title="click to sort">0-shot F1</th>'
+            '<th class="num" data-sort="num" data-dir="desc" '
+            'title="click to sort">5-shot F1</th></tr>')
     ordered = sorted(fid, key=lambda f: (f != "vllm-nvidia",
                                          NAMES.get(f, f).lower()))
     body = []
@@ -246,12 +262,13 @@ def fidelity_table(fid):
         cells = []
         for shot in ("0shot", "5shot"):
             v = (fid[fw].get(shot) or {}).get("f1_weighted")
-            cells.append(f'<td class="num">{v:.4f}</td>'
+            cells.append(f'<td class="num" data-t="3" data-v="{v}">{v:.4f}</td>'
                          if isinstance(v, (int, float))
-                         else '<td class="num muted">–</td>')
+                         else '<td class="num muted" data-t="0" data-v="0">–</td>')
         cls = ' class="refrow"' if fw == "vllm-nvidia" else ""
-        body.append(f'<tr{cls}><td class="stack">{esc(NAMES.get(fw, fw))}'
-                    f'</td>{"".join(cells)}</tr>')
+        nm = NAMES.get(fw, fw)
+        body.append(f'<tr{cls}><td class="stack" data-v="{esc(nm.lower())}">'
+                    f'{esc(nm)}</td>{"".join(cells)}</tr>')
     return f'<table>{head}{"".join(body)}</table>'
 
 
@@ -347,6 +364,9 @@ td.crash { color:var(--crash); }
 td.partial sup { color:var(--partial); font-size:.68em; margin-left:.15rem; }
 td.muted, .muted { color:var(--muted); }
 th.spark, td.spark { text-align:center; width:54px; }
+th[data-sort] { cursor:pointer; user-select:none; }
+th[data-sort]:hover { color:var(--accent); }
+th .arr { font-size:.68em; margin-left:.22rem; opacity:.75; }
 td.spark svg { display:block; margin:0 auto; color:var(--accent); }
 td.spark .sx { stroke:var(--crash); stroke-width:1.1; fill:none; }
 tr.refrow td { background:var(--band); }
@@ -394,6 +414,44 @@ document.getElementById('themetoggle').addEventListener('click', function () {
     window.matchMedia('(prefers-color-scheme: dark)').matches ?
     'dark' : 'light')) === 'dark';
   r.setAttribute('data-theme', dark ? 'light' : 'dark');
+});
+document.querySelectorAll('table').forEach(function (tb) {
+  var ths = tb.querySelectorAll('th[data-sort]');
+  ths.forEach(function (th) {
+    th.addEventListener('click', function () {
+      var idx = Array.prototype.indexOf.call(th.parentNode.children, th);
+      var cur = th.getAttribute('data-active');
+      var dir = cur === 'asc' ? 'desc'
+              : cur === 'desc' ? 'asc' : th.getAttribute('data-dir');
+      ths.forEach(function (o) {
+        o.removeAttribute('data-active');
+        var a = o.querySelector('.arr'); if (a) a.remove();
+      });
+      th.setAttribute('data-active', dir);
+      var arr = document.createElement('span');
+      arr.className = 'arr';
+      arr.textContent = dir === 'asc' ? '\u25b2' : '\u25bc';
+      th.appendChild(arr);
+      var rows = Array.prototype.slice.call(tb.querySelectorAll('tr'))
+        .filter(function (r) { return r.querySelector('td'); });
+      var isText = th.getAttribute('data-sort') === 'text';
+      rows.sort(function (a, b) {
+        var ca = a.children[idx], cb = b.children[idx];
+        var ta = +(ca.getAttribute('data-t') || 0);
+        var tb2 = +(cb.getAttribute('data-t') || 0);
+        if (ta !== tb2) return tb2 - ta;
+        if (isText) {
+          var sa = ca.getAttribute('data-v') || ca.textContent;
+          var sb = cb.getAttribute('data-v') || cb.textContent;
+          return dir === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
+        }
+        var va = +(ca.getAttribute('data-v') || 0);
+        var vb = +(cb.getAttribute('data-v') || 0);
+        return dir === 'asc' ? va - vb : vb - va;
+      });
+      rows.forEach(function (r) { r.parentNode.appendChild(r); });
+    });
+  });
 });
 pick('machine', 'm2max');
 pick('model', 'Qwen3-0.6B');
@@ -478,7 +536,8 @@ automatically from weekly benchmark runs.">
     <a href="#" title="paper link coming">paper (soon)</a>
   </p>
   <p class="scopenote">Single-node serving only. Stacks are listed
-  alphabetically; no single-metric ranking is implied; the paper's central
+  alphabetically by default; click a column header to sort (failed runs
+  always sink to the bottom); no default ranking is implied; the paper's central
   finding is that speed-only orderings mislead. ✕ = crashed
   (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not measured. Trend sparklines show
   each stack's own shape across c=1/8/16 (per-row normalized; TTFT on a
