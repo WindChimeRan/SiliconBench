@@ -455,6 +455,30 @@ tr.refrow td { background:var(--band); }
 details summary { cursor:pointer; }
 .placeholder { border:1px dashed var(--hair); border-radius:.6rem;
   padding:1.2rem; color:var(--muted); margin-top:1rem; }
+.pagenav { margin:1.1rem 0 0; font-size:.9rem; }
+.pagenav a { color:var(--accent); text-decoration:none; margin-right:1.2rem; }
+.pagenav a:hover { text-decoration:underline; }
+.sechead { font-size:1.35rem; margin:2.2rem 0 .6rem;
+  border-top:1px solid var(--hair); padding-top:1.3rem; }
+.sechint { font-size:.78rem; font-weight:400; color:var(--muted);
+  margin-left:.6rem; }
+section { scroll-margin-top:.8rem; }
+.frozen { border:1px solid var(--hair); border-left:3px solid var(--accent);
+  border-radius:.4rem; padding:.65rem .9rem; font-size:.88rem;
+  color:var(--muted); max-width:46rem; }
+.tldr { background:var(--band); border-radius:.6rem;
+  padding:.8rem 1.1rem; max-width:46rem; margin:1rem 0 1.4rem; }
+.tldr p { margin:.1rem 0 .3rem; }
+.tldr ul { margin:.2rem 0 .2rem 1.1rem; padding:0; }
+.tldr li { margin:.35rem 0; font-size:.92rem; }
+#paper h3 { font-size:1.05rem; margin:1.6rem 0 .5rem; }
+#paper > p { max-width:46rem; font-size:.95rem; }
+figure { margin:.8rem 0 1rem; max-width:52rem; }
+figure img { width:100%; height:auto; background:#fff;
+  border:1px solid var(--hair); border-radius:.4rem; padding:.4rem;
+  box-sizing:border-box; }
+figcaption { font-size:.8rem; color:var(--muted); margin-top:.3rem; }
+.linksbox { margin-top:1.8rem; max-width:46rem; }
 footer { margin-top:3rem; font-size:.8rem; color:var(--muted); }
 footer a { color:var(--accent); text-decoration:none; }
 """
@@ -604,6 +628,127 @@ def machine_section(repo, machine, commit):
             + "".join(blocks) + meta + "</section>")
 
 
+PAPER_RUNS = ("Apple chat 2026-07-03, Apple agent 2026-05-19/20, "
+              "DGX Spark 2026-07-03/04, all on Qwen3-0.6B BF16")
+
+
+def paper_section():
+    """Frozen narrative reusing paper figures and findings.
+
+    Deliberately NOT generated from live data: these paragraphs and the
+    two figures describe the paper's fixed runs (PAPER_RUNS) and are
+    refreshed only by hand when the paper itself changes. The banner
+    says so; the live tables above are the current truth and may
+    diverge as engines evolve.
+    """
+    banner = flow(
+        "<strong>Frozen section.</strong> Everything below is analysis "
+        "from the paper, based on fixed benchmark runs (" + PAPER_RUNS +
+        "). It is written once and updated only with the paper. The live "
+        "tables above rebuild automatically and may diverge from these "
+        "numbers as engines evolve.")
+    tldr = [
+        "<strong>Nine stacks enter; four remain viable.</strong> Only "
+        "llama.cpp, vllm-metal, mlx_lm, and omlx pass all three lenses. "
+        "The chat-split throughput leader holds a near-constant 47 GB "
+        "claim and fails 5-shot fidelity, so a speed-only leaderboard "
+        "recommends a stack the multi-lens reading rules out.",
+        "<strong>Declared memory budgets are not enforced ones.</strong> "
+        "Two stacks that configure explicit budgets still grow to within "
+        "a few GB of physical RAM on the agent split and degrade or "
+        "crash.",
+        "<strong>The platform gap is serving software, not "
+        "silicon.</strong> Upstream engines on DGX Spark scale 4 to 8x "
+        "from c=1 to c=16 at matching single-stream speed, while the "
+        "best Apple stack reaches 3.3x.",
+        "<strong>The benchmark maintains itself.</strong> A weekly agent "
+        "updates every engine, re-runs both splits, repairs what breaks "
+        "inside a write allowlist, and publishes a journal; this page "
+        "rebuilds from its commits.",
+    ]
+    tldr_html = "".join(f"<li>{flow(t)}</li>" for t in tldr)
+    fig3_cap = flow(
+        "Figure from the paper. Each stack traces its (throughput, peak "
+        "memory) position across concurrency 1, 8, 16; linestyle is the "
+        "stack's declared budget policy.")
+    fig3_para = flow(
+        "Stacks with enforced budgets trace flat paths: throughput grows "
+        "while memory stays put (vllm-metal holds 33 to 39 GB while "
+        "scaling 3.3x). The sharpest finding cuts against the audit "
+        "table: mistral.rs and sglang declare explicit budgets, yet both "
+        "dive to about 60 GB on a 64 GB machine and degrade to partial "
+        "completion or crash on the agent split. A declared budget is a "
+        "configuration knob; discipline has to be enforced end to end "
+        "through the allocator. ollama sits at 98 percent of Metal's "
+        "48 GB advisory working-set hint from the first request, sized "
+        "to the hint rather than to demand.")
+    fig5_cap = flow(
+        "Figure from the paper. The three engine families the two "
+        "platforms share, same workload; line-end labels give c=1 to "
+        "c=16 scaling.")
+    fig5_para = flow(
+        "Upstream vllm on GB10 scales 7.7x on chat and 4.3x on agent "
+        "with median TTFT of 52 and 134 ms at c=16; sglang behaves "
+        "alike. The attribution is engine-local: sglang scales 6.9x on "
+        "CUDA but declines below single-stream on its MLX backend, and "
+        "llama.cpp plateaus on both platforms, so its ceiling is the "
+        "engine design, not the hardware. The silicon itself is "
+        "competitive: single-stream speed matches across platforms, and "
+        "llama.cpp on the M-series finishes ahead of its own CUDA build "
+        "at chat c=16 (252 vs 193 tok/s).")
+    maintain = flow(
+        "A maintainer agent re-runs the benchmark weekly: it pulls each "
+        "engine from upstream, runs both splits, diagnoses failures, "
+        "applies bounded fixes inside a write allowlist, and commits a "
+        "structured journal. In one week a single MLX library bump broke "
+        "three stacks through three distinct failure modes; two were "
+        "repaired within the same cycle. The journals are the provenance "
+        "record behind the live tables above.")
+    links = flow(
+        "<strong>Paper &amp; code.</strong> The paper is under review; a "
+        "preprint link will appear here. The harness, per-run results, "
+        "and weekly journals are public in the "
+        "<a href='https://github.com/WindChimeRan/applebench'>benchmark "
+        "repository</a>.")
+    return f"""
+<section id="paper">
+<h2 class="sechead">Findings from the paper
+  <span class="sechint">frozen analysis; not refreshed by the weekly
+  pipeline</span></h2>
+
+<div class="frozen">{banner}</div>
+
+<div class="tldr">
+<p><strong>TL;DR.</strong></p>
+<ul>{tldr_html}</ul>
+</div>
+
+<h3>Flat paths are enforced budgets; diving paths end in failure</h3>
+<figure>
+<img src="paper_f3_trajectory.png" loading="lazy"
+     alt="Speed-memory trajectories per stack on chat and agent splits">
+<figcaption>{fig3_cap}</figcaption>
+</figure>
+<p>{fig3_para}</p>
+
+<h3>The scaling gap is software, not silicon</h3>
+<figure>
+<img src="paper_f5_bridge_pairs.png" loading="lazy"
+     alt="Bridge pairs: same engine family on Apple Silicon and DGX Spark">
+<figcaption>{fig5_cap}</figcaption>
+</figure>
+<p>{fig5_para}</p>
+
+<h3>The benchmark maintains itself</h3>
+<p>{maintain}</p>
+
+<div id="links" class="linksbox">
+<p>{links}</p>
+</div>
+</section>
+"""
+
+
 def build(repo, commit):
     machine_btns = "".join(
         f'<button data-pick-machine="{esc(m["id"])}" aria-pressed="false">'
@@ -664,7 +809,17 @@ automatically from weekly benchmark runs.">
   (per-row normalized; TTFT on a log scale); magnitudes are in the
   numbers. Hover a stack name for its run provenance; the full record is
   under per-framework provenance at the bottom.""")}</p>
+  <nav class="pagenav">
+    <a href="#live">Live results</a>
+    <a href="#paper">Findings from the paper</a>
+    <a href="#links">Paper &amp; code</a>
+  </nav>
 </header>
+
+<section id="live">
+<h2 class="sechead">Live results
+  <span class="sechint">rebuilt automatically from every merged
+  benchmark run</span></h2>
 
 <div class="controls">
   <span class="group"><span class="lbl">machine</span>{machine_btns}</span>
@@ -673,6 +828,9 @@ automatically from weekly benchmark runs.">
 </div>
 
 {sections}
+</section>
+
+{paper_section()}
 
 <footer>
   Generated automatically from
@@ -698,6 +856,13 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(build(repo, args.commit))
     print(f"wrote {out}")
+    static = Path(__file__).resolve().parent / "static"
+    if static.is_dir():
+        import shutil
+        for f in static.iterdir():
+            if f.is_file() and not f.name.startswith("."):
+                shutil.copy2(f, out.parent / f.name)
+                print(f"copied {f.name}")
 
 
 if __name__ == "__main__":

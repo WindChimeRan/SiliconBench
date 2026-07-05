@@ -47,11 +47,11 @@ jobs:
           git clone --depth 1 \
             "https://x-access-token:${TOKEN}@github.com/WindChimeRan/WindChimeRan.github.io.git" site-repo
           mkdir -p site-repo/siliconbench
-          cp out/index.html site-repo/siliconbench/index.html
+          cp -R out/. site-repo/siliconbench/
           cd site-repo
           git config user.name "siliconbench-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add siliconbench/index.html
+          git add siliconbench
           if git diff --cached --quiet; then
             echo "Page unchanged; nothing to deploy."
             exit 0
