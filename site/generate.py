@@ -162,18 +162,76 @@ def mem_cell(row, has_memory):
     return f'<td class="num">{max(vals):.1f}</td>'
 
 
+
+import math
+
+
+def spark_svg(cells, key, log=False, title=""):
+    """Tiny inline 3-point trend line for one stack row.
+
+    Per-row normalized (shape, not magnitude; magnitudes are the numeric
+    columns). Clean levels are filled dots, partial levels hollow, crashed
+    levels a small cross at the baseline; missing levels are skipped.
+    """
+    W, H, PAD = 46, 18, 3.5
+    xs = {c: PAD + i * (W - 2 * PAD) / 2 for i, c in enumerate(LEVELS)}
+    pts, marks = [], []
+    vals = []
+    for c in LEVELS:
+        lv = cells.get(c)
+        cls = classify(lv)
+        v = (lv or {}).get(key)
+        if cls in ("clean", "partial") and isinstance(v, (int, float)) and v > 0:
+            vals.append(math.log10(v) if log else v)
+            marks.append((c, cls, v))
+        elif cls == "crash":
+            marks.append((c, "crash", None))
+    if not vals:
+        return '<td class="spark muted">–</td>'
+    lo, hi = min(vals), max(vals)
+    rng = (hi - lo) or 1.0
+    def y(v):
+        vv = math.log10(v) if log else v
+        return H - PAD - (vv - lo) / rng * (H - 2 * PAD)
+    line, dots, i = [], [], 0
+    for c, cls, v in marks:
+        x = xs[c]
+        if cls == "crash":
+            dots.append(f'<path d="M{x-2.4} {H-PAD-2.4} l4.8 4.8 M{x-2.4} '
+                        f'{H-PAD+2.4} l4.8 -4.8" class="sx"/>')
+            continue
+        yy = y(v)
+        line.append(f"{x:.1f},{yy:.1f}")
+        fill = "currentColor" if cls == "clean" else "var(--bg)"
+        dots.append(f'<circle cx="{x:.1f}" cy="{yy:.1f}" r="2.1" '
+                    f'fill="{fill}" stroke="currentColor" stroke-width="1"/>')
+    poly = (f'<polyline points="{" ".join(line)}" fill="none" '
+            f'stroke="currentColor" stroke-width="1.3"/>'
+            if len(line) >= 2 else "")
+    return (f'<td class="spark"><svg width="{W}" height="{H}" '
+            f'viewBox="0 0 {W} {H}" role="img"><title>{esc(title)}</title>'
+            f'{poly}{"".join(dots)}</svg></td>')
+
+
 def split_table(rows, has_memory):
     head = ("<tr><th>Stack</th>"
             + "".join(f'<th class="num">tok/s c={c}</th>' for c in LEVELS)
+            + '<th class="spark">trend</th>'
             + '<th class="num">TTFT p50 c=16</th>'
+            + '<th class="spark">TTFT trend</th>'
             + '<th class="num">peak mem GB</th></tr>')
     body = []
     for fw in sorted(rows, key=lambda f: NAMES.get(f, f).lower()):
         row = rows[fw]
         tds = "".join(tput_cell(row["cells"].get(c)) for c in LEVELS)
+        name = NAMES.get(fw, fw)
         body.append(
-            f'<tr><td class="stack">{esc(NAMES.get(fw, fw))}</td>{tds}'
+            f'<tr><td class="stack">{esc(name)}</td>{tds}'
+            + spark_svg(row["cells"], "output_throughput_tps",
+                        title=f"{name}: output tok/s across c=1/8/16")
             + ms_cell(row["cells"].get(16))
+            + spark_svg(row["cells"], "ttft_p50_ms", log=True,
+                        title=f"{name}: TTFT p50 across c=1/8/16 (log)")
             + mem_cell(row, has_memory) + "</tr>")
     return f'<table>{head}{"".join(body)}</table>'
 
@@ -288,6 +346,9 @@ td.stack { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 td.crash { color:var(--crash); }
 td.partial sup { color:var(--partial); font-size:.68em; margin-left:.15rem; }
 td.muted, .muted { color:var(--muted); }
+th.spark, td.spark { text-align:center; width:54px; }
+td.spark svg { display:block; margin:0 auto; color:var(--accent); }
+td.spark .sx { stroke:var(--crash); stroke-width:1.1; fill:none; }
 tr.refrow td { background:var(--band); }
 .tablewrap { overflow-x:auto; }
 .splits { display:grid; grid-template-columns:1fr; gap:1rem 2rem; }
@@ -419,7 +480,9 @@ automatically from weekly benchmark runs.">
   <p class="scopenote">Single-node serving only. Stacks are listed
   alphabetically; no single-metric ranking is implied; the paper's central
   finding is that speed-only orderings mislead. ✕ = crashed
-  (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not measured.</p>
+  (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not measured. Trend sparklines show
+  each stack's own shape across c=1/8/16 (per-row normalized; TTFT on a
+  log scale); magnitudes are in the numbers.</p>
 </header>
 
 <div class="controls">
