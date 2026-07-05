@@ -1,0 +1,60 @@
+name: Publish results page
+
+# Regenerates the SiliconBench results page whenever benchmark results
+# change on main, and pushes the single self-contained HTML file into the
+# personal website repo (served at ranranhaoranzhang.com/siliconbench/).
+#
+# Requires a repo secret PERSONAL_SITE_TOKEN: a fine-grained PAT with
+# Contents read/write on WindChimeRan/WindChimeRan.github.io. Without the
+# secret the workflow still builds and uploads the page as an artifact.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "results/**"
+      - "correctness/results/**"
+      - "site/**"
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate page
+        run: python3 site/generate.py --commit "$GITHUB_SHA" --out out/index.html
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: siliconbench-page
+          path: out/index.html
+
+      - name: Deploy to personal site
+        env:
+          TOKEN: ${{ secrets.PERSONAL_SITE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "PERSONAL_SITE_TOKEN not set; skipping deploy (artifact only)."
+            exit 0
+          fi
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/WindChimeRan/WindChimeRan.github.io.git" site-repo
+          mkdir -p site-repo/siliconbench
+          cp out/index.html site-repo/siliconbench/index.html
+          cd site-repo
+          git config user.name "siliconbench-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add siliconbench/index.html
+          if git diff --cached --quiet; then
+            echo "Page unchanged; nothing to deploy."
+            exit 0
+          fi
+          git commit -m "siliconbench: update results page (applebench@${GITHUB_SHA:0:9})"
+          git push origin HEAD
