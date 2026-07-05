@@ -121,6 +121,12 @@ fi
 # Initial cleanup
 cleanup
 
+# Hard per-framework wall-time cap (whole benchmark.py call, all concurrency
+# levels combined). Backstops benchmark.py's own --max-wall-time, which only
+# checks *between* levels and can't stop a single pathologically slow one —
+# hf_transformers on the agent split has been projected at 6-10h for c=1 alone.
+FRAMEWORK_TIMEOUT_SECONDS=3600
+
 for entry in "${FRAMEWORKS[@]}"; do
     IFS=':' read -r name port serve stop model_override <<< "$entry"
 
@@ -190,7 +196,19 @@ for entry in "${FRAMEWORKS[@]}"; do
         --output "$BENCH_OUT" \
         --outputs "$OUTPUTS_OUT" \
         --split "$SPLIT" \
-        $MODEL_FLAG || true
+        $MODEL_FLAG &
+    BENCH_PID=$!
+    (
+        sleep "$FRAMEWORK_TIMEOUT_SECONDS"
+        if kill -0 "$BENCH_PID" 2>/dev/null; then
+            echo "  ⚠ $name exceeded ${FRAMEWORK_TIMEOUT_SECONDS}s wall time — killing"
+            kill -TERM "$BENCH_PID" 2>/dev/null
+        fi
+    ) &
+    WATCHER_PID=$!
+    wait "$BENCH_PID" 2>/dev/null || true
+    kill "$WATCHER_PID" 2>/dev/null || true
+    wait "$WATCHER_PID" 2>/dev/null || true
 
     if [ -n "$METAL_PID" ]; then
         kill -TERM "$METAL_PID" 2>/dev/null || true
