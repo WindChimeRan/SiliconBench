@@ -81,6 +81,12 @@ def esc(s):
     return html.escape(str(s), quote=True)
 
 
+def flow(text):
+    """Collapse source-wrapping whitespace so emitted prose is one line
+    per paragraph (readable page source and diffs; rendering unchanged)."""
+    return " ".join(text.split())
+
+
 def load_split(repo, model, machine, split):
     base = repo / "results" / model
     if machine["subdir"]:
@@ -99,6 +105,41 @@ def load_split(repo, model, machine, split):
             cells[int(lv["concurrency"])] = lv
         rows[fw] = {"cells": cells, "timestamp": ts}
     return rows
+
+
+def load_versions(repo, machine):
+    """Structured per-framework versions, emitted by update_all (TODO E7).
+
+    Expected schema: {"frameworks": {fw: {"version": str, "commit": str,
+    "updated_at": "YYYY-MM-DD"}}} (a bare fw->info dict also accepted).
+    Returns {} until the harness starts emitting it; every consumer of
+    this data renders nothing in that case, so the page degrades cleanly.
+    """
+    base = repo / "results"
+    if machine["subdir"]:
+        base = base / machine["subdir"]
+    p = base / "framework_versions.json"
+    if not p.exists():
+        return {}
+    try:
+        with p.open() as f:
+            d = json.load(f)
+    except Exception:
+        return {}
+    d = d.get("frameworks", d)
+    return d if isinstance(d, dict) else {}
+
+
+def version_tip(fw, versions):
+    v = versions.get(fw) or {}
+    bits = []
+    if v.get("version"):
+        bits.append(f"v{v['version']}")
+    if v.get("commit"):
+        bits.append(str(v["commit"])[:9])
+    if v.get("updated_at"):
+        bits.append(f"updated {v['updated_at']}")
+    return " · ".join(bits)
 
 
 def load_fidelity(repo, model):
@@ -220,7 +261,7 @@ def spark_svg(cells, key, log=False, title=""):
             f'{poly}{"".join(dots)}</svg></td>')
 
 
-def split_table(rows, has_memory):
+def split_table(rows, has_memory, versions=None):
     head = ('<tr><th data-sort="text" data-dir="asc" '
             'title="click to sort">Stack</th>'
             + "".join(f'<th class="num" data-sort="num" data-dir="desc" '
@@ -237,8 +278,16 @@ def split_table(rows, has_memory):
         row = rows[fw]
         tds = "".join(tput_cell(row["cells"].get(c)) for c in LEVELS)
         name = NAMES.get(fw, fw)
+        tip = []
+        if row.get("timestamp"):
+            tip.append(f"benchmarked {row['timestamp'][:10]}")
+        vt = version_tip(fw, versions or {})
+        if vt:
+            tip.append(vt)
+        tipattr = f' title="{esc(" · ".join(tip))}"' if tip else ""
         body.append(
-            f'<tr><td class="stack" data-v="{esc(name.lower())}">{esc(name)}</td>{tds}'
+            f'<tr><td class="stack" data-v="{esc(name.lower())}">'
+            f'<span class="prov"{tipattr}>{esc(name)}</span></td>{tds}'
             + spark_svg(row["cells"], "output_throughput_tps",
                         title=f"{name}: output tok/s across c=1/8/16")
             + ms_cell(row["cells"].get(16))
@@ -282,25 +331,44 @@ def run_dates(machine_data):
     return (min(ts), max(ts)) if ts else (None, None)
 
 
-def meta_block(machine, machine_data, commit):
+def meta_block(machine, machine_data, commit, versions):
     lo, hi = run_dates(machine_data)
     when = "no runs yet" if lo is None else (lo if lo == hi else f"{lo} to {hi}")
-    per_fw = []
-    seen = {}
+    seen = {}   # fw -> split -> set(dates)
     for splits in machine_data.values():
         for split, rows in splits.items():
             for fw, row in rows.items():
                 if row.get("timestamp"):
-                    seen.setdefault(NAMES.get(fw, fw), set()).add(
+                    seen.setdefault(fw, {}).setdefault(split, set()).add(
                         row["timestamp"][:10])
-    for fw in sorted(seen, key=str.lower):
-        per_fw.append(f"<tr><td>{esc(fw)}</td>"
-                      f"<td>{esc(', '.join(sorted(seen[fw])))}</td></tr>")
+    has_ver = bool(versions) and any(fw in versions for fw in seen)
+    per_fw = []
+    for fw in sorted(seen, key=lambda f: NAMES.get(f, f).lower()):
+        bench = " · ".join(
+            f"{split} {'/'.join(sorted(seen[fw][split]))}"
+            for split in SPLITS if split in seen[fw])
+        vcols = ""
+        if has_ver:
+            v = versions.get(fw) or {}
+            ver = v.get("version") or "–"
+            if v.get("commit"):
+                ver += f" ({str(v['commit'])[:9]})"
+            vcols = (f"<td>{esc(ver)}</td>"
+                     f"<td>{esc(v.get('updated_at') or '–')}</td>")
+        per_fw.append(f"<tr><td>{esc(NAMES.get(fw, fw))}</td>{vcols}"
+                      f"<td>{esc(bench)}</td></tr>")
     details = ""
     if per_fw:
-        details = ("<details><summary>per-framework run dates</summary>"
-                   f"<table class='meta-table'>{''.join(per_fw)}</table>"
+        vhead = "<th>version</th><th>updated</th>" if has_ver else ""
+        details = ("<details><summary>per-framework provenance</summary>"
+                   f"<table class='meta-table'><tr><th>framework</th>{vhead}"
+                   f"<th>benchmarked</th></tr>{''.join(per_fw)}</table>"
                    "</details>")
+    vnote = ("" if has_ver else flow("""Framework versions and update commits
+      for each run are recorded in the
+      <a href="https://github.com/WindChimeRan/applebench/tree/main/results">
+      weekly journals</a>; structured version fields appear here once the
+      harness emits them.""") + " ")
     return f"""
     <div class="meta">
       <p><span class="k">machine</span> {esc(machine['spec'])}
@@ -308,10 +376,7 @@ def meta_block(machine, machine_data, commit):
          <span class="k">harness</span>
          <a href="https://github.com/WindChimeRan/applebench/commit/{esc(commit)}">
          <code>{esc(commit[:9])}</code></a></p>
-      <p class="note">Framework versions and update commits for each run are
-      recorded in the
-      <a href="https://github.com/WindChimeRan/applebench/tree/main/results">
-      weekly journals</a>. {esc(machine['note'])}</p>
+      <p class="note">{vnote}{esc(machine['note'])}</p>
       {details}
     </div>"""
 
@@ -383,8 +448,10 @@ tr.refrow td { background:var(--band); }
 .meta .k:first-child { margin-left:0; }
 .meta a { color:var(--accent); text-decoration:none; }
 .meta code { font-size:.9em; }
-.meta-table td { padding:.15rem .6rem .15rem 0; border:none;
-  font-size:.82rem; }
+.meta-table td, .meta-table th { padding:.15rem .8rem .15rem 0;
+  border:none; font-size:.82rem; text-align:left; }
+.meta-table th { font-weight:600; border-bottom:1px solid var(--hair); }
+.prov { border-bottom:1px dotted var(--muted); cursor:help; }
 details summary { cursor:pointer; }
 .placeholder { border:1px dashed var(--hair); border-radius:.6rem;
   padding:1.2rem; color:var(--muted); margin-top:1rem; }
@@ -478,17 +545,20 @@ def snapshot_line(splits):
     clean = sum(1 for t in worst.values() if t == 3)
     crash = sum(1 for t in worst.values() if t == 0)
     degrade = n - clean - crash
-    when = max(dates) if dates else "?"
+    lo, hi = (min(dates), max(dates)) if dates else ("?", "?")
+    when = (f"Run {hi}" if lo == hi
+            else f"Runs {lo} to {hi} (splits from different runs)")
     bits = [f"{clean} of {n} stacks complete every request at every level"]
     if degrade:
         bits.append(f"{degrade} degrade to partial or skip")
     if crash:
         bits.append(f"{crash} crash at least once")
-    return (f'<p class="snapshot">Latest run {esc(when)}: '
+    return (f'<p class="snapshot">{esc(when)}: '
             + "; ".join(bits) + ".</p>")
 
 
 def machine_section(repo, machine, commit):
+    versions = load_versions(repo, machine)
     data = {}   # model -> split -> rows
     for model in MODELS:
         splits = {}
@@ -515,7 +585,8 @@ def machine_section(repo, machine, commit):
                 title = ("chat split" if split == "chat"
                          else "agent split (~4K-token prompts)")
                 cols.append(f'<div><h3>{esc(title)}</h3><div class="tablewrap">'
-                            + split_table(splits[split], machine["has_memory"])
+                            + split_table(splits[split], machine["has_memory"],
+                                          versions)
                             + "</div></div>")
             inner.append(snapshot_line(splits))
             inner.append(f'<div class="splits">{"".join(cols)}</div>')
@@ -528,7 +599,7 @@ def machine_section(repo, machine, commit):
         blocks.append(f'<div data-model="{esc(model)}" hidden>'
                       + "".join(inner) + "</div>")
 
-    meta = meta_block(machine, data, commit)
+    meta = meta_block(machine, data, commit, versions)
     return (f'<section data-machine="{esc(machine["id"])}" hidden>'
             + "".join(blocks) + meta + "</section>")
 
@@ -558,39 +629,41 @@ automatically from weekly benchmark runs.">
 <div class="wrap">
 <header>
   <h1>SiliconBench</h1>
-  <p class="tag">Speed, memory, and fidelity for LLM serving on
+  <p class="tag">{flow("""Speed, memory, and fidelity for LLM serving on
   unified-memory desktops. All requests hit an OpenAI-compatible endpoint at
-  concurrency 1 / 8 / 16, BF16 weights, n=100 per level.</p>
+  concurrency 1 / 8 / 16, BF16 weights, n=100 per level.""")}</p>
   <p class="links">
     <a href="https://github.com/WindChimeRan/applebench">benchmark repo</a>
     <a href="https://github.com/WindChimeRan/applebench/tree/main/results">weekly journals</a>
     <a href="#" title="paper link coming">paper (soon)</a>
   </p>
   <div class="about">
-  <p>SiliconBench audits the LLM serving engines that run on
+  <p>{flow("""SiliconBench audits the LLM serving engines that run on
   unified-memory desktop hardware. Nine stacks are benchmarked on Apple
   Silicon against the same weights and prompts, with a CUDA-native
   reference track on an NVIDIA DGX Spark for the three engines the two
   ecosystems share. A maintainer agent re-runs the benchmark, commits the
-  raw results, and this page rebuilds from them automatically.</p>
-  <p>Speed alone is a misleading ranking on shared machines: the engine
-  pool is the same memory your browser and IDE use, and a stack can be
-  fastest while claiming most of it or while returning wrong output. The
+  raw results, and this page rebuilds from them automatically.""")}</p>
+  <p>{flow("""Speed alone is a misleading ranking on shared machines: the
+  engine pool is the same memory your browser and IDE use, and a stack can
+  be fastest while claiming most of it or while returning wrong output. The
   tables therefore keep three lenses side by side. Speed is measured on
   two workloads (a short-prompt chat split and an agent split whose
   multi-turn prompts reach several thousand input tokens), memory as the
   peak footprint during serving, and fidelity as weighted F1 on a
   classification task against an NVIDIA reference on identical weights.
   Try sorting by tok/s at c=1 and then at c=16: the point of the
-  concurrency sweep is that single-stream rankings do not survive load.</p>
+  concurrency sweep is that single-stream rankings do not survive load.""")}</p>
   </div>
-  <p class="scopenote">Single-node serving only. Stacks are listed
-  alphabetically by default; click a column header to sort (failed runs
-  always sink to the bottom); no default ranking is implied; the paper's central
-  finding is that speed-only orderings mislead. ✕ = crashed
-  (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not measured. Trend sparklines show
-  each stack's own shape across c=1/8/16 (per-row normalized; TTFT on a
-  log scale); magnitudes are in the numbers.</p>
+  <p class="scopenote">{flow("""Single-node serving only. Stacks are
+  listed alphabetically by default; click a column header to sort (failed
+  runs always sink to the bottom); no default ranking is implied; the
+  paper's central finding is that speed-only orderings mislead. ✕ =
+  crashed (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not
+  measured. Trend sparklines show each stack's own shape across c=1/8/16
+  (per-row normalized; TTFT on a log scale); magnitudes are in the
+  numbers. Hover a stack name for its run provenance; the full record is
+  under per-framework provenance at the bottom.""")}</p>
 </header>
 
 <div class="controls">

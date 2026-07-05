@@ -35,6 +35,9 @@ The page is keyed by (machine, model, split):
 - **NVIDIA DGX Spark** — `results/<MODEL>/dgxspark/<split>/`.
 
 Adding a machine = one entry in `MACHINES` in `site/generate.py`.
+Per-framework versions render (tooltip + provenance table columns) once
+`results/[<platform>/]framework_versions.json` exists; schema in
+`load_versions()` in `site/generate.py` and in TODO_0705 E7.
 Fidelity comes from `correctness/results/<MODEL>_comparison.json`.
 Multi-node results are out of scope for the page (single-node serving only).
 
