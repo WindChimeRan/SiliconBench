@@ -338,6 +338,9 @@ header .links a { margin-right:1rem; color:var(--accent);
   text-decoration:none; }
 header .links a:hover { text-decoration:underline; }
 .scopenote { font-size:.85rem; color:var(--muted); margin:.3rem 0 0; }
+.about { max-width:46rem; }
+.about p { margin:.55rem 0; font-size:.95rem; }
+.snapshot { font-size:.88rem; color:var(--muted); margin:.2rem 0 .8rem; }
 .controls { display:flex; flex-wrap:wrap; gap:.6rem 1.6rem;
   margin:1.6rem 0 1rem; align-items:center; }
 .controls .group { display:flex; gap:.35rem; align-items:center;
@@ -458,6 +461,33 @@ pick('model', 'Qwen3-0.6B');
 """
 
 
+def snapshot_line(splits):
+    """One computed sentence about the latest data; regenerated on every
+    build, so it cannot go stale the way hand-written findings would."""
+    worst, dates = {}, []
+    for rows in splits.values():
+        for fw, row in rows.items():
+            if row.get("timestamp"):
+                dates.append(row["timestamp"][:10])
+            for lv in row["cells"].values():
+                t = TIER[classify(lv)]
+                worst[fw] = min(worst.get(fw, 3), t)
+    if not worst:
+        return ""
+    n = len(worst)
+    clean = sum(1 for t in worst.values() if t == 3)
+    crash = sum(1 for t in worst.values() if t == 0)
+    degrade = n - clean - crash
+    when = max(dates) if dates else "?"
+    bits = [f"{clean} of {n} stacks complete every request at every level"]
+    if degrade:
+        bits.append(f"{degrade} degrade to partial or skip")
+    if crash:
+        bits.append(f"{crash} crash at least once")
+    return (f'<p class="snapshot">Latest run {esc(when)}: '
+            + "; ".join(bits) + ".</p>")
+
+
 def machine_section(repo, machine, commit):
     data = {}   # model -> split -> rows
     for model in MODELS:
@@ -487,6 +517,7 @@ def machine_section(repo, machine, commit):
                 cols.append(f'<div><h3>{esc(title)}</h3><div class="tablewrap">'
                             + split_table(splits[split], machine["has_memory"])
                             + "</div></div>")
+            inner.append(snapshot_line(splits))
             inner.append(f'<div class="splits">{"".join(cols)}</div>')
             fid = load_fidelity(repo, model)
             if machine["id"] != "dgxspark" and fid:
@@ -535,6 +566,24 @@ automatically from weekly benchmark runs.">
     <a href="https://github.com/WindChimeRan/applebench/tree/main/results">weekly journals</a>
     <a href="#" title="paper link coming">paper (soon)</a>
   </p>
+  <div class="about">
+  <p>SiliconBench audits the LLM serving engines that run on
+  unified-memory desktop hardware. Nine stacks are benchmarked on Apple
+  Silicon against the same weights and prompts, with a CUDA-native
+  reference track on an NVIDIA DGX Spark for the three engines the two
+  ecosystems share. A maintainer agent re-runs the benchmark, commits the
+  raw results, and this page rebuilds from them automatically.</p>
+  <p>Speed alone is a misleading ranking on shared machines: the engine
+  pool is the same memory your browser and IDE use, and a stack can be
+  fastest while claiming most of it or while returning wrong output. The
+  tables therefore keep three lenses side by side. Speed is measured on
+  two workloads (a short-prompt chat split and an agent split whose
+  multi-turn prompts reach several thousand input tokens), memory as the
+  peak footprint during serving, and fidelity as weighted F1 on a
+  classification task against an NVIDIA reference on identical weights.
+  Try sorting by tok/s at c=1 and then at c=16: the point of the
+  concurrency sweep is that single-stream rankings do not survive load.</p>
+  </div>
   <p class="scopenote">Single-node serving only. Stacks are listed
   alphabetically by default; click a column header to sort (failed runs
   always sink to the bottom); no default ranking is implied; the paper's central

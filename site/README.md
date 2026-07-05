@@ -38,6 +38,12 @@ Adding a machine = one entry in `MACHINES` in `site/generate.py`.
 Fidelity comes from `correctness/results/<MODEL>_comparison.json`.
 Multi-node results are out of scope for the page (single-node serving only).
 
+**Prose rule:** the page auto-updates, so any sentence on it must be either
+*timeless* (describes what the benchmark measures, never who currently wins)
+or *computed* (the snapshot lines are generated from the data at build time).
+Hand-written findings tied to current numbers belong in a dated blog post,
+not here; they would silently rot on the next weekly run.
+
 Design rules: stacks are listed alphabetically with the three lenses side by
 side (deliberately not a speed-sorted leaderboard, per the paper's thesis);
 run dates / harness commit / per-framework timestamps are muted meta info at
