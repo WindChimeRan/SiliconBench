@@ -602,3 +602,23 @@ Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/chat/REPORT.md
 =========================================
  [18:59:21] sync_github.sh
 =========================================
+[main ee09bf5] Benchmark results: 2026-07-05 18:59
+ 14 files changed, 1417 insertions(+), 795 deletions(-)
+ delete mode 100644 results/Qwen3.5-0.8B/chat/llamacpp_20260703_161430.json
+ create mode 100644 results/Qwen3.5-0.8B/chat/llamacpp_20260705_182048.json
+ rename results/Qwen3.5-0.8B/chat/{mlx_lm_20260703_161827.json => mlx_lm_20260705_182447.json} (57%)
+ rename results/Qwen3.5-0.8B/chat/{ollama_20260703_172924.json => ollama_20260705_184144.json} (81%)
+ delete mode 100644 results/Qwen3.5-0.8B/chat/omlx_20260703_172446.json
+ create mode 100644 results/Qwen3.5-0.8B/chat/omlx_20260705_183714.json
+ delete mode 100644 results/Qwen3.5-0.8B/chat/vllm_metal_20260703_171919.json
+ create mode 100644 results/Qwen3.5-0.8B/chat/vllm_metal_20260705_183149.json
+ delete mode 100644 results/Qwen3.5-0.8B/chat/vllm_mlx_20260703_173035.json
+ create mode 100644 results/Qwen3.5-0.8B/chat/vllm_mlx_20260705_184257.json
+ create mode 100644 results/Qwen3.5-0.8B/weekly_2026-07-05.log
+To github.com:WindChimeRan/applebench.git
+   a42b25f..ee09bf5  main -> main
+[18:59:22] sync_github.sh: OK
+
+=========================================
+ Weekly run finished: 2026-07-05T18:59:22
+=========================================

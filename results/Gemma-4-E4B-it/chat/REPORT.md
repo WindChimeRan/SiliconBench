@@ -2,64 +2,64 @@
 
 **Model:** Gemma-4-E4B-it
 **Split:** chat
-**Generated:** 2026-07-03 18:32:18
+**Generated:** 2026-07-05 21:01:59
 
 ## Concurrency: 1
 
-| Metric | mlx_lm | ollama | omlx | vllm_metal | llamacpp |
+| Metric | llamacpp | vllm_metal | mlx_lm | ollama | omlx |
 |--------|--------|--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | CRASHED | 100 / 0 | 100 / 0 | 100 / 0 |
-| TTFT avg (ms) | 1091.9 | 0.0 | 873.5 | 960.6 | 1284.3 |
-| TTFT p50 (ms) | 877.3 | 0.0 | 672.0 | 510.3 | 665.9 |
-| TTFT p99 (ms) | 2909.7 | 0.0 | 2782.4 | 5196.2 | 4864.2 |
-| Throughput avg (tok/s) | 20.8 | 0.0 | 5.9 | 21.9 | 30.0 |
-| Output throughput (tok/s) | 14.4 | 0.0 | 24.2 | 18.4 | 21.1 |
-| Input throughput (tok/s) | N/A | 0.0 | 309.0 | 238.4 | 272.9 |
-| Total token throughput (tok/s) | N/A | 0.0 | 333.2 | 256.8 | 294.0 |
-| ITL avg (ms) | 47.9 | 0.0 | 152.5 | 42.6 | 31.1 |
-| ITL p50 (ms) | 47.3 | 0.0 | 155.3 | 44.2 | 31.1 |
-| Latency avg (s) | 3.46 | 0.00 | 3.20 | 4.14 | 3.62 |
-| Latency p99 (s) | 10.30 | 0.00 | 9.03 | 12.33 | 11.92 |
-| Wall time (s) | 345.9 | 0.1 | 319.6 | 414.1 | 361.8 |
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | CRASHED | 100 / 0 |
+| TTFT avg (ms) | 1297.5 | 960.6 | 1089.8 | 0.0 | 502.7 |
+| TTFT p50 (ms) | 677.9 | 511.2 | 867.7 | 0.0 | 476.4 |
+| TTFT p99 (ms) | 4887.0 | 5207.4 | 2828.5 | 0.0 | 686.0 |
+| Throughput avg (tok/s) | 29.5 | 21.9 | 20.5 | 0.0 | 6.0 |
+| Output throughput (tok/s) | 20.8 | 18.4 | 14.3 | 0.0 | 27.8 |
+| Input throughput (tok/s) | 268.7 | 238.9 | N/A | 0.0 | 354.6 |
+| Total token throughput (tok/s) | 289.5 | 257.3 | N/A | 0.0 | 382.5 |
+| ITL avg (ms) | 31.6 | 42.5 | 48.6 | 0.0 | 149.5 |
+| ITL p50 (ms) | 31.5 | 44.2 | 47.9 | 0.0 | 152.4 |
+| Latency avg (s) | 3.67 | 4.13 | 3.49 | 0.00 | 2.78 |
+| Latency p99 (s) | 12.25 | 12.32 | 10.41 | 0.00 | 8.64 |
+| Wall time (s) | 367.4 | 413.2 | 348.8 | 0.1 | 278.4 |
 
 ## Concurrency: 8
 
-| Metric | mlx_lm | ollama | omlx | vllm_metal | llamacpp |
+| Metric | llamacpp | vllm_metal | mlx_lm | ollama | omlx |
 |--------|--------|--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | CRASHED | 100 / 0 | 100 / 0 | 100 / 0 |
-| TTFT avg (ms) | 23806.2 | 0.0 | 1202.5 | 444.2 | 9797.2 |
-| TTFT p50 (ms) | 24235.1 | 0.0 | 1063.8 | 438.2 | 9210.8 |
-| TTFT p99 (ms) | 39138.1 | 0.0 | 3671.6 | 687.3 | 19077.5 |
-| Throughput avg (tok/s) | 20.8 | 0.0 | 3.9 | 7.5 | 14.1 |
-| Output throughput (tok/s) | 14.5 | 0.0 | 56.3 | 58.7 | 36.1 |
-| Input throughput (tok/s) | N/A | 0.0 | 713.2 | 746.4 | 463.6 |
-| Total token throughput (tok/s) | N/A | 0.0 | 769.5 | 805.0 | 499.7 |
-| ITL avg (ms) | 47.9 | 0.0 | 248.2 | 123.5 | 83.0 |
-| ITL p50 (ms) | 47.2 | 0.0 | 247.0 | 123.4 | 76.3 |
-| Latency avg (s) | 26.17 | 0.00 | 10.56 | 9.88 | 16.43 |
-| Latency p99 (s) | 44.07 | 0.00 | 35.09 | 33.08 | 45.09 |
-| Wall time (s) | 345.2 | 0.0 | 138.4 | 132.3 | 213.0 |
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | CRASHED | 100 / 0 |
+| TTFT avg (ms) | 9890.0 | 440.2 | 24031.9 | 0.0 | 1208.0 |
+| TTFT p50 (ms) | 9413.2 | 433.8 | 24466.0 | 0.0 | 1054.4 |
+| TTFT p99 (ms) | 19700.9 | 682.9 | 39585.4 | 0.0 | 3704.1 |
+| Throughput avg (tok/s) | 14.2 | 7.6 | 20.5 | 0.0 | 4.0 |
+| Output throughput (tok/s) | 35.0 | 59.2 | 14.3 | 0.0 | 56.8 |
+| Input throughput (tok/s) | 452.0 | 753.5 | N/A | 0.0 | 720.2 |
+| Total token throughput (tok/s) | 487.0 | 812.7 | N/A | 0.0 | 777.0 |
+| ITL avg (ms) | 84.1 | 122.3 | 48.6 | 0.0 | 244.1 |
+| ITL p50 (ms) | 75.4 | 122.3 | 47.9 | 0.0 | 244.6 |
+| Latency avg (s) | 16.79 | 9.78 | 26.43 | 0.00 | 10.47 |
+| Latency p99 (s) | 46.20 | 32.78 | 44.60 | 0.00 | 34.74 |
+| Wall time (s) | 218.4 | 131.0 | 348.7 | 0.0 | 137.1 |
 
 ## Concurrency: 16
 
-| Metric | mlx_lm | ollama | omlx | vllm_metal | llamacpp |
+| Metric | llamacpp | vllm_metal | mlx_lm | ollama | omlx |
 |--------|--------|--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | CRASHED | 100 / 0 | 100 / 0 | 100 / 0 |
-| TTFT avg (ms) | 47380.7 | 0.0 | 9571.8 | 572.8 | 24356.1 |
-| TTFT p50 (ms) | 50047.1 | 0.0 | 9983.1 | 575.9 | 26939.3 |
-| TTFT p99 (ms) | 68707.6 | 0.0 | 14098.8 | 790.0 | 35095.2 |
-| Throughput avg (tok/s) | 20.8 | 0.0 | 3.6 | 6.2 | 15.2 |
-| Output throughput (tok/s) | 14.5 | 0.0 | 58.1 | 86.8 | 35.7 |
-| Input throughput (tok/s) | N/A | 0.0 | 730.6 | 1107.9 | 460.2 |
-| Total token throughput (tok/s) | N/A | 0.0 | 788.7 | 1194.7 | 495.9 |
-| ITL avg (ms) | 47.9 | 0.0 | 250.2 | 152.5 | 81.8 |
-| ITL p50 (ms) | 47.2 | 0.0 | 254.8 | 151.8 | 64.5 |
-| Latency avg (s) | 49.74 | 0.00 | 19.22 | 11.99 | 31.04 |
-| Latency p99 (s) | 70.40 | 0.00 | 45.37 | 41.18 | 64.14 |
-| Wall time (s) | 345.5 | 0.0 | 135.1 | 89.1 | 214.5 |
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | CRASHED | 100 / 0 |
+| TTFT avg (ms) | 24663.6 | 563.8 | 47816.4 | 0.0 | 9517.6 |
+| TTFT p50 (ms) | 26527.6 | 567.6 | 50518.7 | 0.0 | 9749.7 |
+| TTFT p99 (ms) | 35805.8 | 770.5 | 69427.7 | 0.0 | 14345.6 |
+| Throughput avg (tok/s) | 14.5 | 6.2 | 20.5 | 0.0 | 3.8 |
+| Output throughput (tok/s) | 35.2 | 87.8 | 14.3 | 0.0 | 57.6 |
+| Input throughput (tok/s) | 454.0 | 1120.6 | N/A | 0.0 | 735.0 |
+| Total token throughput (tok/s) | 489.2 | 1208.4 | N/A | 0.0 | 792.6 |
+| ITL avg (ms) | 87.0 | 150.5 | 48.6 | 0.0 | 247.6 |
+| ITL p50 (ms) | 70.3 | 150.4 | 48.0 | 0.0 | 250.3 |
+| Latency avg (s) | 31.57 | 11.85 | 50.21 | 0.00 | 18.98 |
+| Latency p99 (s) | 67.89 | 40.63 | 71.15 | 0.00 | 46.87 |
+| Wall time (s) | 217.4 | 88.1 | 348.8 | 0.0 | 134.3 |
 
 ## Total Benchmark Duration
 
-| Framework | mlx_lm | ollama | omlx | vllm_metal | llamacpp |
+| Framework | llamacpp | vllm_metal | mlx_lm | ollama | omlx |
 |-----------|--------|--------|--------|--------|--------|
-| Duration | 17.7m | 0.2s | 10.4m | 11.0m | 13.7m |
+| Duration | 13.9m | 11.0m | 17.9m | 0.2s | 9.6m |
