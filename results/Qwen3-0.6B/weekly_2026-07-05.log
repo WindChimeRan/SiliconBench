@@ -518,3 +518,23 @@ Report saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/REPORT.md
 =========================================
  [00:35:09] sync_github.sh
 =========================================
+[main 4e18a73] Benchmark results: 2026-07-06 00:35
+ 6 files changed, 1220 insertions(+), 49 deletions(-)
+ create mode 100644 results/Qwen3-0.6B/agent/comparison.json
+ create mode 100644 results/Qwen3-0.6B/agent/ollama_20260705_230743.json
+ create mode 100644 results/Qwen3-0.6B/agent/sglang_20260706_002401.json
+ create mode 100644 results/Qwen3-0.6B/agent/vllm_mlx_20260705_231856.json
+To github.com:WindChimeRan/applebench.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'github.com:WindChimeRan/applebench.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+Push failed — check remote configuration
+[00:35:10] sync_github.sh: OK
+
+=========================================
+ Weekly run finished: 2026-07-06T00:35:10
+=========================================

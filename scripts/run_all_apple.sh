@@ -199,7 +199,14 @@ for entry in "${FRAMEWORKS[@]}"; do
         $MODEL_FLAG &
     BENCH_PID=$!
     (
-        sleep "$FRAMEWORK_TIMEOUT_SECONDS"
+        # trap+background+wait (not a plain foreground `sleep`) so that killing
+        # this subshell from outside also kills the sleep instead of orphaning
+        # it — an orphaned sleep keeps this script's stdout fd open, which
+        # hangs weekly_bench.sh's `| tee` pipe until the sleep's own deadline.
+        trap 'kill "$SLEEP_PID" 2>/dev/null; exit 0' TERM
+        sleep "$FRAMEWORK_TIMEOUT_SECONDS" &
+        SLEEP_PID=$!
+        wait "$SLEEP_PID" 2>/dev/null
         if kill -0 "$BENCH_PID" 2>/dev/null; then
             echo "  ⚠ $name exceeded ${FRAMEWORK_TIMEOUT_SECONDS}s wall time — killing"
             kill -TERM "$BENCH_PID" 2>/dev/null
