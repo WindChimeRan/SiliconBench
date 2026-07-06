@@ -1,0 +1,811 @@
+=========================================
+ SiliconBench — Weekly Run
+ Started: 2026-07-06T01:59:18
+ Model: Gemma-4-E4B-it
+ Splits: agent
+ Log: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/weekly_2026-07-06.log
+ Skip update: true
+ Metalstat: 1
+ Run args: --model gemma-4-e4b-it
+=========================================
+
+Skipping update_all.sh (--skip-update)
+
+=========================================
+ [01:59:18] run_all.sh --split agent
+=========================================
+=== SiliconBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+  [ok]   sglang
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: gemma-4-E4B-it-BF16.gguf
+  [ok]   MLX: gemma-4-e4b-it-bf16-mlx
+  [ok]   HF: Gemma-4-E4B-it
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ SiliconBench — Full Benchmark Run
+ Model: Gemma-4-E4B-it
+ Split: agent
+ Output: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent
+ Skip-existing: false
+ Mon Jul  6 01:59:19 CDT 2026
+=========================================
+
+Cleaning old result files...
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: llamacpp (port 8001)
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 55600
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+Framework: llamacpp
+Model: /Users/haorzhang/applebench/.models/gemma-4-E4B-it-BF16.gguf
+Endpoint: http://localhost:8001
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 4434.1ms | Throughput avg: 30.7 tok/s | Output: 13.0 tok/s | ITL avg: 31.6ms | Wall: 743.1s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 22330.8ms | Throughput avg: 12.1 tok/s | Output: 21.2 tok/s | ITL avg: 136.5ms | Wall: 454.5s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 56870.0ms | Throughput avg: 12.1 tok/s | Output: 21.0 tok/s | ITL avg: 134.5ms | Wall: 457.4s
+
+Total benchmark duration: 1726.1s
+Results saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/llamacpp_20260706_015931.json
+Outputs saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/llamacpp_20260706_015931_outputs.jsonl (300 records)
+
+Stopping llamacpp server...
+llama.cpp server (PID 55600) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_vlm server on port 8002 ===
+PID: 61497
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  9/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a024_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a032_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: server did not report token usage for 91/91 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 4751.8ms | Throughput avg: 12.8 tok/s | Output: 5.3 tok/s | ITL avg: 68.3ms | Wall: 736.0s | FAILED: 9
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  9/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a024_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a032_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: server did not report token usage for 91/91 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 54199.8ms | Throughput avg: 13.0 tok/s | Output: 5.4 tok/s | ITL avg: 67.4ms | Wall: 729.3s | FAILED: 9
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  9/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a024_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a032_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: server did not report token usage for 91/91 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 107645.5ms | Throughput avg: 12.8 tok/s | Output: 5.3 tok/s | ITL avg: 68.5ms | Wall: 737.2s | FAILED: 9
+
+Total benchmark duration: 2279.4s
+Results saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/mlx_lm_20260706_022932.json
+Outputs saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/mlx_lm_20260706_022932_outputs.jsonl (273 records)
+
+Stopping mlx_lm server...
+mlx_lm server (PID 61497) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: mistralrs (port 8003)
+===========================================
+Starting mistralrs server...
+=== Starting mistral.rs server on port 8003 ===
+PID: 69630
+Waiting for server to be ready...
+Error: mistral.rs process exited before becoming ready
+
+thread 'main' (3412984) panicked at mistralrs-core/src/gguf/content.rs:151:22:
+called `Result::unwrap()` on an `Err` value: Unknown GGUF architecture `gemma4`
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+ERROR: mistralrs server failed to start — skipping this framework
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 69679
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Gemma-4-E4B-it
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  5/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: 41/95 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.32x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 6377.6ms | Throughput avg: 18.4 tok/s | Output: 8.4 tok/s | ITL avg: 52.5ms | Wall: 1022.1s | FAILED: 5
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  6/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: 41/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.32x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 8752.1ms | Throughput avg: 2.5 tok/s | Output: 11.8 tok/s | ITL avg: 568.9ms | Wall: 697.9s | FAILED: 6
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  10/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: 40/90 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.33x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 16554.1ms | Throughput avg: 1.1 tok/s | Output: 10.9 tok/s | ITL avg: 1416.8ms | Wall: 670.0s | FAILED: 10
+
+Total benchmark duration: 2485.3s
+Results saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/vllm_metal_20260706_031010.json
+Outputs saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/vllm_metal_20260706_031010_outputs.jsonl (279 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 69679) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: omlx (port 8005)
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: gemma-4-e4b-it-bf16-mlx -> /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 78141
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+Framework: omlx
+Model: gemma-4-e4b-it-bf16-mlx
+Endpoint: http://localhost:8005
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  6/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: 94/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 4.35x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 3148.3ms | Throughput avg: 6.7 tok/s | Output: 14.7 tok/s | ITL avg: 148.3ms | Wall: 568.3s | FAILED: 6
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  6/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: 94/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.92x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1455.9ms | Throughput avg: 3.5 tok/s | Output: 48.7 tok/s | ITL avg: 280.8ms | Wall: 167.4s | FAILED: 6
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  6/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)
+  ⚠ WARNING: 94/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.95x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 12556.6ms | Throughput avg: 3.3 tok/s | Output: 50.3 tok/s | ITL avg: 289.6ms | Wall: 164.4s | FAILED: 6
+
+Total benchmark duration: 944.6s
+Results saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/omlx_20260706_035245.json
+Outputs saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/omlx_20260706_035245_outputs.jsonl (282 records)
+
+Stopping omlx server...
+omlx server (PID 78141) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: ollama (port 8006)
+===========================================
+Starting ollama server...
+=== Starting Ollama server on port 8006 ===
+PID: 81840
+Waiting for server to be ready...
+Ollama server is ready on port 8006
+
+Framework: ollama
+Model: gemma-4-e4b-it-bf16
+Endpoint: http://localhost:8006
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 1...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.2s | FAILED: 100
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 8...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.1s | FAILED: 100
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Warmup error: 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  Running 100 requests at concurrency 16...
+  100/100 requests FAILED
+    > 404, message='Not Found', url='http://localhost:8006/v1/chat/completions'
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+Total benchmark duration: 0.3s
+Results saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/ollama_20260706_040938.json
+Outputs saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/ollama_20260706_040938_outputs.jsonl (0 records)
+
+Stopping ollama server...
+Ollama server (PID 81840) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: vllm_mlx (port 8008)
+===========================================
+Starting vllm_mlx server...
+=== Starting vllm-mlx server on port 8008 ===
+PID: 81957
+Waiting for server to be ready...
+Error: Server failed to start within 300 seconds
+============================================================
+SECURITY CONFIGURATION
+============================================================
+  Authentication: DISABLED - Use --api-key to enable
+  Rate limiting: DISABLED - Use --rate-limit to enable
+  Request timeout: 300.0s
+  Metrics: DISABLED - Use --enable-metrics to expose /metrics
+  Remote code loading: DISABLED (default)
+  Idle auto-unload: DISABLED
+  Tool calling: Use --enable-auto-tool-choice to enable
+  Reasoning: Use --reasoning-parser to enable
+  Audio upload limit: 25 MiB, TTS input limit: 4096 chars
+============================================================
+INFO:vllm_mlx.utils.download:Model found at local path: /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+Loading model: /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+Default max tokens: 32768
+Max request tokens: 32768
+Mode: Continuous batching (for multiple concurrent users)
+Stream interval: 1 tokens
+Memory-aware cache: 20% of RAM
+INFO:vllm_mlx.server:Loading model with BatchedEngine: /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+INFO:vllm_mlx.server:Model loaded (batched mode): /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+INFO:vllm_mlx.server:Default max tokens: 32768
+INFO:vllm_mlx.server:Max request tokens: 32768
+Starting server at http://127.0.0.1:8008
+INFO:     Started server process [81957]
+INFO:     Waiting for application startup.
+INFO:vllm_mlx.models.mllm:Loading MLLM: /Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx
+ERROR:vllm_mlx.models.mllm:Failed to load MLLM: Received 54 parameters not in model: 
+language_model.model.layers.24.self_attn.k_norm.weight,
+language_model.model.layers.24.self_attn.k_proj.weight,
+language_model.model.layers.24.self_attn.v_proj.weight,
+language_model.model.layers.25.self_attn.k_norm.weight,
+language_model.model.layers.25.self_attn.k_proj.weight,
+language_model.model.layers.25.self_attn.v_proj.weight,
+language_model.model.layers.26.self_attn.k_norm.weight,
+language_model.model.layers.26.self_attn.k_proj.weight,
+language_model.model.layers.26.self_attn.v_proj.weight,
+language_model.model.layers.27.self_attn.k_norm.weight,
+language_model.model.layers.27.self_attn.k_proj.weight,
+language_model.model.layers.27.self_attn.v_proj.weight,
+language_model.model.layers.28.self_attn.k_norm.weight,
+language_model.model.layers.28.self_attn.k_proj.weight,
+language_model.model.layers.28.self_attn.v_proj.weight,
+language_model.model.layers.29.self_attn.k_norm.weight,
+language_model.model.layers.29.self_attn.k_proj.weight,
+language_model.model.layers.29.self_attn.v_proj.weight,
+language_model.model.layers.30.self_attn.k_norm.weight,
+language_model.model.layers.30.self_attn.k_proj.weight,
+language_model.model.layers.30.self_attn.v_proj.weight,
+language_model.model.layers.31.self_attn.k_norm.weight,
+language_model.model.layers.31.self_attn.k_proj.weight,
+language_model.model.layers.31.self_attn.v_proj.weight,
+language_model.model.layers.32.self_attn.k_norm.weight,
+language_model.model.layers.32.self_attn.k_proj.weight,
+language_model.model.layers.32.self_attn.v_proj.weight,
+language_model.model.layers.33.self_attn.k_norm.weight,
+language_model.model.layers.33.self_attn.k_proj.weight,
+language_model.model.layers.33.self_attn.v_proj.weight,
+language_model.model.layers.34.self_attn.k_norm.weight,
+language_model.model.layers.34.self_attn.k_proj.weight,
+language_model.model.layers.34.self_attn.v_proj.weight,
+language_model.model.layers.35.self_attn.k_norm.weight,
+language_model.model.layers.35.self_attn.k_proj.weight,
+language_model.model.layers.35.self_attn.v_proj.weight,
+language_model.model.layers.36.self_attn.k_norm.weight,
+language_model.model.layers.36.self_attn.k_proj.weight,
+language_model.model.layers.36.self_attn.v_proj.weight,
+language_model.model.layers.37.self_attn.k_norm.weight,
+language_model.model.layers.37.self_attn.k_proj.weight,
+language_model.model.layers.37.self_attn.v_proj.weight,
+language_model.model.layers.38.self_attn.k_norm.weight,
+language_model.model.layers.38.self_attn.k_proj.weight,
+language_model.model.layers.38.self_attn.v_proj.weight,
+language_model.model.layers.39.self_attn.k_norm.weight,
+language_model.model.layers.39.self_attn.k_proj.weight,
+language_model.model.layers.39.self_attn.v_proj.weight,
+language_model.model.layers.40.self_attn.k_norm.weight,
+language_model.model.layers.40.self_attn.k_proj.weight,
+language_model.model.layers.40.self_attn.v_proj.weight,
+language_model.model.layers.41.self_attn.k_norm.weight,
+language_model.model.layers.41.self_attn.k_proj.weight,
+language_model.model.layers.41.self_attn.v_proj.weight.
+INFO:vllm_mlx.server:[_get_cache_dir] _model_path='/Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx' type=<class 'str'>
+INFO:vllm_mlx.server:[_get_cache_dir] cache_dir='/Users/haorzhang/.cache/vllm-mlx/prefix_cache/--Users--haorzhang--applebench--.models--gemma-4-e4b-it-bf16-mlx'
+INFO:vllm_mlx.server:[lifespan] Saving prefix cache to /Users/haorzhang/.cache/vllm-mlx/prefix_cache/--Users--haorzhang--applebench--.models--gemma-4-e4b-it-bf16-mlx
+INFO:vllm_mlx.server:[lifespan] No cache to save
+INFO:vllm_mlx.engine.batched:BatchedEngine stopped
+INFO:vllm_mlx.server:Engine stopped
+ERROR:    Traceback (most recent call last):
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/starlette/routing.py", line 638, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/vllm_mlx/server.py", line 1524, in lifespan
+    raise primary_exc
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/vllm_mlx/server.py", line 1420, in lifespan
+    await _engine.start()
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/vllm_mlx/engine/batched.py", line 265, in start
+    self.prepare_for_start()
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/vllm_mlx/engine/batched.py", line 249, in prepare_for_start
+    self._prepare_mllm_model()
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/vllm_mlx/engine/batched.py", line 299, in _prepare_mllm_model
+    self._mllm_instance.load()
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/vllm_mlx/models/mllm.py", line 1291, in load
+    self.model, self.processor = load(self.model_name)
+                                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/mlx_vlm/utils.py", line 782, in load
+    model = load_model(model_path, lazy, strict=strict, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/mlx_vlm/utils.py", line 658, in load_model
+    model.load_weights(list(weights.items()))
+  File "/Users/haorzhang/applebench/.venvs/vllm_mlx/lib/python3.12/site-packages/mlx/nn/layers/base.py", line 185, in load_weights
+    raise ValueError(
+ValueError: Received 54 parameters not in model: 
+language_model.model.layers.24.self_attn.k_norm.weight,
+language_model.model.layers.24.self_attn.k_proj.weight,
+language_model.model.layers.24.self_attn.v_proj.weight,
+language_model.model.layers.25.self_attn.k_norm.weight,
+language_model.model.layers.25.self_attn.k_proj.weight,
+language_model.model.layers.25.self_attn.v_proj.weight,
+language_model.model.layers.26.self_attn.k_norm.weight,
+language_model.model.layers.26.self_attn.k_proj.weight,
+language_model.model.layers.26.self_attn.v_proj.weight,
+language_model.model.layers.27.self_attn.k_norm.weight,
+language_model.model.layers.27.self_attn.k_proj.weight,
+language_model.model.layers.27.self_attn.v_proj.weight,
+language_model.model.layers.28.self_attn.k_norm.weight,
+language_model.model.layers.28.self_attn.k_proj.weight,
+language_model.model.layers.28.self_attn.v_proj.weight,
+language_model.model.layers.29.self_attn.k_norm.weight,
+language_model.model.layers.29.self_attn.k_proj.weight,
+language_model.model.layers.29.self_attn.v_proj.weight,
+language_model.model.layers.30.self_attn.k_norm.weight,
+language_model.model.layers.30.self_attn.k_proj.weight,
+language_model.model.layers.30.self_attn.v_proj.weight,
+language_model.model.layers.31.self_attn.k_norm.weight,
+language_model.model.layers.31.self_attn.k_proj.weight,
+language_model.model.layers.31.self_attn.v_proj.weight,
+language_model.model.layers.32.self_attn.k_norm.weight,
+language_model.model.layers.32.self_attn.k_proj.weight,
+language_model.model.layers.32.self_attn.v_proj.weight,
+language_model.model.layers.33.self_attn.k_norm.weight,
+language_model.model.layers.33.self_attn.k_proj.weight,
+language_model.model.layers.33.self_attn.v_proj.weight,
+language_model.model.layers.34.self_attn.k_norm.weight,
+language_model.model.layers.34.self_attn.k_proj.weight,
+language_model.model.layers.34.self_attn.v_proj.weight,
+language_model.model.layers.35.self_attn.k_norm.weight,
+language_model.model.layers.35.self_attn.k_proj.weight,
+language_model.model.layers.35.self_attn.v_proj.weight,
+language_model.model.layers.36.self_attn.k_norm.weight,
+language_model.model.layers.36.self_attn.k_proj.weight,
+language_model.model.layers.36.self_attn.v_proj.weight,
+language_model.model.layers.37.self_attn.k_norm.weight,
+language_model.model.layers.37.self_attn.k_proj.weight,
+language_model.model.layers.37.self_attn.v_proj.weight,
+language_model.model.layers.38.self_attn.k_norm.weight,
+language_model.model.layers.38.self_attn.k_proj.weight,
+language_model.model.layers.38.self_attn.v_proj.weight,
+language_model.model.layers.39.self_attn.k_norm.weight,
+language_model.model.layers.39.self_attn.k_proj.weight,
+language_model.model.layers.39.self_attn.v_proj.weight,
+language_model.model.layers.40.self_attn.k_norm.weight,
+language_model.model.layers.40.self_attn.k_proj.weight,
+language_model.model.layers.40.self_attn.v_proj.weight,
+language_model.model.layers.41.self_attn.k_norm.weight,
+language_model.model.layers.41.self_attn.k_proj.weight,
+language_model.model.layers.41.self_attn.v_proj.weight.
+
+ERROR:    Application startup failed. Exiting.
+ERROR: vllm_mlx server failed to start — skipping this framework
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: hf_transformers (port 8009)
+===========================================
+Starting hf_transformers server...
+=== Starting hf_transformers server on port 8009 ===
+PID: 82774
+Waiting for server to be ready...
+Error: Server failed to start within 300 seconds
+[transformers] Loading /Users/haorzhang/applebench/.models/Gemma-4-E4B-it@main
+Traceback (most recent call last):
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/bin/transformers", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/transformers.py", line 37, in main
+    app()
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/main.py", line 1152, in __call__
+    raise e
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/main.py", line 1135, in __call__
+    return get_command(self)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 1569, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/core.py", line 794, in main
+    return _main(
+           ^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/core.py", line 188, in _main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/huggingface_hub/cli/_cli_utils.py", line 132, in invoke
+    return super().invoke(ctx)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 1970, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 1353, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/click/core.py", line 907, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/typer/main.py", line 1514, in wrapper
+    return callback(**use_params)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serve.py", line 129, in __init__
+    self._model_manager = ModelManager(
+                          ^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serving/model_manager.py", line 146, in __init__
+    self.load_model_and_processor(self.process_model_name(force_model))
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serving/model_manager.py", line 302, in load_model_and_processor
+    processor = self._load_processor(model_id_and_revision)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/cli/serving/model_manager.py", line 234, in _load_processor
+    return AutoProcessor.from_pretrained(model_id, revision=revision, trust_remote_code=self.trust_remote_code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2090, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/Users/haorzhang/applebench/.venvs/hf_transformers/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2076, in requires_backends
+    raise ImportError("".join(failed))
+ImportError: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+ERROR: hf_transformers server failed to start — skipping this framework
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: sglang (port 8010)
+===========================================
+Starting sglang server...
+=== Starting sglang server on port 8010 ===
+PID: 83501
+Waiting for server to be ready...
+/Users/haorzhang/applebench/scripts/serve_sglang.sh: line 37: 83501 Killed: 9               SGLANG_USE_MLX=1 python -m sglang.launch_server --model-path "$HF_MODEL" --host 0.0.0.0 --port "$SGLANG_PORT" --trust-remote-code --disable-radix-cache --disable-cuda-graph --tp-size 1 >&"$PROJECT_DIR/.frameworks/sglang_server.log"
+Error: Server failed to start within 300 seconds
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/launch_server.py:55: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+[1;33m'--disable-cuda-graph' is deprecated and will be removed in a future release. Use '--cuda-graph-backend-{decode,prefill}=disabled' instead.[0m
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+[2026-07-06 04:23:33] Hybrid swa model: self.hf_config.architectures=['Gemma4ForConditionalGeneration']
+[2026-07-06 04:23:33] Use triton as default attention backend for Gemma4
+[2026-07-06 04:23:34] Fail to set RLIMIT_STACK: current limit exceeds maximum limit
+[2026-07-06 04:23:34] server_args=ServerArgs(model_path='/Users/haorzhang/applebench/.models/Gemma-4-E4B-it', tokenizer_path='/Users/haorzhang/applebench/.models/Gemma-4-E4B-it', tokenizer_mode='auto', tokenizer_backend='huggingface', tokenizer_worker_num=1, detokenizer_worker_num=1, skip_tokenizer_init=False, load_format='auto', model_loader_extra_config='{}', trust_remote_code=True, context_length=None, is_embedding=False, enable_multimodal=None, revision=None, model_impl='auto', model_config_parser='auto', json_model_override_args='{}', host='0.0.0.0', port=8010, fastapi_root_path='', grpc_mode=False, skip_server_warmup=False, warmups=None, enable_http2=False, ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_keyfile_password=None, enable_ssl_refresh=False, dtype='auto', quantization=None, quantization_param_path=None, kv_cache_dtype='auto', enable_fp32_lm_head=False, modelopt_quant=None, modelopt_checkpoint_restore_path=None, modelopt_checkpoint_save_path=None, modelopt_export_path=None, quantize_and_serve=False, rl_quant_profile=None, enable_tf32_matmul=False, mem_fraction_static=0.8777999999999999, max_running_requests=None, max_queued_requests=None, max_total_tokens=None, chunked_prefill_size=4096, enable_dynamic_chunking=False, max_prefill_tokens=16384, prefill_max_requests=None, schedule_policy='fcfs', enable_priority_scheduling=False, disable_priority_preemption=False, default_priority_value=None, abort_on_priority_when_disabled=False, schedule_low_priority_values_first=False, priority_scheduling_preemption_threshold=10, schedule_conservativeness=1.0, page_size=1, swa_full_tokens_ratio=0.8, disable_hybrid_swa_memory=False, radix_eviction_policy='lru', prefill_only_disable_kv_cache=False, disable_radix_cache=True, enable_page_major_kv_layout=False, enable_unified_memory=False, disable_chunked_prefix_cache=False, disable_overlap_schedule=False, num_continuous_decode_steps=1, scheduler_recv_interval=1, enable_mixed_chunk=False, device='mps', base_gpu_id=0, gpu_id_step=1, random_seed=196306718, watchdog_timeout=300, soft_watchdog_timeout=None, sleep_on_idle=False, use_ray=False, custom_sigquit_handler=None, numa_node=None, gc_threshold=None, nccl_port=None, dist_timeout=None, dist_init_addr=None, nnodes=1, node_rank=0, tp_size=1, dcp_size=1, pp_size=1, pp_max_micro_batch_size=None, pp_async_batch_depth=0, dp_size=1, load_balance_method='round_robin', attn_cp_size=1, moe_dp_size=1, enable_prefill_cp=False, cp_strategy=None, enable_dsa_prefill_context_parallel=False, dsa_prefill_cp_mode='round-robin-split', enable_prefill_context_parallel=False, prefill_cp_mode='in-seq-split', enable_dp_attention=False, enable_dp_attention_local_control_broadcast=False, enable_dp_lm_head=False, enable_attn_tp_input_scattered=False, disable_attn_tp_gather=False, enable_p2p_check=False, stream_interval=1, batch_notify_size=16, stream_response_default_include_usage=False, incremental_streaming_output=False, enable_streaming_session=False, enable_session_radix_cache=False, constrained_json_whitespace_pattern=None, constrained_json_disable_any_whitespace=False, log_level='info', log_level_http=None, log_requests=False, log_requests_level=2, log_requests_format='text', log_requests_target=None, uvicorn_access_log_exclude_prefixes=[], crash_dump_folder=None, show_time_cost=False, enable_metrics=False, grpc_http_sidecar_port=None, enable_mfu_metrics=False, enable_metrics_for_all_schedulers=False, load_snapshot_publish_interval=15, tokenizer_metrics_custom_labels_header='x-custom-labels', tokenizer_metrics_allowed_custom_labels=None, extra_metric_labels=None, bucket_time_to_first_token=None, bucket_inter_token_latency=None, bucket_e2e_request_latency=None, prompt_tokens_buckets=None, generation_tokens_buckets=None, gc_warning_threshold_secs=0.0, decode_log_interval=40, enable_request_time_stats_logging=False, kv_events_config=None, enable_forward_pass_metrics=False, forward_pass_metrics_worker_id='', forward_pass_metrics_ipc_name=None, enable_trace=False, trace_modules='request', otlp_traces_endpoint='localhost:4317', export_metrics_to_file=False, export_metrics_to_file_dir=None, stat_loggers=None, api_key=None, admin_api_key=None, served_model_name='/Users/haorzhang/applebench/.models/Gemma-4-E4B-it', weight_version='default', chat_template=None, hf_chat_template_name=None, completion_template=None, file_storage_path='sglang_storage', enable_cache_report=False, reasoning_parser=None, strip_thinking_cache=False, enable_strict_thinking=False, tool_call_parser=None, tool_server=None, sampling_defaults='model', asr_max_buffer_seconds=60, asr_max_concurrent_sessions=32, preferred_sampling_params=None, allow_auto_truncate=False, enable_prefill_delayer=False, prefill_delayer_max_delay_passes=30, prefill_delayer_token_usage_low_watermark=None, prefill_delayer_forward_passes_buckets=None, prefill_delayer_wait_seconds_buckets=None, prefill_delayer_queue_min_ratio=None, prefill_delayer_max_delay_ms=None, min_free_slots_delay=None, enable_lora=None, enable_lora_overlap_loading=None, max_lora_rank=None, lora_target_modules=None, lora_paths=None, max_loaded_loras=None, max_loras_per_batch=8, lora_eviction_policy='lru', lora_backend='csgmv', max_lora_chunk_size=16, experts_shared_outer_loras=None, lora_use_virtual_experts=False, lora_strict_loading=False, lora_drain_wait_threshold=0.0, attention_backend='triton', decode_attention_backend=None, prefill_attention_backend=None, sampling_backend='pytorch', grammar_backend='xgrammar', radix_cache_backend=None, mm_attention_backend=None, fp8_gemm_runner_backend='auto', fp4_gemm_runner_backend='auto', dsa_prefill_backend=None, dsa_decode_backend=None, dsa_topk_backend='sgl-kernel', disable_flashinfer_autotune=False, mamba_backend='triton', speculative_algorithm=None, speculative_draft_model_path=None, speculative_draft_model_revision=None, speculative_draft_load_format=None, speculative_num_steps=None, speculative_eagle_topk=None, speculative_num_draft_tokens=None, speculative_dflash_block_size=None, speculative_accept_threshold_single=1.0, speculative_accept_threshold_acc=1.0, speculative_use_rejection_sampling=False, speculative_token_map=None, speculative_attention_mode='prefill', speculative_draft_attention_backend=None, speculative_draft_window_size=None, speculative_moe_runner_backend='auto', speculative_moe_a2a_backend=None, speculative_draft_model_quantization=None, speculative_skip_dp_mlp_sync=False, enable_multi_layer_eagle=False, speculative_adaptive=False, speculative_adaptive_config=None, decoupled_spec_bind_endpoint=None, decoupled_spec_connect_endpoints=None, decoupled_spec_rank=None, decoupled_spec_role='null', spec_trace_dir=None, speculative_ngram_min_bfs_breadth=1, speculative_ngram_max_bfs_breadth=10, speculative_ngram_match_type='BFS', speculative_ngram_max_trie_depth=18, speculative_ngram_capacity=10000000, speculative_ngram_external_corpus_path=None, speculative_ngram_external_sam_budget=0, speculative_ngram_external_corpus_max_tokens=10000000, ep_size=1, moe_a2a_backend='none', moe_runner_backend='auto', flashinfer_mxfp4_moe_precision='default', deepep_mode='auto', deepep_dispatcher_output_dtype='auto', ep_num_redundant_experts=0, ep_dispatch_algorithm=None, init_expert_location='trivial', enable_eplb=False, eplb_algorithm='auto', eplb_rebalance_num_iterations=1000, eplb_rebalance_layers_per_chunk=None, eplb_min_rebalancing_utilization_threshold=1.0, expert_distribution_recorder_mode=None, expert_distribution_recorder_buffer_size=1000, enable_expert_distribution_metrics=False, deepep_config=None, moe_dense_tp_size=None, elastic_ep_backend=None, enable_elastic_expert_backup=False, mooncake_ib_device=None, enable_deepep_waterfill=False, elastic_ep_rejoin=False, disable_flashinfer_cutlass_moe_fp4_allgather=False, disable_shared_experts_fusion=False, enforce_shared_experts_fusion=False, max_mamba_cache_size=None, mamba_ssm_dtype=None, enable_mamba_cache_stochastic_rounding=False, mamba_cache_philox_rounds=0, mamba_full_memory_ratio=0.9, mamba_radix_cache_strategy='auto', mamba_track_interval=256, enable_int8_mamba_checkpoint=False, int8_mamba_ckpt_size=None, linear_attn_backend='triton', linear_attn_decode_backend=None, linear_attn_prefill_backend=None, enable_linear_replayssm=False, linear_replayssm_cache_len=16, enable_hierarchical_cache=False, hicache_ratio=2.0, hicache_size=0, hicache_write_policy='write_through', hicache_io_backend='kernel', hicache_mem_layout='page_first', hicache_storage_backend=None, hicache_storage_prefetch_policy='timeout', hicache_storage_backend_extra_config=None, enable_hisparse=False, hisparse_config=None, enable_lmcache=False, lmcache_config_file=None, kt_weight_path=None, kt_method='AMXINT4', kt_cpuinfer=None, kt_threadpool_count=2, kt_num_gpu_experts=None, kt_max_deferred_experts_per_token=None, dllm_algorithm=None, dllm_algorithm_config=None, cpu_offload_gb=0, offload_group_size=-1, offload_num_in_group=1, offload_prefetch_step=1, offload_mode='cpu', cuda_graph_config=CudaGraphConfig(decode=PhaseConfig(backend='disabled', max_bs=160, bs=[1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160], tc_compiler='eager'), prefill=PhaseConfig(backend='disabled', max_bs=4096, bs=[4, 8, 12, 16, 20, 24, 28, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1280, 1536, 1792, 2048, 2304, 2560, 2816, 3072, 3328, 3584, 3840, 4096], tc_compiler='eager')), cuda_graph_backend_decode=None, cuda_graph_backend_prefill=None, cuda_graph_max_bs_decode=None, cuda_graph_max_bs_prefill=None, cuda_graph_bs_decode=None, cuda_graph_bs_prefill=None, cuda_graph_tc_compiler=None, disable_prefill_cuda_graph=False, disable_decode_cuda_graph=False, disable_cuda_graph=True, disable_cuda_graph_padding=False, enable_profile_cuda_graph=False, enable_cudagraph_gc=False, debug_cuda_graph=False, enable_layerwise_nvtx_marker=False, enable_nccl_nvls=False, enable_symm_mem=False, triton_attention_reduce_in_fp32=False, triton_attention_num_kv_splits=8, triton_attention_split_tile_size=None, flashinfer_mla_disable_ragged=False, enable_fused_qk_norm_rope=False, enable_precise_embedding_interpolation=False, enable_fused_moe_sum_all_reduce=False, enable_deepseek_v4_fp4_indexer=False, disable_custom_all_reduce=False, enable_mscclpp=False, enable_torch_symm_mem=False, pre_warm_nccl=False, enable_quant_communications=False, enable_flashinfer_allreduce_fusion=False, enforce_disable_flashinfer_allreduce_fusion=False, flashinfer_allreduce_fusion_backend=None, enable_aiter_allreduce_fusion=False, enable_two_batch_overlap=False, enable_single_batch_overlap=False, tbo_token_distribution_threshold=0.48, enable_torch_compile=False, enable_torch_compile_debug_mode=False, torch_compile_max_bs=32, torchao_config='', enable_memory_saver=False, enable_weights_cpu_backup=False, enable_draft_weights_cpu_backup=False, enable_custom_logit_processor=False, enable_return_hidden_states=False, enable_return_routed_experts=False, enable_return_indexer_topk=False, disable_outlines_disk_cache=False, enable_mis=False, enable_deterministic_inference=False, rl_on_policy_target=None, kv_canary='none', kv_canary_real_data='none', kv_canary_sweep_interval=0, enable_dynamic_batch_tokenizer=False, dynamic_batch_tokenizer_batch_size=32, dynamic_batch_tokenizer_batch_timeout=0.002, enable_tokenizer_batch_encode=False, disable_tokenizer_batch_decode=False, debug_tensor_dump_output_folder=None, debug_tensor_dump_layers=None, debug_tensor_dump_input_file=None, disaggregation_mode='null', disaggregation_transfer_backend='mooncake', disaggregation_bootstrap_port=8998, disaggregation_ib_device=None, disaggregation_decode_enable_radix_cache=False, disaggregation_decode_enable_offload_kvcache=False, num_reserved_decode_tokens=512, disaggregation_decode_extra_slots=None, disaggregation_decode_polling_interval=1, optimistic_prefill_retries=0, encoder_only=False, language_only=False, encoder_transfer_backend='zmq_to_scheduler', encoder_urls=[], encoder_bootstrap_port=8997, encoder_register_urls=[], enable_adaptive_dispatch_to_encoder=False, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, custom_weight_loader=[], weight_loader_disable_mmap=False, weight_loader_prefetch_checkpoints=False, weight_loader_prefetch_num_threads=4, weight_loader_drop_cache_after_load=False, remote_instance_weight_loader_seed_instance_ip=None, remote_instance_weight_loader_seed_instance_service_port=None, remote_instance_weight_loader_send_weights_group_ports=None, remote_instance_weight_loader_backend='nccl', remote_instance_weight_loader_start_seed_via_transfer_engine=False, engine_info_bootstrap_port=6789, modelexpress_config=None, download_dir=None, model_checksum=None, delete_ckpt_after_loading=False, decrypted_config_file=None, decrypted_draft_config_file=None, checkpoint_engine_wait_weights_before_ready=False, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, enable_mm_global_cache=False, disable_fast_image_processor=False, keep_mm_feature_on_device=False, forward_hooks=None, msprobe_dump_config=None)
+[2026-07-06 04:23:34] Hybrid swa model: self.hf_config.architectures=['Gemma4ForConditionalGeneration']
+[2026-07-06 04:23:34] torchcodec is not installed; audio inputs will fail at request time
+[2026-07-06 04:23:34] Ignore import error when loading sglang.srt.multimodal.processors.mimo_v2: No module named 'torchcodec'
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[2026-07-06 04:23:36] Ignore import error when loading sglang.srt.models.bailing_moe_linear: No module named 'vllm'
+[2026-07-06 04:23:36] Ignore import error when loading sglang.srt.models.bailing_moe_nextn: No module named 'vllm'
+[2026-07-06 04:23:36] tilelang not installed; deepseek_v4_rope pass_configs unset. Triton kernels in this module still run; only downstream tilelang.jit consumers of pass_configs will need to handle the None.
+[2026-07-06 04:23:36] Using default HuggingFace chat template with detected content format: openai
+[2026-07-06 04:23:36] Auto-detected template features: reasoning_parser=gemma4, tool_call_parser=gemma4
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/awq/awq.py:52: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/layers/quantization/gguf.py:64: UserWarning: Only CUDA, MUSA and NPU support GGUF quantization currently.
+  warnings.warn(f"Only CUDA, MUSA and NPU support GGUF quantization currently.")
+[2026-07-06 04:23:37] Hybrid swa model: self.hf_config.architectures=['Gemma4ForConditionalGeneration']
+[2026-07-06 04:23:37] load snapshot writer init failed: [Errno 2] No such file or directory: '/dev/shm/sglang_loads_5fd811d3f119_fc855d9b.shm'
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[2026-07-06 04:23:39] torchcodec is not installed; audio inputs will fail at request time
+[2026-07-06 04:23:39] Ignore import error when loading sglang.srt.multimodal.processors.mimo_v2: No module named 'torchcodec'
+[2026-07-06 04:23:39] Restoring add_bos_token=True for /Users/haorzhang/applebench/.models/Gemma-4-E4B-it (was False after v5 loading)
+[2026-07-06 04:23:39] Hybrid swa model: self.hf_config.architectures=['Gemma4ForConditionalGeneration']
+[2026-07-06 04:23:39] Initializing MlxModelRunner for end-to-end MLX inference
+[2026-07-06 04:23:39] Loading MLX model: /Users/haorzhang/applebench/.models/Gemma-4-E4B-it
+[2026-07-06 04:23:39] Scheduler hit an exception: Traceback (most recent call last):
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 4298, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 422, in __init__
+    self.init_model_worker()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 854, in init_model_worker
+    self.init_tp_model_worker()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/scheduler.py", line 771, in init_tp_model_worker
+    self.tp_worker = MlxTpModelWorker(**worker_kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/managers/tp_worker.py", line 273, in __init__
+    self._init_model_runner()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/tp_worker.py", line 60, in _init_model_runner
+    self._mlx_runner = MlxModelRunner(**init_kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/model_runner.py", line 141, in __init__
+    self._load_model()
+  File "/Users/haorzhang/applebench/.frameworks/sglang/python/sglang/srt/hardware_backend/mlx/model_runner.py", line 410, in _load_model
+    loaded = mlx_lm_load(
+             ^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/sglang/lib/python3.11/site-packages/mlx_lm/utils.py", line 491, in load
+    model, config = load_model(model_path, lazy, model_config=model_config)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/haorzhang/applebench/.venvs/sglang/lib/python3.11/site-packages/mlx_lm/utils.py", line 415, in load_model
+    model.load_weights(list(weights.items()), strict=strict)
+  File "/Users/haorzhang/applebench/.venvs/sglang/lib/python3.11/site-packages/mlx/nn/layers/base.py", line 185, in load_weights
+    raise ValueError(
+ValueError: Received 54 parameters not in model: 
+language_model.model.layers.24.self_attn.k_norm.weight,
+language_model.model.layers.24.self_attn.k_proj.weight,
+language_model.model.layers.24.self_attn.v_proj.weight,
+language_model.model.layers.25.self_attn.k_norm.weight,
+language_model.model.layers.25.self_attn.k_proj.weight,
+language_model.model.layers.25.self_attn.v_proj.weight,
+language_model.model.layers.26.self_attn.k_norm.weight,
+language_model.model.layers.26.self_attn.k_proj.weight,
+language_model.model.layers.26.self_attn.v_proj.weight,
+language_model.model.layers.27.self_attn.k_norm.weight,
+language_model.model.layers.27.self_attn.k_proj.weight,
+language_model.model.layers.27.self_attn.v_proj.weight,
+language_model.model.layers.28.self_attn.k_norm.weight,
+language_model.model.layers.28.self_attn.k_proj.weight,
+language_model.model.layers.28.self_attn.v_proj.weight,
+language_model.model.layers.29.self_attn.k_norm.weight,
+language_model.model.layers.29.self_attn.k_proj.weight,
+language_model.model.layers.29.self_attn.v_proj.weight,
+language_model.model.layers.30.self_attn.k_norm.weight,
+language_model.model.layers.30.self_attn.k_proj.weight,
+language_model.model.layers.30.self_attn.v_proj.weight,
+language_model.model.layers.31.self_attn.k_norm.weight,
+language_model.model.layers.31.self_attn.k_proj.weight,
+language_model.model.layers.31.self_attn.v_proj.weight,
+language_model.model.layers.32.self_attn.k_norm.weight,
+language_model.model.layers.32.self_attn.k_proj.weight,
+language_model.model.layers.32.self_attn.v_proj.weight,
+language_model.model.layers.33.self_attn.k_norm.weight,
+language_model.model.layers.33.self_attn.k_proj.weight,
+language_model.model.layers.33.self_attn.v_proj.weight,
+language_model.model.layers.34.self_attn.k_norm.weight,
+language_model.model.layers.34.self_attn.k_proj.weight,
+language_model.model.layers.34.self_attn.v_proj.weight,
+language_model.model.layers.35.self_attn.k_norm.weight,
+language_model.model.layers.35.self_attn.k_proj.weight,
+language_model.model.layers.35.self_attn.v_proj.weight,
+language_model.model.layers.36.self_attn.k_norm.weight,
+language_model.model.layers.36.self_attn.k_proj.weight,
+language_model.model.layers.36.self_attn.v_proj.weight,
+language_model.model.layers.37.self_attn.k_norm.weight,
+language_model.model.layers.37.self_attn.k_proj.weight,
+language_model.model.layers.37.self_attn.v_proj.weight,
+language_model.model.layers.38.self_attn.k_norm.weight,
+language_model.model.layers.38.self_attn.k_proj.weight,
+language_model.model.layers.38.self_attn.v_proj.weight,
+language_model.model.layers.39.self_attn.k_norm.weight,
+language_model.model.layers.39.self_attn.k_proj.weight,
+language_model.model.layers.39.self_attn.v_proj.weight,
+language_model.model.layers.40.self_attn.k_norm.weight,
+language_model.model.layers.40.self_attn.k_proj.weight,
+language_model.model.layers.40.self_attn.v_proj.weight,
+language_model.model.layers.41.self_attn.k_norm.weight,
+language_model.model.layers.41.self_attn.k_proj.weight,
+language_model.model.layers.41.self_attn.v_proj.weight.
+
+[2026-07-06 04:23:39] Received sigquit from a child process. It usually means the child failed.
+[2026-07-06 04:23:39] kill_process_tree called: parent_pid=83501, include_parent=True, pid=83501
+ERROR: sglang server failed to start — skipping this framework
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Collecting results and generating report
+===========================================
+Comparison saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/comparison.json
+Frameworks: omlx, ollama, mlx_lm, vllm_metal, llamacpp
+Report saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/REPORT.md
+
+# SiliconBench Results — Gemma-4-E4B-it (agent)
+
+**Model:** Gemma-4-E4B-it
+**Split:** agent
+**Generated:** 2026-07-06 04:29:50
+
+## Concurrency: 1
+
+| Metric | omlx | ollama | mlx_lm | vllm_metal | llamacpp |
+|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 94 / 6 | CRASHED | 91 / 9 | 95 / 5 | 100 / 0 |
+| TTFT avg (ms) | 3148.3 | 0.0 | 4751.8 | 6377.6 | 4434.1 |
+| TTFT p50 (ms) | 1694.8 | 0.0 | 3256.6 | 3139.5 | 2919.7 |
+| TTFT p99 (ms) | 15965.0 | 0.0 | 15663.2 | 31285.4 | 17744.7 |
+| Throughput avg (tok/s) | 6.7 | 0.0 | 12.8 | 18.4 | 30.7 |
+| Output throughput (tok/s) | 14.7 | 0.0 | 5.3 | 8.4 | 13.0 |
+| Input throughput (tok/s) | 1381.6 | 0.0 | N/A | 451.2 | 624.7 |
+| Total token throughput (tok/s) | 1396.3 | 0.0 | N/A | 459.6 | 637.7 |
+| ITL avg (ms) | 148.3 | 0.0 | 68.3 | 52.5 | 31.6 |
+| ITL p50 (ms) | 149.7 | 0.0 | 47.3 | 50.7 | 31.6 |
+| Latency avg (s) | 5.97 | 0.00 | 6.99 | 10.63 | 7.43 |
+| Latency p99 (s) | 20.29 | 0.00 | 16.24 | 35.94 | 20.45 |
+| Wall time (s) | 568.3 | 0.2 | 736.0 | 1022.1 | 743.1 |
+
+## Concurrency: 8
+
+| Metric | omlx | ollama | mlx_lm | vllm_metal | llamacpp |
+|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 94 / 6 | CRASHED | 91 / 9 | 94 / 6 | 100 / 0 |
+| TTFT avg (ms) | 1455.9 | 0.0 | 54199.8 | 8752.1 | 22330.8 |
+| TTFT p50 (ms) | 1214.0 | 0.0 | 55753.4 | 6135.5 | 20029.5 |
+| TTFT p99 (ms) | 4384.3 | 0.0 | 78260.7 | 35502.5 | 51632.5 |
+| Throughput avg (tok/s) | 3.5 | 0.0 | 13.0 | 2.5 | 12.1 |
+| Output throughput (tok/s) | 48.7 | 0.0 | 5.4 | 11.8 | 21.2 |
+| Input throughput (tok/s) | 4689.9 | 0.0 | N/A | 653.9 | 1021.4 |
+| Total token throughput (tok/s) | 4738.6 | 0.0 | N/A | 665.6 | 1042.6 |
+| ITL avg (ms) | 280.8 | 0.0 | 67.4 | 568.9 | 136.5 |
+| ITL p50 (ms) | 278.7 | 0.0 | 47.3 | 476.1 | 98.9 |
+| Latency avg (s) | 13.54 | 0.00 | 56.41 | 58.39 | 35.80 |
+| Latency p99 (s) | 42.39 | 0.00 | 80.81 | 219.85 | 104.24 |
+| Wall time (s) | 167.4 | 0.1 | 729.3 | 697.9 | 454.5 |
+
+## Concurrency: 16
+
+| Metric | omlx | ollama | mlx_lm | vllm_metal | llamacpp |
+|--------|--------|--------|--------|--------|--------|
+| Successful / Failed | 94 / 6 | CRASHED | 91 / 9 | 90 / 10 | 100 / 0 |
+| TTFT avg (ms) | 12556.6 | 0.0 | 107645.5 | 16554.1 | 56870.0 |
+| TTFT p50 (ms) | 13013.0 | 0.0 | 114441.1 | 9770.5 | 56625.1 |
+| TTFT p99 (ms) | 21310.9 | 0.0 | 141733.1 | 54817.0 | 97748.5 |
+| Throughput avg (tok/s) | 3.3 | 0.0 | 12.8 | 1.1 | 12.1 |
+| Output throughput (tok/s) | 50.3 | 0.0 | 5.3 | 10.9 | 21.0 |
+| Input throughput (tok/s) | 4774.7 | 0.0 | N/A | 668.0 | 1014.9 |
+| Total token throughput (tok/s) | 4825.0 | 0.0 | N/A | 678.9 | 1035.9 |
+| ITL avg (ms) | 289.6 | 0.0 | 68.5 | 1416.8 | 134.5 |
+| ITL p50 (ms) | 280.9 | 0.0 | 48.0 | 1104.4 | 100.9 |
+| Latency avg (s) | 25.10 | 0.00 | 109.89 | 102.22 | 70.45 |
+| Latency p99 (s) | 50.92 | 0.00 | 141.74 | 297.20 | 145.75 |
+| Wall time (s) | 164.4 | 0.0 | 737.2 | 670.0 | 457.4 |
+
+## Total Benchmark Duration
+
+| Framework | omlx | ollama | mlx_lm | vllm_metal | llamacpp |
+|-----------|--------|--------|--------|--------|--------|
+| Duration | 15.7m | 0.3s | 38.0m | 41.4m | 28.8m |
+
+
+=========================================
+ SiliconBench complete!
+=========================================
+[04:29:50] run_all.sh --split agent: OK
+
+=========================================
+ [04:29:50] sync_github.sh
+=========================================

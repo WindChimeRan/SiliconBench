@@ -607,3 +607,24 @@ Report saved to: /Users/haorzhang/applebench/results/Qwen3.5-0.8B/agent/REPORT.m
 =========================================
  [01:46:15] sync_github.sh
 =========================================
+[main 1c17fda] Benchmark results: 2026-07-06 01:46
+ 16 files changed, 1473 insertions(+), 922 deletions(-)
+ delete mode 100644 results/Qwen3.5-0.8B/agent/llamacpp_20260523_002305.json
+ create mode 100644 results/Qwen3.5-0.8B/agent/llamacpp_20260706_005228.json
+ rename results/Qwen3.5-0.8B/agent/{mlx_lm_20260523_003019.json => mlx_lm_20260706_005836.json} (60%)
+ rename results/Qwen3.5-0.8B/agent/{ollama_20260523_010408.json => ollama_20260706_012753.json} (81%)
+ delete mode 100644 results/Qwen3.5-0.8B/agent/omlx_20260523_005826.json
+ create mode 100644 results/Qwen3.5-0.8B/agent/omlx_20260706_012222.json
+ delete mode 100644 results/Qwen3.5-0.8B/agent/sglang_20260523_011236.json
+ delete mode 100644 results/Qwen3.5-0.8B/agent/vllm_metal_20260523_004148.json
+ create mode 100644 results/Qwen3.5-0.8B/agent/vllm_metal_20260706_011018.json
+ delete mode 100644 results/Qwen3.5-0.8B/agent/vllm_mlx_20260523_010619.json
+ create mode 100644 results/Qwen3.5-0.8B/agent/vllm_mlx_20260706_012905.json
+ create mode 100644 results/Qwen3.5-0.8B/weekly_2026-07-06.log
+To github.com:WindChimeRan/applebench.git
+   21ad110..1c17fda  main -> main
+[01:46:16] sync_github.sh: OK
+
+=========================================
+ Weekly run finished: 2026-07-06T01:46:16
+=========================================

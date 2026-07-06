@@ -198,24 +198,25 @@ for entry in "${FRAMEWORKS[@]}"; do
         --split "$SPLIT" \
         $MODEL_FLAG &
     BENCH_PID=$!
-    (
-        # trap+background+wait (not a plain foreground `sleep`) so that killing
-        # this subshell from outside also kills the sleep instead of orphaning
-        # it — an orphaned sleep keeps this script's stdout fd open, which
-        # hangs weekly_bench.sh's `| tee` pipe until the sleep's own deadline.
-        trap 'kill "$SLEEP_PID" 2>/dev/null; exit 0' TERM
-        sleep "$FRAMEWORK_TIMEOUT_SECONDS" &
-        SLEEP_PID=$!
-        wait "$SLEEP_PID" 2>/dev/null
-        if kill -0 "$BENCH_PID" 2>/dev/null; then
-            echo "  ⚠ $name exceeded ${FRAMEWORK_TIMEOUT_SECONDS}s wall time — killing"
-            kill -TERM "$BENCH_PID" 2>/dev/null
-        fi
-    ) &
-    WATCHER_PID=$!
-    wait "$BENCH_PID" 2>/dev/null || true
-    kill "$WATCHER_PID" 2>/dev/null || true
-    wait "$WATCHER_PID" 2>/dev/null || true
+    sleep "$FRAMEWORK_TIMEOUT_SECONDS" &
+    SLEEP_PID=$!
+
+    # Poll both directly (no wrapper subshell/trap) — a killed subshell can
+    # orphan its own `sleep` child instead of terminating it, and an orphaned
+    # sleep keeps this script's stdout fd open, hanging weekly_bench.sh's
+    # `| tee` pipe until the orphan's own deadline. Direct PIDs, no relay.
+    while kill -0 "$BENCH_PID" 2>/dev/null && kill -0 "$SLEEP_PID" 2>/dev/null; do
+        sleep 1
+    done
+
+    if kill -0 "$BENCH_PID" 2>/dev/null; then
+        echo "  ⚠ $name exceeded ${FRAMEWORK_TIMEOUT_SECONDS}s wall time — killing"
+        kill -TERM "$BENCH_PID" 2>/dev/null
+        wait "$BENCH_PID" 2>/dev/null || true
+    else
+        kill "$SLEEP_PID" 2>/dev/null || true
+        wait "$SLEEP_PID" 2>/dev/null || true
+    fi
 
     if [ -n "$METAL_PID" ]; then
         kill -TERM "$METAL_PID" 2>/dev/null || true
