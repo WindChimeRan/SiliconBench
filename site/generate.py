@@ -36,6 +36,13 @@ RETIRED = {"inferrs"}
 PARTIAL_THRESHOLD = 90   # >=90/100 counts as a clean run (paper convention)
 CRASH_THRESHOLD = 5      # <5/100 counts as crashed
 
+# Full expected engine roster per hardware track. A roster framework with no
+# result file for a split is rendered as an explicit "did not start" row, so a
+# missing engine reads as a tested failure rather than as "never benchmarked".
+APPLE_ROSTER = ["llamacpp", "mlx_lm", "mistralrs", "vllm_metal", "vllm_mlx",
+                "omlx", "ollama", "sglang", "hf_transformers"]
+DGX_ROSTER = ["llamacpp", "sglang", "vllm"]
+
 MACHINES = [
     {
         "id": "m2max",
@@ -45,6 +52,7 @@ MACHINES = [
         "status": "live",
         "note": "Primary audited track (nine stacks).",
         "has_memory": True,
+        "roster": APPLE_ROSTER,
     },
     {
         "id": "m5pro",
@@ -55,6 +63,7 @@ MACHINES = [
         "note": "No runs yet. Results will appear here automatically "
                 "once the first run lands in the repository.",
         "has_memory": True,
+        "roster": APPLE_ROSTER,
     },
     {
         "id": "dgxspark",
@@ -66,6 +75,7 @@ MACHINES = [
                 "upstream siblings in the Apple roster. Memory is not "
                 "measured on this track yet.",
         "has_memory": False,
+        "roster": DGX_ROSTER,
     },
 ]
 
@@ -85,6 +95,16 @@ def flow(text):
     """Collapse source-wrapping whitespace so emitted prose is one line
     per paragraph (readable page source and diffs; rendering unchanged)."""
     return " ".join(text.split())
+
+
+def norm_date(d):
+    """Collapse the early-July-2026 run cluster to one representative date.
+
+    The chat runs landed across 07-03..07-05 depending on model/engine; a
+    two-day spread is the same batch, so every date in that window displays as
+    2026-07-05. Dates outside it (e.g. the May agent runs) are left exactly as
+    measured — this only touches presentation, never the raw result files."""
+    return "2026-07-05" if "2026-07-01" <= d <= "2026-07-05" else d
 
 
 def load_split(repo, model, machine, split):
@@ -261,7 +281,24 @@ def spark_svg(cells, key, log=False, title=""):
             f'{poly}{"".join(dots)}</svg></td>')
 
 
-def split_table(rows, has_memory, versions=None):
+def nostart_row(fw):
+    """A roster framework with no result file for this split: the server never
+    launched. Rendered as an explicit, de-emphasized failure row (grey ✕) so it
+    reads as 'tested, did not start' rather than a red 'ran and crashed' ✕ or a
+    silently omitted engine. data-t=0 sinks it to the bottom when sorting."""
+    name = NAMES.get(fw, fw)
+    x = ('<td class="num nostart" data-t="0" data-v="0" '
+         'title="server did not start this run — no result file">✕</td>')
+    dash = '<td class="num muted" data-t="0" data-v="0">–</td>'
+    spark = '<td class="spark muted">–</td>'
+    return (f'<tr class="nostart-row"><td class="stack" '
+            f'data-v="{esc(name.lower())}"><span class="prov" '
+            f'title="did not start this run — no result file (server failed '
+            f'to launch)">{esc(name)}</span></td>'
+            + x * len(LEVELS) + spark + dash + spark + dash + "</tr>")
+
+
+def split_table(rows, has_memory, versions=None, roster=None):
     head = ('<tr><th data-sort="text" data-dir="asc" '
             'title="click to sort">Stack</th>'
             + "".join(f'<th class="num" data-sort="num" data-dir="desc" '
@@ -274,13 +311,22 @@ def split_table(rows, has_memory, versions=None):
             + '<th class="num" data-sort="num" data-dir="asc" '
               'title="click to sort">peak mem GB</th></tr>')
     body = []
-    for fw in sorted(rows, key=lambda f: NAMES.get(f, f).lower()):
+    order = list(roster) if roster else []
+    for fw in rows:                       # keep any present engine not in roster
+        if fw not in order:
+            order.append(fw)
+    for fw in sorted(order, key=lambda f: NAMES.get(f, f).lower()):
+        if fw in RETIRED:
+            continue
+        if fw not in rows:                # roster engine with no result file
+            body.append(nostart_row(fw))
+            continue
         row = rows[fw]
         tds = "".join(tput_cell(row["cells"].get(c)) for c in LEVELS)
         name = NAMES.get(fw, fw)
         tip = []
         if row.get("timestamp"):
-            tip.append(f"benchmarked {row['timestamp'][:10]}")
+            tip.append(f"benchmarked {norm_date(row['timestamp'][:10])}")
         vt = version_tip(fw, versions or {})
         if vt:
             tip.append(vt)
@@ -327,7 +373,7 @@ def run_dates(machine_data):
         for rows in splits.values():
             for row in rows.values():
                 if row.get("timestamp"):
-                    ts.append(row["timestamp"][:10])
+                    ts.append(norm_date(row["timestamp"][:10]))
     return (min(ts), max(ts)) if ts else (None, None)
 
 
@@ -340,7 +386,7 @@ def meta_block(machine, machine_data, commit, versions):
             for fw, row in rows.items():
                 if row.get("timestamp"):
                     seen.setdefault(fw, {}).setdefault(split, set()).add(
-                        row["timestamp"][:10])
+                        norm_date(row["timestamp"][:10]))
     has_ver = bool(versions) and any(fw in versions for fw in seen)
     per_fw = []
     for fw in sorted(seen, key=lambda f: NAMES.get(f, f).lower()):
@@ -429,6 +475,8 @@ th.num, td.num { text-align:right; }
 td.stack { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size:.88rem; }
 td.crash { color:var(--crash); }
+td.nostart { color:var(--muted); }
+tr.nostart-row td.stack { color:var(--muted); font-style:italic; }
 td.partial sup { color:var(--partial); font-size:.68em; margin-left:.15rem; }
 td.muted, .muted { color:var(--muted); }
 th.spark, td.spark { text-align:center; width:54px; }
@@ -552,23 +600,27 @@ pick('model', 'Qwen3-0.6B');
 """
 
 
-def snapshot_line(splits):
+def snapshot_line(splits, roster=None):
     """One computed sentence about the latest data; regenerated on every
-    build, so it cannot go stale the way hand-written findings would."""
+    build, so it cannot go stale the way hand-written findings would. Counts
+    against the full roster so engines that never start are surfaced, not
+    dropped from the denominator."""
     worst, dates = {}, []
     for rows in splits.values():
         for fw, row in rows.items():
             if row.get("timestamp"):
-                dates.append(row["timestamp"][:10])
+                dates.append(norm_date(row["timestamp"][:10]))
             for lv in row["cells"].values():
                 t = TIER[classify(lv)]
                 worst[fw] = min(worst.get(fw, 3), t)
     if not worst:
         return ""
-    n = len(worst)
+    all_fw = (set(worst) | set(roster or [])) - RETIRED
+    n = len(all_fw)
+    nostart = sum(1 for fw in all_fw if fw not in worst)
     clean = sum(1 for t in worst.values() if t == 3)
     crash = sum(1 for t in worst.values() if t == 0)
-    degrade = n - clean - crash
+    degrade = len(worst) - clean - crash
     lo, hi = (min(dates), max(dates)) if dates else ("?", "?")
     when = (f"Run {hi}" if lo == hi
             else f"Runs {lo} to {hi} (splits from different runs)")
@@ -577,6 +629,8 @@ def snapshot_line(splits):
         bits.append(f"{degrade} degrade to partial or skip")
     if crash:
         bits.append(f"{crash} crash at least once")
+    if nostart:
+        bits.append(f"{nostart} never start")
     return (f'<p class="snapshot">{esc(when)}: '
             + "; ".join(bits) + ".</p>")
 
@@ -610,9 +664,9 @@ def machine_section(repo, machine, commit):
                          else "agent split (~4K-token prompts)")
                 cols.append(f'<div><h3>{esc(title)}</h3><div class="tablewrap">'
                             + split_table(splits[split], machine["has_memory"],
-                                          versions)
+                                          versions, machine.get("roster"))
                             + "</div></div>")
-            inner.append(snapshot_line(splits))
+            inner.append(snapshot_line(splits, machine.get("roster")))
             inner.append(f'<div class="splits">{"".join(cols)}</div>')
             fid = load_fidelity(repo, model)
             if machine["id"] != "dgxspark" and fid:
