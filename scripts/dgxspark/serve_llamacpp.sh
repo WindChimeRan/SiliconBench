@@ -29,7 +29,7 @@ fi
     --port "$LLAMACPP_PORT" \
     --host 0.0.0.0 \
     -ngl 99 \
-    --parallel 4 \
+    --parallel "${LLAMACPP_PARALLEL:-16}" \
     $CTX_ARG \
     &> "$PROJECT_DIR/.frameworks/llamacpp_dgxspark_server.log" &
 

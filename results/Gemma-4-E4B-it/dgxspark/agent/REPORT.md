@@ -2,64 +2,64 @@
 
 **Model:** Gemma-4-E4B-it
 **Split:** agent
-**Generated:** 2026-07-04 20:40:24
+**Generated:** 2026-07-05 23:43:48
 
 ## Concurrency: 1
 
-| Metric | llamacpp | sglang | vllm |
+| Metric | sglang | vllm | llamacpp |
 |--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | 94 / 6 | 94 / 6 |
-| TTFT avg (ms) | 907.9 | 551.7 | 500.4 |
-| TTFT p50 (ms) | 689.3 | 397.9 | 371.0 |
-| TTFT p99 (ms) | 3025.2 | 2364.5 | 1832.9 |
-| Throughput avg (tok/s) | 21.0 | 17.1 | 15.7 |
-| Output throughput (tok/s) | 18.2 | 16.0 | 16.1 |
-| Input throughput (tok/s) | 884.3 | 861.7 | 841.4 |
-| Total token throughput (tok/s) | 902.5 | 877.7 | 857.5 |
-| ITL avg (ms) | 46.1 | 56.6 | 60.6 |
-| ITL p50 (ms) | 46.0 | 56.5 | 57.7 |
-| Latency avg (s) | 5.25 | 5.44 | 5.58 |
-| Latency p99 (s) | 13.15 | 15.48 | 15.61 |
-| Wall time (s) | 524.9 | 514.1 | 526.6 |
+| Successful / Failed | 94 / 6 | 94 / 6 | 100 / 0 |
+| TTFT avg (ms) | 551.7 | 500.4 | 896.7 |
+| TTFT p50 (ms) | 397.9 | 371.0 | 700.1 |
+| TTFT p99 (ms) | 2364.5 | 1832.9 | 2988.5 |
+| Throughput avg (tok/s) | 17.1 | 15.7 | 20.9 |
+| Output throughput (tok/s) | 16.0 | 16.1 | 18.1 |
+| Input throughput (tok/s) | 861.7 | 841.4 | 880.7 |
+| Total token throughput (tok/s) | 877.7 | 857.5 | 898.9 |
+| ITL avg (ms) | 56.6 | 60.6 | 46.4 |
+| ITL p50 (ms) | 56.5 | 57.7 | 46.3 |
+| Latency avg (s) | 5.44 | 5.58 | 5.27 |
+| Latency p99 (s) | 15.48 | 15.61 | 13.19 |
+| Wall time (s) | 514.1 | 526.6 | 527.1 |
 
 ## Concurrency: 8
 
-| Metric | llamacpp | sglang | vllm |
+| Metric | sglang | vllm | llamacpp |
 |--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | 94 / 6 | 94 / 6 |
-| TTFT avg (ms) | 9616.8 | 182.5 | 211.7 |
-| TTFT p50 (ms) | 9937.0 | 174.1 | 176.2 |
-| TTFT p99 (ms) | 16992.1 | 324.8 | 471.7 |
-| Throughput avg (tok/s) | 13.2 | 17.1 | 17.1 |
-| Output throughput (tok/s) | 42.9 | 125.8 | 131.9 |
-| Input throughput (tok/s) | 2069.3 | 6618.3 | 6948.2 |
-| Total token throughput (tok/s) | 2112.2 | 6744.1 | 7080.1 |
-| ITL avg (ms) | 79.6 | 56.9 | 55.7 |
-| ITL p50 (ms) | 73.9 | 57.2 | 53.3 |
-| Latency avg (s) | 17.16 | 5.24 | 4.86 |
-| Latency p99 (s) | 40.53 | 15.24 | 14.10 |
-| Wall time (s) | 224.3 | 66.9 | 63.8 |
+| Successful / Failed | 94 / 6 | 94 / 6 | 100 / 0 |
+| TTFT avg (ms) | 182.5 | 211.7 | 2698.6 |
+| TTFT p50 (ms) | 174.1 | 176.2 | 2186.8 |
+| TTFT p99 (ms) | 324.8 | 471.7 | 7118.4 |
+| Throughput avg (tok/s) | 17.1 | 17.1 | 3.6 |
+| Output throughput (tok/s) | 125.8 | 131.9 | 24.6 |
+| Input throughput (tok/s) | 6618.3 | 6948.2 | 1201.2 |
+| Total token throughput (tok/s) | 6744.1 | 7080.1 | 1225.8 |
+| ITL avg (ms) | 56.9 | 55.7 | 283.5 |
+| ITL p50 (ms) | 57.2 | 53.3 | 292.4 |
+| Latency avg (s) | 5.24 | 4.86 | 30.01 |
+| Latency p99 (s) | 15.24 | 14.10 | 88.45 |
+| Wall time (s) | 66.9 | 63.8 | 386.5 |
 
 ## Concurrency: 16
 
-| Metric | llamacpp | sglang | vllm |
+| Metric | sglang | vllm | llamacpp |
 |--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | 94 / 6 | 94 / 6 |
-| TTFT avg (ms) | 25483.0 | 208.1 | 240.7 |
-| TTFT p50 (ms) | 27328.5 | 189.1 | 211.4 |
-| TTFT p99 (ms) | 36957.4 | 416.3 | 546.8 |
-| Throughput avg (tok/s) | 13.8 | 14.5 | 15.5 |
-| Output throughput (tok/s) | 43.8 | 201.9 | 226.4 |
-| Input throughput (tok/s) | 2130.7 | 10290.4 | 11818.6 |
-| Total token throughput (tok/s) | 2174.5 | 10492.3 | 12045.1 |
-| ITL avg (ms) | 75.9 | 67.3 | 61.7 |
-| ITL p50 (ms) | 71.1 | 67.5 | 59.4 |
-| Latency avg (s) | 32.78 | 6.26 | 5.36 |
-| Latency p99 (s) | 60.61 | 17.88 | 15.08 |
-| Wall time (s) | 217.9 | 43.0 | 37.5 |
+| Successful / Failed | 94 / 6 | 94 / 6 | 100 / 0 |
+| TTFT avg (ms) | 208.1 | 240.7 | 3936.5 |
+| TTFT p50 (ms) | 189.1 | 211.4 | 2429.9 |
+| TTFT p99 (ms) | 416.3 | 546.8 | 12625.8 |
+| Throughput avg (tok/s) | 14.5 | 15.5 | 4.5 |
+| Output throughput (tok/s) | 201.9 | 226.4 | 51.7 |
+| Input throughput (tok/s) | 10290.4 | 11818.6 | 2507.0 |
+| Total token throughput (tok/s) | 10492.3 | 12045.1 | 2558.7 |
+| ITL avg (ms) | 67.3 | 61.7 | 251.5 |
+| ITL p50 (ms) | 67.5 | 59.4 | 233.8 |
+| Latency avg (s) | 6.26 | 5.36 | 26.98 |
+| Latency p99 (s) | 17.88 | 15.08 | 72.20 |
+| Wall time (s) | 43.0 | 37.5 | 185.2 |
 
 ## Total Benchmark Duration
 
-| Framework | llamacpp | sglang | vllm |
+| Framework | sglang | vllm | llamacpp |
 |-----------|--------|--------|--------|
-| Duration | 16.5m | 10.8m | 10.9m |
+| Duration | 10.8m | 10.9m | 18.7m |

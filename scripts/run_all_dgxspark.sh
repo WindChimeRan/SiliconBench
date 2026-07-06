@@ -69,11 +69,19 @@ FRAMEWORKS=(
 
 CONCURRENCY_ARG=$(echo $CONCURRENCY_LEVELS | tr ' ' ',')
 
-# Bump context window for agent split — prompts reach ~8.8K tokens.
-# llamacpp's --parallel 4 divides ctx across slots, so 65536 = 16384/slot.
+# llama.cpp serves at most --parallel requests concurrently; anything beyond
+# that queues (huge TTFT) and can't batch. Set it to the max concurrency
+# tested so the comparison against vllm/sglang is apples-to-apples. Note -c is
+# the TOTAL context shared across slots, so size it as parallel × per-slot to
+# keep each concurrent request's room constant as --parallel grows. Memory is
+# not a constraint on GB10 (128 GB unified; Gemma also uses sliding-window
+# attention, so its KV stays small even at large ctx).
+export LLAMACPP_PARALLEL=16
 if [ "$SPLIT" = "agent" ]; then
     export DGX_VLLM_MAX_MODEL_LEN=16384
-    export LLAMACPP_CTX_SIZE=65536
+    export LLAMACPP_CTX_SIZE=$((LLAMACPP_PARALLEL * 16384))  # 16384/slot — agent prompts reach ~8.8K tokens
+else
+    export LLAMACPP_CTX_SIZE=$((LLAMACPP_PARALLEL * 8192))   # 8192/slot — chat prompts reach ~4K tokens
 fi
 
 # Per-split output directory: results/<MODEL>/dgxspark/<split>/
