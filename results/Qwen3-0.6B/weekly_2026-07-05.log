@@ -1,0 +1,279 @@
+=========================================
+ SiliconBench — Weekly Run
+ Started: 2026-07-05T21:41:47
+ Model: Qwen3-0.6B
+ Splits: agent
+ Log: /Users/haorzhang/applebench/results/Qwen3-0.6B/weekly_2026-07-05.log
+ Skip update: true
+ Metalstat: 1
+ Run args: --model qwen3-0.6b
+=========================================
+
+Skipping update_all.sh (--skip-update)
+
+=========================================
+ [21:41:47] run_all.sh --split agent
+=========================================
+=== SiliconBench Environment Check ===
+
+Platform:
+  [ok]   Apple Silicon (arm64)
+  [ok]   Xcode Command Line Tools
+
+Required tools:
+  [ok]   uv
+  [ok]   cmake
+  [warn] cargo not found (mistral.rs already built)
+         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  [ok]   huggingface-cli (hf)
+
+Python:
+  [ok]   Python 3.12 (/Users/haorzhang/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12)
+
+Frameworks (run install scripts if missing):
+  [ok]   llama.cpp
+  [ok]   mlx_lm
+  [ok]   mistral.rs
+  [ok]   vllm-metal
+  [ok]   omlx
+  [ok]   ollama
+  [ok]   vllm-mlx
+  [ok]   hf_transformers
+  [ok]   sglang
+
+Models (run scripts/download_model.sh if missing):
+  [ok]   GGUF: Qwen3-0.6B-BF16.gguf
+  [ok]   MLX: Qwen3-0.6B-bf16-mlx
+  [ok]   HF: Qwen3-0.6B
+
+Benchmark:
+  [ok]   bench venv
+
+===========================================
+ All prerequisites met, 1 warning(s)
+===========================================
+
+=========================================
+ SiliconBench — Full Benchmark Run
+ Model: Qwen3-0.6B
+ Split: agent
+ Output: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent
+ Skip-existing: false
+ Sun Jul  5 21:41:47 CDT 2026
+=========================================
+
+Cleaning old result files...
+  Cleaning up all inference processes...
+===========================================
+ Benchmarking: llamacpp (port 8001)
+===========================================
+Starting llamacpp server...
+=== Starting llama.cpp server on port 8001 ===
+PID: 10556
+Waiting for server to be ready...
+llama.cpp server is ready on port 8001
+
+Framework: llamacpp
+Model: /Users/haorzhang/applebench/.models/Qwen3-0.6B-BF16.gguf
+Endpoint: http://localhost:8001
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 1017.4ms | Throughput avg: 143.8 tok/s | Output: 41.6 tok/s | ITL avg: 6.8ms | Wall: 140.4s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 5871.8ms | Throughput avg: 30.2 tok/s | Output: 52.9 tok/s | ITL avg: 55.1ms | Wall: 113.7s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 14857.8ms | Throughput avg: 28.6 tok/s | Output: 51.5 tok/s | ITL avg: 62.0ms | Wall: 116.9s
+
+Total benchmark duration: 384.6s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/llamacpp_20260705_214155.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/llamacpp_20260705_214155_outputs.jsonl (300 records)
+
+Stopping llamacpp server...
+llama.cpp server (PID 10556) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: mlx_lm (port 8002)
+===========================================
+Starting mlx_lm server...
+=== Starting mlx_lm server on port 8002 ===
+PID: 11908
+Waiting for server to be ready...
+mlx_lm server is ready on port 8002
+
+Framework: mlx_lm
+Model: /Users/haorzhang/applebench/.models/Qwen3-0.6B-bf16-mlx
+Endpoint: http://localhost:8002
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Warmup error: silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+  Warmup error: silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+  Running 100 requests at concurrency 1...
+  30/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a006_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+  ⚠ WARNING: 21/70 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 767.9ms | Throughput avg: 117.9 tok/s | Output: 30.2 tok/s | ITL avg: 8.1ms | Wall: 161.5s | FAILED: 30
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Warmup error: silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+  Warmup error: silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+  Running 100 requests at concurrency 8...
+  83/100 requests FAILED
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a002_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+    > silent failure: server returned OK but generated only 0 token(s) for prompt 'a006_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)
+  ⚠ WARNING: server did not report token usage for 6/17 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 4063.3ms | Throughput avg: 5.1 tok/s | Output: 15.8 tok/s | ITL avg: 221.3ms | Wall: 57.5s | FAILED: 83
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Warmup error: Cannot connect to host localhost:8002 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8002, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8002)]
+  Warmup error: Cannot connect to host localhost:8002 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8002), [Errno 61] Connect call failed ('::1', 8002, 0, 0)]
+  Warmup error: Cannot connect to host localhost:8002 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8002, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8002)]
+  Running 100 requests at concurrency 16...
+  100/100 requests FAILED
+    > Cannot connect to host localhost:8002 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8002), [Errno 61] Connect call failed ('::1', 8002, 0, 0)]
+    > Cannot connect to host localhost:8002 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8002, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8002)]
+  TTFT avg: 0.0ms | Throughput avg: 0.0 tok/s | Output: 0.0 tok/s | ITL avg: 0.0ms | Wall: 0.0s | FAILED: 100
+
+Total benchmark duration: 230.6s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/mlx_lm_20260705_214929.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/mlx_lm_20260705_214929_outputs.jsonl (87 records)
+
+Stopping mlx_lm server...
+mlx_lm server (PID 11908) was not running
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: mistralrs (port 8003)
+===========================================
+Starting mistralrs server...
+=== Starting mistral.rs server on port 8003 ===
+PID: 12916
+Waiting for server to be ready...
+mistral.rs server is ready on port 8003
+
+Framework: mistralrs
+Model: default
+Endpoint: http://localhost:8003
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  TTFT avg: 1585.7ms | Throughput avg: 89.2 tok/s | Output: 56.8 tok/s | ITL avg: 11.3ms | Wall: 431.4s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  38/100 requests FAILED
+    > 
+  ⚠ WARNING: throughput (0.8 tok/s) inconsistent with ITL (10348.7ms, implies ~0.1 tok/s). Ratio: 8.57x.
+  ⚠ WARNING: server did not report token usage for 19/62 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`.
+  TTFT avg: 36244.8ms | Throughput avg: 0.8 tok/s | Output: 2.9 tok/s | ITL avg: 10348.7ms | Wall: 3128.1s | FAILED: 38
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  ⚠ mistralrs exceeded 3600s wall time — killing
+
+Stopping mistralrs server...
+mistral.rs server (PID 12916) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: vllm_metal (port 8004)
+===========================================
+Starting vllm_metal server...
+=== Starting vllm-metal server on port 8004 ===
+PID: 25063
+Waiting for server to be ready...
+vllm-metal server is ready on port 8004
+
+Framework: vllm_metal
+Model: /Users/haorzhang/applebench/.models/Qwen3-0.6B
+Endpoint: http://localhost:8004
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 20/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 958.3ms | Throughput avg: 61.4 tok/s | Output: 32.1 tok/s | ITL avg: 16.0ms | Wall: 194.0s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 355.5ms | Throughput avg: 14.9 tok/s | Output: 106.8 tok/s | ITL avg: 66.9ms | Wall: 52.9s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 19/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 635.7ms | Throughput avg: 7.2 tok/s | Output: 101.7 tok/s | ITL avg: 142.7ms | Wall: 57.6s
+
+Total benchmark duration: 317.9s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/vllm_metal_20260705_225552.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/vllm_metal_20260705_225552_outputs.jsonl (300 records)
+
+Stopping vllm_metal server...
+vllm-metal server (PID 25063) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
+
+===========================================
+ Benchmarking: omlx (port 8005)
+===========================================
+Starting omlx server...
+omlx model dir reset to single entry: Qwen3-0.6B-bf16-mlx -> /Users/haorzhang/applebench/.models/Qwen3-0.6B-bf16-mlx
+=== Starting omlx server on port 8005 ===
+PID: 26230
+Waiting for server to be ready...
+omlx server is ready on port 8005
+
+Framework: omlx
+Model: Qwen3-0.6B-bf16-mlx
+Endpoint: http://localhost:8005
+
+--- Concurrency: 1 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 1...
+  ⚠ WARNING: 100/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 13.72x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 821.6ms | Throughput avg: 12.7 tok/s | Output: 54.3 tok/s | ITL avg: 83.7ms | Wall: 112.7s
+
+--- Concurrency: 8 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 8...
+  ⚠ WARNING: 100/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 2.28x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 724.3ms | Throughput avg: 5.6 tok/s | Output: 91.5 tok/s | ITL avg: 182.7ms | Wall: 65.9s
+
+--- Concurrency: 16 ---
+  Warming up (3 requests)...
+  Running 100 requests at concurrency 16...
+  ⚠ WARNING: 100/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 2.30x). Framework may be bundling multiple tokens per chunk — per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect.
+  TTFT avg: 5435.3ms | Throughput avg: 5.5 tok/s | Output: 95.1 tok/s | ITL avg: 182.7ms | Wall: 66.6s
+
+Total benchmark duration: 255.5s
+Results saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/omlx_20260705_230219.json
+Outputs saved to: /Users/haorzhang/applebench/results/Qwen3-0.6B/agent/omlx_20260705_230219_outputs.jsonl (300 records)
+
+Stopping omlx server...
+omlx server (PID 26230) stopped
+  Cleaning up all inference processes...
+Cooling down for 60s...
