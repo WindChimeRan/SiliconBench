@@ -9,6 +9,6 @@ VENV_DIR="$VENVS_DIR/hf_transformers"
 echo "=== Updating hf_transformers ==="
 
 source "$VENV_DIR/bin/activate"
-uv pip install --upgrade "transformers[serving]" torch
+uv pip install --upgrade "transformers[serving]" torch torchvision pillow
 
 echo "=== hf_transformers updated ==="

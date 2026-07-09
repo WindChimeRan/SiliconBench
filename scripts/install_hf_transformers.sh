@@ -15,6 +15,10 @@ else
 fi
 
 source "$VENV_DIR/bin/activate"
-uv pip install "transformers[serving]" torch requests
+# pillow/torchvision: not needed for text-only inference, but AutoProcessor
+# still imports the image-processor class for natively-multimodal checkpoints
+# (Qwen3.5, Gemma-4) even when we never pass image inputs — without these,
+# that import raises ImportError before the server ever comes up.
+uv pip install "transformers[serving]" torch torchvision pillow requests
 
 echo "=== hf_transformers installed ==="
