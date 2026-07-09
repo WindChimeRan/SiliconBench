@@ -809,3 +809,20 @@ Report saved to: /Users/haorzhang/applebench/results/Gemma-4-E4B-it/agent/REPORT
 =========================================
  [04:29:50] sync_github.sh
 =========================================
+[main ec9b63c] Benchmark results: 2026-07-06 04:29
+ 12 files changed, 1570 insertions(+), 616 deletions(-)
+ delete mode 100644 results/Gemma-4-E4B-it/agent/llamacpp_20260524_042620.json
+ create mode 100644 results/Gemma-4-E4B-it/agent/llamacpp_20260706_015931.json
+ rename results/Gemma-4-E4B-it/agent/{mlx_lm_20260524_045754.json => mlx_lm_20260706_022932.json} (73%)
+ create mode 100644 results/Gemma-4-E4B-it/agent/ollama_20260706_040938.json
+ delete mode 100644 results/Gemma-4-E4B-it/agent/omlx_20260524_063135.json
+ create mode 100644 results/Gemma-4-E4B-it/agent/omlx_20260706_035245.json
+ rename results/Gemma-4-E4B-it/agent/{vllm_metal_20260524_053810.json => vllm_metal_20260706_031010.json} (57%)
+ create mode 100644 results/Gemma-4-E4B-it/weekly_2026-07-06.log
+To github.com:WindChimeRan/applebench.git
+   1c17fda..ec9b63c  main -> main
+[04:29:52] sync_github.sh: OK
+
+=========================================
+ Weekly run finished: 2026-07-06T04:29:52
+=========================================
