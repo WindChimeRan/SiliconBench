@@ -1,0 +1,86 @@
+{
+  "framework": "vllm_mlx",
+  "model": "/Users/ranzhang/workspace/applebench/.models/Qwen3-0.6B-bf16-mlx",
+  "endpoint": "http://localhost:8008",
+  "timestamp": "2026-08-15T01:34:21",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 4723,
+      "total_output_tokens": 4803,
+      "total_input_tokens": 99677,
+      "server_usage_available": true,
+      "ttft_avg_ms": 94.18331697466783,
+      "ttft_p50_ms": 54.709167045075446,
+      "ttft_p99_ms": 278.6429169937037,
+      "throughput_avg_tps": 153.52932163209778,
+      "throughput_p50_tps": 157.35824645691045,
+      "itl_avg_ms": 5.408292176777123,
+      "itl_p50_ms": 5.2860108705278,
+      "latency_avg_s": 0.37591268160031177,
+      "latency_p50_s": 0.3454986249562353,
+      "latency_p99_s": 1.807204999960959,
+      "output_throughput_tps": 127.74435822562873,
+      "input_throughput_tps": 2651.087735760149,
+      "total_token_throughput_tps": 2778.8320939857776,
+      "wall_time_s": 37.598529334005434,
+      "error_samples": [],
+      "sanity_warnings": [
+        "31/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.19x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 33,
+      "failed": 67,
+      "total_tokens_generated": 1400,
+      "total_output_tokens": 1414,
+      "total_input_tokens": 24374,
+      "server_usage_available": true,
+      "ttft_avg_ms": 1846.96010600204,
+      "ttft_p50_ms": 955.9368750196882,
+      "ttft_p99_ms": 3888.6228330084123,
+      "throughput_avg_tps": 12.932227381967111,
+      "throughput_p50_tps": 13.450863009300548,
+      "itl_avg_ms": 79.44564932525664,
+      "itl_p50_ms": 72.69373097780931,
+      "latency_avg_s": 5.279912850937707,
+      "latency_p50_s": 4.911603416025173,
+      "latency_p99_s": 9.000316916033626,
+      "output_throughput_tps": 40.53682035901268,
+      "input_throughput_tps": 698.7584578716938,
+      "total_token_throughput_tps": 739.2952782307065,
+      "wall_time_s": 34.88186758302618,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p043_long_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p044_long_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p066_long_out256' (requested max_tokens=256, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p023_medium_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p057_long_out256' (requested max_tokens=256, finish_reason=error)"
+      ],
+      "sanity_warnings": [
+        "6/33 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.22x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 6.831683958007488,
+      "error": "no successful requests",
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p025_medium_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p076_vlong_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p079_vlong_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p053_long_out64' (requested max_tokens=64, finish_reason=error)",
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'p084_vlong_out64' (requested max_tokens=64, finish_reason=error)"
+      ]
+    }
+  ],
+  "total_duration_s": 89.74565175001044
+}
