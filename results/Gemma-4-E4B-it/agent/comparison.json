@@ -3,138 +3,392 @@
   "split": "agent",
   "frameworks": [
     "omlx",
-    "ollama",
-    "mlx_lm",
+    "vllm_mlx",
+    "llamacpp",
     "vllm_metal",
-    "llamacpp"
+    "ollama",
+    "mlx_lm"
   ],
   "results": {
     "omlx": {
       "framework": "omlx",
-      "model": "gemma-4-e4b-it-bf16-mlx",
+      "model": "RedHatAI--Qwen3-8B-speculator.dflash",
       "endpoint": "http://localhost:8005",
-      "timestamp": "2026-07-06T03:52:46",
+      "timestamp": "2026-08-15T14:21:44",
       "concurrency_results": [
         {
           "concurrency": 1,
           "num_requests": 100,
-          "successful": 94,
-          "failed": 6,
-          "total_tokens_generated": 1791,
-          "total_output_tokens": 8356,
-          "total_input_tokens": 785179,
-          "server_usage_available": true,
-          "ttft_avg_ms": 3148.334839563641,
-          "ttft_p50_ms": 1694.7857500053942,
-          "ttft_p99_ms": 15965.024583012564,
-          "throughput_avg_tps": 6.738775673827715,
-          "throughput_p50_tps": 6.399158440737264,
-          "itl_avg_ms": 148.28999814532668,
-          "itl_p50_ms": 149.7450165974442,
-          "latency_avg_s": 5.969162709702629,
-          "latency_p50_s": 4.282674084010068,
-          "latency_p99_s": 20.288182708027307,
-          "output_throughput_tps": 14.703465384078953,
-          "input_throughput_tps": 1381.6242516521934,
-          "total_token_throughput_tps": 1396.3277170362724,
-          "wall_time_s": 568.3014025420125,
+          "successful": 0,
+          "failed": 100,
+          "wall_time_s": 0.07265941699733958,
+          "error": "no successful requests",
           "error_samples": [
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a025_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
-          ],
-          "sanity_warnings": [
-            "94/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 4.35x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ],
-          "mem_used_gb": 28.77
+            "409, message='Conflict', url='http://localhost:8005/v1/chat/completions'"
+          ]
         },
         {
           "concurrency": 8,
           "num_requests": 100,
-          "successful": 94,
-          "failed": 6,
-          "total_tokens_generated": 4141,
-          "total_output_tokens": 8153,
-          "total_input_tokens": 785179,
-          "server_usage_available": true,
-          "ttft_avg_ms": 1455.8846153172744,
-          "ttft_p50_ms": 1213.9607919962145,
-          "ttft_p99_ms": 4384.278624987928,
-          "throughput_avg_tps": 3.50987005254447,
-          "throughput_p50_tps": 3.5514556675763864,
-          "itl_avg_ms": 280.7909510842931,
-          "itl_p50_ms": 278.725030049529,
-          "latency_avg_s": 13.535433478735479,
-          "latency_p50_s": 8.933939167007338,
-          "latency_p99_s": 42.392474749998655,
-          "output_throughput_tps": 48.69797561887174,
-          "input_throughput_tps": 4689.884434987132,
-          "total_token_throughput_tps": 4738.582410606004,
-          "wall_time_s": 167.41969037498347,
+          "successful": 0,
+          "failed": 100,
+          "wall_time_s": 0.0332167079905048,
+          "error": "no successful requests",
           "error_samples": [
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a025_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
-          ],
-          "sanity_warnings": [
-            "94/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.92x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ],
-          "mem_used_gb": 38.9
+            "409, message='Conflict', url='http://localhost:8005/v1/chat/completions'"
+          ]
         },
         {
           "concurrency": 16,
           "num_requests": 100,
-          "successful": 94,
-          "failed": 6,
-          "total_tokens_generated": 4170,
-          "total_output_tokens": 8276,
-          "total_input_tokens": 785179,
+          "successful": 0,
+          "failed": 100,
+          "wall_time_s": 0.032046624983195215,
+          "error": "no successful requests",
+          "error_samples": [
+            "409, message='Conflict', url='http://localhost:8005/v1/chat/completions'"
+          ]
+        }
+      ],
+      "total_duration_s": 0.15856608300236985
+    },
+    "vllm_mlx": {
+      "framework": "vllm_mlx",
+      "model": "/Users/ranzhang/workspace/applebench/.models/gemma-4-e4b-it-bf16-mlx",
+      "endpoint": "http://localhost:8008",
+      "timestamp": "2026-08-15T14:24:06",
+      "concurrency_results": [
+        {
+          "concurrency": 1,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 8547,
+          "total_output_tokens": 8631,
+          "total_input_tokens": 438959,
           "server_usage_available": true,
-          "ttft_avg_ms": 12556.550650222369,
-          "ttft_p50_ms": 13012.979208026081,
-          "ttft_p99_ms": 21310.923167009605,
-          "throughput_avg_tps": 3.345757655241441,
-          "throughput_p50_tps": 3.417163877850832,
-          "itl_avg_ms": 289.62448738136476,
-          "itl_p50_ms": 280.85667154687144,
-          "latency_avg_s": 25.096551532329535,
-          "latency_p50_s": 21.975584667001385,
-          "latency_p99_s": 50.91821008300758,
-          "output_throughput_tps": 50.3264023845627,
-          "input_throughput_tps": 4774.677899698955,
-          "total_token_throughput_tps": 4825.004302083518,
-          "wall_time_s": 164.44648549999692,
+          "ttft_avg_ms": 1582.7693619761587,
+          "ttft_p50_ms": 1417.3243339755572,
+          "ttft_p99_ms": 3531.1683749896474,
+          "throughput_avg_tps": 25.133210713546163,
+          "throughput_p50_tps": 25.589824321833998,
+          "itl_avg_ms": 38.209804443823636,
+          "itl_p50_ms": 38.22902989138485,
+          "latency_avg_s": 5.081224769706868,
+          "latency_p50_s": 4.112745709018782,
+          "latency_p99_s": 12.100269833987113,
+          "output_throughput_tps": 17.983928123788008,
+          "input_throughput_tps": 914.6341218039463,
+          "total_token_throughput_tps": 932.6180499277343,
+          "wall_time_s": 479.928519542038,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a001_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "22/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 43.42
+        },
+        {
+          "concurrency": 8,
+          "num_requests": 100,
+          "successful": 48,
+          "failed": 52,
+          "total_tokens_generated": 2956,
+          "total_output_tokens": 3069,
+          "total_input_tokens": 238686,
+          "server_usage_available": true,
+          "ttft_avg_ms": 38968.46226741642,
+          "ttft_p50_ms": 4022.6074589882046,
+          "ttft_p99_ms": 275708.78883299883,
+          "throughput_avg_tps": 3.789737936756785,
+          "throughput_p50_tps": 3.789856089396978,
+          "itl_avg_ms": 517.6793474372804,
+          "itl_p50_ms": 230.28524359368342,
+          "latency_avg_s": 55.9904046710617,
+          "latency_p50_s": 25.526348332990892,
+          "latency_p99_s": 278.4720061669941,
+          "output_throughput_tps": 1.4020894781827202,
+          "input_throughput_tps": 109.04500788189013,
+          "total_token_throughput_tps": 110.44709736007285,
+          "wall_time_s": 2188.875993833004,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a001_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            ""
+          ],
+          "sanity_warnings": [
+            "22/48 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.93x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 61.57
+        },
+        {
+          "concurrency": 16,
+          "num_requests": 100,
+          "successful": 52,
+          "failed": 48,
+          "total_tokens_generated": 2003,
+          "total_output_tokens": 2388,
+          "total_input_tokens": 284341,
+          "server_usage_available": true,
+          "ttft_avg_ms": 17586.53730363697,
+          "ttft_p50_ms": 2337.7583329565823,
+          "ttft_p99_ms": 286957.60454103583,
+          "throughput_avg_tps": 4.718486088811087,
+          "throughput_p50_tps": 3.710247470734294,
+          "itl_avg_ms": 1197.014979965404,
+          "itl_p50_ms": 251.11643436442438,
+          "latency_avg_s": 45.03268747432426,
+          "latency_p50_s": 13.628309749998152,
+          "latency_p99_s": 297.05700112500926,
+          "output_throughput_tps": 6.445249007769736,
+          "input_throughput_tps": 767.4407655436578,
+          "total_token_throughput_tps": 773.8860145514275,
+          "wall_time_s": 370.50546799995936,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a001_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a025_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "throughput (4.7 tok/s) inconsistent with ITL (1197.0ms, implies ~0.8 tok/s). Ratio: 5.65x.",
+            "26/52 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.41x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 60.69
+        }
+      ],
+      "total_duration_s": 3061.9844418749562
+    },
+    "llamacpp": {
+      "framework": "llamacpp",
+      "model": "/Users/ranzhang/workspace/applebench/.models/gemma-4-E4B-it-BF16.gguf",
+      "endpoint": "http://localhost:8001",
+      "timestamp": "2026-08-15T13:26:56",
+      "concurrency_results": [
+        {
+          "concurrency": 1,
+          "num_requests": 100,
+          "successful": 100,
+          "failed": 0,
+          "total_tokens_generated": 9577,
+          "total_output_tokens": 9666,
+          "total_input_tokens": 464308,
+          "server_usage_available": true,
+          "ttft_avg_ms": 1800.1347716694,
+          "ttft_p50_ms": 1310.7161250081845,
+          "ttft_p99_ms": 7170.510625001043,
+          "throughput_avg_tps": 23.72408971395105,
+          "throughput_p50_tps": 23.017135689546343,
+          "itl_avg_ms": 41.137487763744794,
+          "itl_p50_ms": 42.853113103585386,
+          "latency_avg_s": 5.7374184971099025,
+          "latency_p50_s": 5.602697583031841,
+          "latency_p99_s": 14.03337279194966,
+          "output_throughput_tps": 16.84702514783009,
+          "input_throughput_tps": 809.2497985038996,
+          "total_token_throughput_tps": 826.0968236517297,
+          "wall_time_s": 573.7511468750308,
+          "error_samples": [],
+          "sanity_warnings": [
+            "21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 41.95
+        },
+        {
+          "concurrency": 8,
+          "num_requests": 100,
+          "successful": 100,
+          "failed": 0,
+          "total_tokens_generated": 9575,
+          "total_output_tokens": 9664,
+          "total_input_tokens": 464308,
+          "server_usage_available": true,
+          "ttft_avg_ms": 11607.670353782014,
+          "ttft_p50_ms": 12112.913582997862,
+          "ttft_p99_ms": 23251.420917047653,
+          "throughput_avg_tps": 13.736554118792046,
+          "throughput_p50_tps": 13.285758259486473,
+          "itl_avg_ms": 92.95894552576158,
+          "itl_p50_ms": 75.40770553362866,
+          "latency_avg_s": 20.020810076249763,
+          "latency_p50_s": 17.605849999992643,
+          "latency_p99_s": 44.82168966601603,
+          "output_throughput_tps": 37.40743912953246,
+          "input_throughput_tps": 1797.2447482776242,
+          "total_token_throughput_tps": 1834.6521874071566,
+          "wall_time_s": 258.34433537500445,
+          "error_samples": [],
+          "sanity_warnings": [
+            "21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 42.16
+        },
+        {
+          "concurrency": 16,
+          "num_requests": 100,
+          "successful": 100,
+          "failed": 0,
+          "total_tokens_generated": 9575,
+          "total_output_tokens": 9664,
+          "total_input_tokens": 464308,
+          "server_usage_available": true,
+          "ttft_avg_ms": 26168.43634707795,
+          "ttft_p50_ms": 28278.33499998087,
+          "ttft_p99_ms": 40320.11795899598,
+          "throughput_avg_tps": 15.545772586996641,
+          "throughput_p50_tps": 15.868224437232055,
+          "itl_avg_ms": 79.01405591916257,
+          "itl_p50_ms": 60.9693749982398,
+          "latency_avg_s": 33.484000006240095,
+          "latency_p50_s": 34.944185375003144,
+          "latency_p99_s": 64.8828224169556,
+          "output_throughput_tps": 43.13056017575127,
+          "input_throughput_tps": 2072.2127622188245,
+          "total_token_throughput_tps": 2115.343322394576,
+          "wall_time_s": 224.06386470800499,
+          "error_samples": [],
+          "sanity_warnings": [
+            "21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 41.74
+        }
+      ],
+      "total_duration_s": 1090.9886258749757
+    },
+    "vllm_metal": {
+      "framework": "vllm_metal",
+      "model": "/Users/ranzhang/workspace/applebench/.models/Gemma-4-E4B-it",
+      "endpoint": "http://localhost:8004",
+      "timestamp": "2026-08-15T14:04:10",
+      "concurrency_results": [
+        {
+          "concurrency": 1,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 8179,
+          "total_output_tokens": 8433,
+          "total_input_tokens": 436951,
+          "server_usage_available": true,
+          "ttft_avg_ms": 1637.9125591721738,
+          "ttft_p50_ms": 975.2409170032479,
+          "ttft_p99_ms": 8578.029291995335,
+          "throughput_avg_tps": 21.150118138643986,
+          "throughput_p50_tps": 21.926634139475166,
+          "itl_avg_ms": 45.368335846312974,
+          "itl_p50_ms": 43.62090536266227,
+          "latency_avg_s": 5.427799021098537,
+          "latency_p50_s": 4.704427458054852,
+          "latency_p99_s": 14.481785167008638,
+          "output_throughput_tps": 16.416470742083852,
+          "input_throughput_tps": 850.6099024338055,
+          "total_token_throughput_tps": 867.0263731758894,
+          "wall_time_s": 513.6914098340203,
           "error_samples": [
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a025_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
           ],
           "sanity_warnings": [
-            "94/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.95x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+            "38/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.33x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
           ],
-          "mem_used_gb": 38.59
+          "mem_used_gb": 47.5
+        },
+        {
+          "concurrency": 8,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 8568,
+          "total_output_tokens": 8814,
+          "total_input_tokens": 436951,
+          "server_usage_available": true,
+          "ttft_avg_ms": 2233.060468643558,
+          "ttft_p50_ms": 1581.642874982208,
+          "ttft_p99_ms": 11054.300374991726,
+          "throughput_avg_tps": 5.474218205959633,
+          "throughput_p50_tps": 5.326268056750545,
+          "itl_avg_ms": 208.81954564665068,
+          "itl_p50_ms": 180.54474941334587,
+          "latency_avg_s": 19.890269429664507,
+          "latency_p50_s": 14.149229166971054,
+          "latency_p99_s": 61.19651591597358,
+          "output_throughput_tps": 36.75529725752548,
+          "input_throughput_tps": 1822.1311427244175,
+          "total_token_throughput_tps": 1858.886439981943,
+          "wall_time_s": 239.80216887500137,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "38/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.33x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 47.7
+        },
+        {
+          "concurrency": 16,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 8401,
+          "total_output_tokens": 8650,
+          "total_input_tokens": 436951,
+          "server_usage_available": true,
+          "ttft_avg_ms": 3312.5144099479953,
+          "ttft_p50_ms": 2221.8334999633953,
+          "ttft_p99_ms": 11778.674166998826,
+          "throughput_avg_tps": 3.053044177472381,
+          "throughput_p50_tps": 2.920311917000297,
+          "itl_avg_ms": 391.31915261041974,
+          "itl_p50_ms": 332.4554079547658,
+          "latency_avg_s": 32.90202620919476,
+          "latency_p50_s": 24.020451374992263,
+          "latency_p99_s": 95.18829341698438,
+          "output_throughput_tps": 42.42991698659616,
+          "input_throughput_tps": 2143.3288621052234,
+          "total_token_throughput_tps": 2185.758779091819,
+          "wall_time_s": 203.86558858299395,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "38/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.34x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 47.58
         }
       ],
-      "total_duration_s": 944.6408006249985
+      "total_duration_s": 983.4361636249814
     },
     "ollama": {
       "framework": "ollama",
       "model": "gemma-4-e4b-it-bf16",
       "endpoint": "http://localhost:8006",
-      "timestamp": "2026-07-06T04:09:39",
+      "timestamp": "2026-08-15T14:22:53",
       "concurrency_results": [
         {
           "concurrency": 1,
           "num_requests": 100,
           "successful": 0,
           "failed": 100,
-          "wall_time_s": 0.1692705840105191,
+          "wall_time_s": 0.08985425002174452,
           "error": "no successful requests",
           "error_samples": [
             "404, message='Not Found', url='http://localhost:8006/v1/chat/completions'"
@@ -145,7 +399,7 @@
           "num_requests": 100,
           "successful": 0,
           "failed": 100,
-          "wall_time_s": 0.051198125001974404,
+          "wall_time_s": 0.03048399998806417,
           "error": "no successful requests",
           "error_samples": [
             "404, message='Not Found', url='http://localhost:8006/v1/chat/completions'"
@@ -156,193 +410,44 @@
           "num_requests": 100,
           "successful": 0,
           "failed": 100,
-          "wall_time_s": 0.037272749992553145,
+          "wall_time_s": 0.02252883301116526,
           "error": "no successful requests",
           "error_samples": [
             "404, message='Not Found', url='http://localhost:8006/v1/chat/completions'"
           ]
         }
       ],
-      "total_duration_s": 0.283242458011955
+      "total_duration_s": 0.16024012496927753
     },
     "mlx_lm": {
       "framework": "mlx_lm",
-      "model": "/Users/haorzhang/applebench/.models/gemma-4-e4b-it-bf16-mlx",
+      "model": "/Users/ranzhang/workspace/applebench/.models/gemma-4-e4b-it-bf16-mlx",
       "endpoint": "http://localhost:8002",
-      "timestamp": "2026-07-06T02:29:33",
+      "timestamp": "2026-08-15T13:46:21",
       "concurrency_results": [
         {
           "concurrency": 1,
-          "num_requests": 100,
-          "successful": 91,
-          "failed": 9,
-          "total_tokens_generated": 3934,
-          "total_output_tokens": 3934,
-          "total_input_tokens": null,
-          "server_usage_available": false,
-          "ttft_avg_ms": 4751.84809341854,
-          "ttft_p50_ms": 3256.551375001436,
-          "ttft_p99_ms": 15663.237875007326,
-          "throughput_avg_tps": 12.808902573275104,
-          "throughput_p50_tps": 16.431061866303402,
-          "itl_avg_ms": 68.32815216437082,
-          "itl_p50_ms": 47.30131862743292,
-          "latency_avg_s": 6.986924143318742,
-          "latency_p50_s": 5.542814707994694,
-          "latency_p99_s": 16.242947416001698,
-          "output_throughput_tps": 5.345144599874515,
-          "input_throughput_tps": null,
-          "total_token_throughput_tps": null,
-          "wall_time_s": 735.9950561659934,
-          "error_samples": [
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a024_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a032_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a049_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a076_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)"
-          ],
-          "sanity_warnings": [
-            "server did not report token usage for 91/91 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
-          ],
-          "mem_used_gb": 31.87
-        },
-        {
-          "concurrency": 8,
-          "num_requests": 100,
-          "successful": 91,
-          "failed": 9,
-          "total_tokens_generated": 3934,
-          "total_output_tokens": 3934,
-          "total_input_tokens": null,
-          "server_usage_available": false,
-          "ttft_avg_ms": 54199.83149681478,
-          "ttft_p50_ms": 55753.35720801377,
-          "ttft_p99_ms": 78260.7457920094,
-          "throughput_avg_tps": 12.974783608434546,
-          "throughput_p50_tps": 16.6280924615105,
-          "itl_avg_ms": 67.41074569190987,
-          "itl_p50_ms": 47.283884803833,
-          "latency_avg_s": 56.40609100733015,
-          "latency_p50_s": 56.580714790994534,
-          "latency_p99_s": 80.8113843750034,
-          "output_throughput_tps": 5.394311047747536,
-          "input_throughput_tps": null,
-          "total_token_throughput_tps": null,
-          "wall_time_s": 729.2868292499916,
-          "error_samples": [
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a024_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a032_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a049_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a076_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)"
-          ],
-          "sanity_warnings": [
-            "server did not report token usage for 91/91 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
-          ],
-          "mem_used_gb": 31.76
-        },
-        {
-          "concurrency": 16,
-          "num_requests": 100,
-          "successful": 91,
-          "failed": 9,
-          "total_tokens_generated": 3934,
-          "total_output_tokens": 3934,
-          "total_input_tokens": null,
-          "server_usage_available": false,
-          "ttft_avg_ms": 107645.47040743771,
-          "ttft_p50_ms": 114441.10954197822,
-          "ttft_p99_ms": 141733.06987498654,
-          "throughput_avg_tps": 12.77598563354541,
-          "throughput_p50_tps": 16.404568208711346,
-          "itl_avg_ms": 68.45021004016114,
-          "itl_p50_ms": 47.95462173534165,
-          "latency_avg_s": 109.8855401075939,
-          "latency_p50_s": 116.53752520799753,
-          "latency_p99_s": 141.74206037499243,
-          "output_throughput_tps": 5.336768375059621,
-          "input_throughput_tps": null,
-          "total_token_throughput_tps": null,
-          "wall_time_s": 737.1502234170039,
-          "error_samples": [
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a024_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a032_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a049_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a076_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=stop)"
-          ],
-          "sanity_warnings": [
-            "server did not report token usage for 91/91 requests (missing `usage.completion_tokens`). Output counts fell back to SSE chunk count, which may undercount if the framework bundles multiple tokens per chunk. Framework should honor `stream_options.include_usage=true`."
-          ],
-          "mem_used_gb": 32.22
-        }
-      ],
-      "total_duration_s": 2279.3547592920077
-    },
-    "vllm_metal": {
-      "framework": "vllm_metal",
-      "model": "/Users/haorzhang/applebench/.models/Gemma-4-E4B-it",
-      "endpoint": "http://localhost:8004",
-      "timestamp": "2026-07-06T03:10:11",
-      "concurrency_results": [
-        {
-          "concurrency": 1,
-          "num_requests": 100,
-          "successful": 95,
-          "failed": 5,
-          "total_tokens_generated": 8280,
-          "total_output_tokens": 8558,
-          "total_input_tokens": 461207,
-          "server_usage_available": true,
-          "ttft_avg_ms": 6377.552057843116,
-          "ttft_p50_ms": 3139.540957985446,
-          "ttft_p99_ms": 31285.35879199626,
-          "throughput_avg_tps": 18.410087188842848,
-          "throughput_p50_tps": 18.87501393278503,
-          "itl_avg_ms": 52.534262805358686,
-          "itl_p50_ms": 50.72777981381388,
-          "latency_avg_s": 10.628401107873804,
-          "latency_p50_s": 9.077786582987756,
-          "latency_p99_s": 35.94019225001102,
-          "output_throughput_tps": 8.373079177369235,
-          "input_throughput_tps": 451.2412629302328,
-          "total_token_throughput_tps": 459.61434210760206,
-          "wall_time_s": 1022.0851635000145,
-          "error_samples": [
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a070_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
-          ],
-          "sanity_warnings": [
-            "41/95 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.32x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ],
-          "mem_used_gb": 39.5
-        },
-        {
-          "concurrency": 8,
           "num_requests": 100,
           "successful": 94,
           "failed": 6,
-          "total_tokens_generated": 7938,
-          "total_output_tokens": 8208,
-          "total_input_tokens": 456313,
+          "total_tokens_generated": 8566,
+          "total_output_tokens": 8651,
+          "total_input_tokens": 443049,
           "server_usage_available": true,
-          "ttft_avg_ms": 8752.149930839958,
-          "ttft_p50_ms": 6135.487124993233,
-          "ttft_p99_ms": 35502.48345799628,
-          "throughput_avg_tps": 2.4883133070522465,
-          "throughput_p50_tps": 2.0937213037789175,
-          "itl_avg_ms": 568.8952134536197,
-          "itl_p50_ms": 476.1227671403512,
-          "latency_avg_s": 58.391690698989784,
-          "latency_p50_s": 35.83927329198923,
-          "latency_p99_s": 219.8479212920065,
-          "output_throughput_tps": 11.761532171099056,
-          "input_throughput_tps": 653.8669626694351,
-          "total_token_throughput_tps": 665.6284948405341,
-          "wall_time_s": 697.8682607499941,
+          "ttft_avg_ms": 1335.1972766587155,
+          "ttft_p50_ms": 1141.9422500184737,
+          "ttft_p99_ms": 2884.1875409707427,
+          "throughput_avg_tps": 26.555235081613702,
+          "throughput_p50_tps": 26.99056653023661,
+          "itl_avg_ms": 36.3146618966738,
+          "itl_p50_ms": 36.21693218843646,
+          "latency_avg_s": 4.619621557670279,
+          "latency_p50_s": 3.5079407090088353,
+          "latency_p99_s": 10.800655749975704,
+          "output_throughput_tps": 19.642648957482166,
+          "input_throughput_tps": 1005.9710990594748,
+          "total_token_throughput_tps": 1025.6137480169568,
+          "wall_time_s": 440.4192132499884,
           "error_samples": [
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
@@ -351,143 +456,82 @@
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
           ],
           "sanity_warnings": [
-            "41/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.32x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+            "21/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
           ],
-          "mem_used_gb": 39.68
+          "mem_used_gb": 36.54
         },
         {
-          "concurrency": 16,
+          "concurrency": 8,
           "num_requests": 100,
-          "successful": 90,
-          "failed": 10,
-          "total_tokens_generated": 7032,
-          "total_output_tokens": 7289,
-          "total_input_tokens": 447579,
+          "successful": 94,
+          "failed": 6,
+          "total_tokens_generated": 8480,
+          "total_output_tokens": 8566,
+          "total_input_tokens": 443049,
           "server_usage_available": true,
-          "ttft_avg_ms": 16554.072665221047,
-          "ttft_p50_ms": 9770.53820900619,
-          "ttft_p99_ms": 54817.00195799931,
-          "throughput_avg_tps": 1.1428865820308407,
-          "throughput_p50_tps": 0.8893821732082987,
-          "itl_avg_ms": 1416.786283237712,
-          "itl_p50_ms": 1104.3731235545463,
-          "latency_avg_s": 102.22437783055777,
-          "latency_p50_s": 82.21091075000004,
-          "latency_p99_s": 297.20074075000593,
-          "output_throughput_tps": 10.879332845493177,
-          "input_throughput_tps": 668.0423810746317,
-          "total_token_throughput_tps": 678.921713920125,
-          "wall_time_s": 669.9859360419796,
+          "ttft_avg_ms": 3553.632881177807,
+          "ttft_p50_ms": 2117.5392090226524,
+          "ttft_p99_ms": 17939.09416598035,
+          "throughput_avg_tps": 6.685687707626558,
+          "throughput_p50_tps": 6.188216453937512,
+          "itl_avg_ms": 173.98911407747815,
+          "itl_p50_ms": 159.76643021686945,
+          "latency_avg_s": 19.511107077111213,
+          "latency_p50_s": 12.225957583985291,
+          "latency_p99_s": 80.46120766701642,
+          "output_throughput_tps": 36.375211169540115,
+          "input_throughput_tps": 1881.3916569523208,
+          "total_token_throughput_tps": 1917.7668681218609,
+          "wall_time_s": 235.49004183302168,
           "error_samples": [
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
             "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
-            ""
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
           ],
           "sanity_warnings": [
-            "40/90 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.33x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+            "20/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
           ],
-          "mem_used_gb": 40.72
-        }
-      ],
-      "total_duration_s": 2485.2753313749854
-    },
-    "llamacpp": {
-      "framework": "llamacpp",
-      "model": "/Users/haorzhang/applebench/.models/gemma-4-E4B-it-BF16.gguf",
-      "endpoint": "http://localhost:8001",
-      "timestamp": "2026-07-06T01:59:32",
-      "concurrency_results": [
-        {
-          "concurrency": 1,
-          "num_requests": 100,
-          "successful": 100,
-          "failed": 0,
-          "total_tokens_generated": 9541,
-          "total_output_tokens": 9630,
-          "total_input_tokens": 464206,
-          "server_usage_available": true,
-          "ttft_avg_ms": 4434.118611188314,
-          "ttft_p50_ms": 2919.673500000499,
-          "ttft_p99_ms": 17744.685999990907,
-          "throughput_avg_tps": 30.711725049144533,
-          "throughput_p50_tps": 31.0796891700324,
-          "itl_avg_ms": 31.584873759517496,
-          "itl_p50_ms": 31.557816601707604,
-          "latency_avg_s": 7.43066323040839,
-          "latency_p50_s": 7.389356958010467,
-          "latency_p99_s": 20.44846137499553,
-          "output_throughput_tps": 12.9596265486249,
-          "input_throughput_tps": 624.7078298682212,
-          "total_token_throughput_tps": 637.6674564168462,
-          "wall_time_s": 743.0769678329816,
-          "error_samples": [],
-          "sanity_warnings": [
-            "21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ],
-          "mem_used_gb": 33.92
-        },
-        {
-          "concurrency": 8,
-          "num_requests": 100,
-          "successful": 100,
-          "failed": 0,
-          "total_tokens_generated": 9539,
-          "total_output_tokens": 9630,
-          "total_input_tokens": 464206,
-          "server_usage_available": true,
-          "ttft_avg_ms": 22330.787800860708,
-          "ttft_p50_ms": 20029.50883298763,
-          "ttft_p99_ms": 51632.52474999172,
-          "throughput_avg_tps": 12.145481976990554,
-          "throughput_p50_tps": 10.087455774863797,
-          "itl_avg_ms": 136.53598088316704,
-          "itl_p50_ms": 98.87060375687867,
-          "latency_avg_s": 35.80099898588087,
-          "latency_p50_s": 33.1172170000209,
-          "latency_p99_s": 104.23994858301012,
-          "output_throughput_tps": 21.19006842638861,
-          "input_throughput_tps": 1021.4493150508982,
-          "total_token_throughput_tps": 1042.6393834772869,
-          "wall_time_s": 454.45818325001164,
-          "error_samples": [],
-          "sanity_warnings": [
-            "21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
-          ],
-          "mem_used_gb": 35.86
+          "mem_used_gb": 43.07
         },
         {
           "concurrency": 16,
           "num_requests": 100,
-          "successful": 100,
-          "failed": 0,
-          "total_tokens_generated": 9534,
-          "total_output_tokens": 9621,
-          "total_input_tokens": 464206,
+          "successful": 94,
+          "failed": 6,
+          "total_tokens_generated": 8648,
+          "total_output_tokens": 8735,
+          "total_input_tokens": 443049,
           "server_usage_available": true,
-          "ttft_avg_ms": 56869.97733747965,
-          "ttft_p50_ms": 56625.076667027315,
-          "ttft_p99_ms": 97748.51320800371,
-          "throughput_avg_tps": 12.137070377360367,
-          "throughput_p50_tps": 9.878809561615615,
-          "itl_avg_ms": 134.54838325995007,
-          "itl_p50_ms": 100.89021862744738,
-          "latency_avg_s": 70.45099694418982,
-          "latency_p50_s": 70.28105512500042,
-          "latency_p99_s": 145.75025333301164,
-          "output_throughput_tps": 21.0341577091471,
-          "input_throughput_tps": 1014.8822589681258,
-          "total_token_throughput_tps": 1035.916416677273,
-          "wall_time_s": 457.3988715419837,
-          "error_samples": [],
-          "sanity_warnings": [
-            "21/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          "ttft_avg_ms": 6850.8324583118,
+          "ttft_p50_ms": 3346.668416983448,
+          "ttft_p99_ms": 34868.09533304768,
+          "throughput_avg_tps": 3.7115392285367683,
+          "throughput_p50_tps": 3.2325511871660115,
+          "itl_avg_ms": 340.62571798037055,
+          "itl_p50_ms": 304.81911668088287,
+          "latency_avg_s": 35.11816483556833,
+          "latency_p50_s": 26.209423708030954,
+          "latency_p99_s": 118.23901608295273,
+          "output_throughput_tps": 40.11981600478125,
+          "input_throughput_tps": 2034.9220791187554,
+          "total_token_throughput_tps": 2075.0418951235365,
+          "wall_time_s": 217.72283300000709,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
           ],
-          "mem_used_gb": 36.57
+          "sanity_warnings": [
+            "20/94 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.08x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+          ],
+          "mem_used_gb": 50.57
         }
       ],
-      "total_duration_s": 1726.1460393749876
+      "total_duration_s": 916.9476920840098
     }
   }
 }

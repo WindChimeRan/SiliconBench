@@ -1,0 +1,42 @@
+{
+  "framework": "omlx",
+  "model": "RedHatAI--Qwen3-8B-speculator.dflash",
+  "endpoint": "http://localhost:8005",
+  "timestamp": "2026-08-15T14:21:44",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.07265941699733958,
+      "error": "no successful requests",
+      "error_samples": [
+        "409, message='Conflict', url='http://localhost:8005/v1/chat/completions'"
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.0332167079905048,
+      "error": "no successful requests",
+      "error_samples": [
+        "409, message='Conflict', url='http://localhost:8005/v1/chat/completions'"
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.032046624983195215,
+      "error": "no successful requests",
+      "error_samples": [
+        "409, message='Conflict', url='http://localhost:8005/v1/chat/completions'"
+      ]
+    }
+  ],
+  "total_duration_s": 0.15856608300236985
+}
