@@ -34,6 +34,28 @@ echo "Waiting for server to be ready..."
 for i in $(seq 1 300); do
     if curl -s "http://localhost:$OLLAMA_PORT/v1/models" > /dev/null 2>&1; then
         echo "Ollama server is ready on port $OLLAMA_PORT"
+
+        # Guard: config.sh derives a fallback OLLAMA_MODEL_NAME ("<model>-bf16")
+        # for profiles that deliberately DON'T set one — Qwen3.5-0.8B and
+        # Gemma-4-E4B-it are "fast engines only" and name no Ollama tag. That
+        # derived tag isn't in the Ollama registry, so install_ollama.sh never
+        # pulled it and every /v1/chat/completions returns 404. The benchmark
+        # still completes and writes a result file with 100% failed requests,
+        # which reads downstream as a catastrophically slow framework rather
+        # than an unsupported one. Fail the serve instead, so run_all takes its
+        # "server failed to start — skipping this framework" path and leaves a
+        # clean gap.
+        if ! curl -s "http://localhost:$OLLAMA_PORT/v1/models" | tr ',' '\n' \
+             | grep -q "\"id\"[[:space:]]*:[[:space:]]*\"$OLLAMA_MODEL_NAME\""; then
+            echo "Error: model '$OLLAMA_MODEL_NAME' is not loaded in Ollama."
+            echo "       install_ollama.sh pulls only the model active at install time,"
+            echo "       and this profile may not name a real Ollama registry tag."
+            echo "       Models currently available:"
+            curl -s "http://localhost:$OLLAMA_PORT/v1/models" | tr ',' '\n' \
+                | grep '"id"' | sed 's/^/         /'
+            exit 1
+        fi
+
         exit 0
     fi
     sleep 1
