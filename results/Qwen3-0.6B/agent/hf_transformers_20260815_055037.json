@@ -1,0 +1,111 @@
+{
+  "framework": "hf_transformers",
+  "model": "/Users/ranzhang/workspace/applebench/.models/Qwen3-0.6B",
+  "endpoint": "http://localhost:8009",
+  "timestamp": "2026-08-15T05:50:38",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 76,
+      "failed": 24,
+      "total_tokens_generated": 4816,
+      "total_output_tokens": 4964,
+      "total_input_tokens": 271505,
+      "server_usage_available": true,
+      "ttft_avg_ms": 6.829034435979433,
+      "ttft_p50_ms": 5.948374979197979,
+      "ttft_p99_ms": 17.715582973323762,
+      "throughput_avg_tps": 17.940372455517334,
+      "throughput_p50_tps": 16.61359758508024,
+      "itl_avg_ms": 69.84362747776125,
+      "itl_p50_ms": 59.35200867852906,
+      "latency_avg_s": 4.315518883171822,
+      "latency_p50_s": 2.545675207977183,
+      "latency_p99_s": 29.563911082979757,
+      "output_throughput_tps": 12.024044252863101,
+      "input_throughput_tps": 657.6527266062844,
+      "total_token_throughput_tps": 669.6767708591476,
+      "wall_time_s": 412.83946529205423,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a010_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a016_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a018_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)"
+      ],
+      "sanity_warnings": [
+        "12/76 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.17x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 76,
+      "failed": 24,
+      "total_tokens_generated": 4543,
+      "total_output_tokens": 4693,
+      "total_input_tokens": 271505,
+      "server_usage_available": true,
+      "ttft_avg_ms": 11.401946869323423,
+      "ttft_p50_ms": 8.493083994835615,
+      "ttft_p99_ms": 39.95533299166709,
+      "throughput_avg_tps": 2.091868664856073,
+      "throughput_p50_tps": 2.012840512211991,
+      "itl_avg_ms": 485.89702867611356,
+      "itl_p50_ms": 484.30334504283525,
+      "latency_avg_s": 28.345176713805383,
+      "latency_p50_s": 20.535545958031435,
+      "latency_p99_s": 118.69466212496627,
+      "output_throughput_tps": 13.974929449819438,
+      "input_throughput_tps": 808.494187145371,
+      "total_token_throughput_tps": 822.4691165951905,
+      "wall_time_s": 335.815648791031,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a010_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a016_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a018_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)"
+      ],
+      "sanity_warnings": [
+        "9/76 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.11x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 49,
+      "failed": 51,
+      "total_tokens_generated": 1524,
+      "total_output_tokens": 1531,
+      "total_input_tokens": 169539,
+      "server_usage_available": true,
+      "ttft_avg_ms": 26.160024610176986,
+      "ttft_p50_ms": 10.00637502875179,
+      "ttft_p99_ms": 92.49866602476686,
+      "throughput_avg_tps": 0.1788191682598804,
+      "throughput_p50_tps": 0.1661002367154539,
+      "itl_avg_ms": 5579.936611839872,
+      "itl_p50_ms": 5834.356489998754,
+      "latency_avg_s": 171.7339049745054,
+      "latency_p50_s": 165.4707113339682,
+      "latency_p99_s": 296.0457020410104,
+      "output_throughput_tps": 1.0522353542246106,
+      "input_throughput_tps": 116.52183521873692,
+      "total_token_throughput_tps": 117.57407057296153,
+      "wall_time_s": 1454.9976807500352,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a000_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a010_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a014_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)",
+        "silent failure: server returned OK but generated only 1 token(s) for prompt 'a016_vlong_bfcl_v3' (requested max_tokens=256, finish_reason=tool_calls)"
+      ],
+      "sanity_warnings": [
+        "3/49 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.07x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    }
+  ],
+  "total_duration_s": 2242.7034727500286
+}
