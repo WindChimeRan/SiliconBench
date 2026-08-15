@@ -41,4 +41,18 @@ uv pip install -e "$REPO_DIR/python[all_mps]"
 # and the pinned versions in pyproject often lag what actually works.
 uv pip install --upgrade mlx mlx-lm
 
+# ...but that --upgrade resolves mlx-lm's own deps too, which drags transformers
+# past the version sglang pins. sglang registers configs that newer transformers
+# now ships natively, so AutoConfig.register() aborts server startup with
+# "ValueError: 'qwen3_asr' is already used by a Transformers config" — the import
+# chain is server_args.py -> configs/__init__.py -> qwen3_asr.py. Restore sglang's
+# own pin, read from pyproject so it rolls forward when upstream bumps it.
+TRANSFORMERS_PIN=$(grep -oE '"transformers==[^"]+"' "$REPO_DIR/python/pyproject.toml" | head -1 | tr -d '"')
+if [ -n "$TRANSFORMERS_PIN" ]; then
+    echo "Restoring sglang's transformers pin: $TRANSFORMERS_PIN"
+    uv pip install "$TRANSFORMERS_PIN"
+else
+    echo "WARNING: no transformers== pin found in sglang pyproject.toml — skipping restore"
+fi
+
 echo "=== sglang installed ==="
