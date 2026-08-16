@@ -35,7 +35,16 @@ source "$MODEL_PROFILE"
 GGUF_MODEL="$MODELS_DIR/$GGUF_FILE"
 MLX_MODEL="$MODELS_DIR/$MLX_DIR_NAME"
 HF_MODEL="$MODELS_DIR/$HF_DIR_NAME"
-RESULTS_DIR="$RESULTS_BASE_DIR/$MODEL_NAME"
+# APPLEBENCH_RESULTS_SUBDIR scopes results to one machine within the apple
+# track, e.g. APPLEBENCH_RESULTS_SUBDIR=m5pro -> results/<MODEL>/m5pro/<split>/.
+# Unset (the default) keeps the legacy layout results/<MODEL>/<split>/, which is
+# the M2 Max tree the site renders under its "Apple M2 Max" tab. Without this,
+# a run on a second Apple machine overwrites the first machine's results in
+# place — run_all deletes stale results in the active split dir at startup.
+# No effect on dgxspark, which overrides RESULTS_DIR in config_dgxspark.sh.
+# NOTE: when set, pass --model-name to collect_results.py (the extra path
+# segment defeats its parent-dir inference), exactly as run_all_dgxspark.sh does.
+RESULTS_DIR="$RESULTS_BASE_DIR/$MODEL_NAME${APPLEBENCH_RESULTS_SUBDIR:+/$APPLEBENCH_RESULTS_SUBDIR}"
 # Fallback only — model profiles should set OLLAMA_MODEL_NAME explicitly
 # (to an ollama registry tag like qwen3:0.6b-fp16). The older derived form
 # built a lowercase-<model>-bf16 tag used with a bare-FROM Modelfile, which

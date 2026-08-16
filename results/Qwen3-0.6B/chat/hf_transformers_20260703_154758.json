@@ -1,0 +1,65 @@
+{
+  "framework": "hf_transformers",
+  "model": "/Users/haorzhang/applebench/.models/Qwen3-0.6B",
+  "endpoint": "http://localhost:8009",
+  "timestamp": "2026-07-03T15:47:59",
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 1,
+      "failed": 99,
+      "total_tokens_generated": 8,
+      "total_output_tokens": 9,
+      "total_input_tokens": 329,
+      "server_usage_available": true,
+      "ttft_avg_ms": 30045.453708999958,
+      "ttft_p50_ms": 30045.453708999958,
+      "ttft_p99_ms": 30045.453708999958,
+      "throughput_avg_tps": 0.045891095539160306,
+      "throughput_p50_tps": 0.045891095539160306,
+      "itl_avg_ms": 19067.459964285652,
+      "itl_p50_ms": 19067.459964285652,
+      "latency_avg_s": 182.58049166699948,
+      "latency_p50_s": 182.58049166699948,
+      "latency_p99_s": 182.58049166699948,
+      "output_throughput_tps": 0.01935036308342768,
+      "input_throughput_tps": 0.7073632727164119,
+      "total_token_throughput_tps": 0.7267136357998395,
+      "wall_time_s": 465.10755179100033,
+      "error_samples": [
+        "Response payload is not completed: <TransferEncodingError: 400, message='Not enough data to satisfy transfer length header.'>",
+        "Cannot connect to host localhost:8009 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8009, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8009)]",
+        "Cannot connect to host localhost:8009 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8009), [Errno 61] Connect call failed ('::1', 8009, 0, 0)]"
+      ],
+      "sanity_warnings": [
+        "1/1 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.12x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.0247464169997329,
+      "error": "no successful requests",
+      "error_samples": [
+        "Cannot connect to host localhost:8009 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8009), [Errno 61] Connect call failed ('::1', 8009, 0, 0)]",
+        "Cannot connect to host localhost:8009 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8009, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8009)]"
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 0,
+      "failed": 100,
+      "wall_time_s": 0.02157808300034958,
+      "error": "no successful requests",
+      "error_samples": [
+        "Cannot connect to host localhost:8009 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('127.0.0.1', 8009), [Errno 61] Connect call failed ('::1', 8009, 0, 0)]",
+        "Cannot connect to host localhost:8009 ssl:default [Multiple exceptions: [Errno 61] Connect call failed ('::1', 8009, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8009)]"
+      ]
+    }
+  ],
+  "total_duration_s": 1253.15838875
+}
