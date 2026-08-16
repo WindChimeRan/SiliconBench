@@ -38,13 +38,25 @@ It is **not** your job to heroically fix every failure. A clear failure report i
 
 1. Determine today's date: `DATE=$(date +%Y-%m-%d)`
 2. Read the model name from `scripts/config.sh` (or let the user specify). Default: whatever `APPLEBENCH_MODEL` resolves to.
-3. `RESULTS_DIR=results/<MODEL_NAME>`
-4. `JOURNAL=$RESULTS_DIR/weekly_$DATE.journal.md`
-5. Check for prior journals in `$RESULTS_DIR/weekly_*.journal.md`. Read the most recent 1-2 to learn:
+3. **Identify the machine before anything writes.** `sysctl -n machdep.cpu.brand_string`.
+   The Apple track is no longer single-machine: the legacy tree
+   `results/<MODEL>/<split>/` belongs to the **M2 Max**, and a second machine must
+   scope itself with `APPLEBENCH_RESULTS_SUBDIR` (e.g. `m5pro` →
+   `results/<MODEL>/m5pro/<split>/`). Getting this wrong is destructive, not
+   cosmetic — `run_all_apple.sh` deletes stale results in the active split dir at
+   startup, and an unscoped run on a second machine once wiped 40 of the first
+   machine's result files. A guard now refuses to delete results whose recorded
+   `machine.chip` differs, but it can only see files that carry the `machine` field
+   (added 2026-08-16); anything older is invisible to it.
+   Set the subdir **before** the first run, and confirm `$RESULTS_DIR` points where
+   you intend.
+4. `RESULTS_DIR=results/<MODEL_NAME>${APPLEBENCH_RESULTS_SUBDIR:+/$APPLEBENCH_RESULTS_SUBDIR}`
+5. `JOURNAL=$RESULTS_DIR/weekly_$DATE.journal.md`
+6. Check for prior journals in `$RESULTS_DIR/weekly_*.journal.md`. Read the most recent 1-2 to learn:
    - Which frameworks were skipped and why (don't re-fight the same battles)
    - What auto-fixes were applied previously (you may need to re-apply or roll forward)
-6. Create a fresh `weekly/<DATE>` git branch. All auto-fix commits land here, not on main.
-7. Initialize the journal with a preamble (see Journal Format below).
+7. Create a fresh `weekly/<DATE>` git branch. All auto-fix commits land here, not on main.
+8. Initialize the journal with a preamble (see Journal Format below).
 
 ### Phase 1 — Kick off the happy path in background
 
@@ -80,24 +92,62 @@ Use `ScheduleWakeup` to check the log every 30 minutes. On each check, tail the 
 
 When Phase 1 finishes, inventory what succeeded and what didn't, **per (framework, split)**:
 
+**File presence is not success.** A framework can serve, answer every request with
+an error, and still write a complete, well-formed result file. Judging by
+`find`-and-exists alone has already produced false `ok`s for six cells in one run:
+four where ollama 404'd on all 300 requests, and two where omlx served an entirely
+different model. Inventory on **three** signals — the file exists, its failure rate
+is sane, and it served the model you asked for:
+
 ```bash
-# A (framework, split) cell succeeded if a result file from the last 24h exists
-# in results/<MODEL>/<split>/
+# Inventory each (framework, split) cell on existence + failure rate + served model.
+# $RESULTS_DIR is the model's results dir (add /m5pro or /dgxspark when scoped).
 for split in chat agent; do
     for fw in llamacpp mlx_lm mistralrs vllm_metal vllm_mlx omlx ollama hf_transformers sglang; do
-        recent=$(find "results/<MODEL>/$split" -maxdepth 1 -name "${fw}_*.json" -mtime -1 2>/dev/null | head -1)
-        if [ -n "$recent" ]; then
-            echo "ok      $split $fw $(basename $recent)"
-        else
-            echo "FAILED  $split $fw"
+        recent=$(find "$RESULTS_DIR/$split" -maxdepth 1 -name "${fw}_*.json" \
+                     ! -name '*_metalstat*' -mtime -1 2>/dev/null | head -1)
+        if [ -z "$recent" ]; then
+            # No file is ambiguous: a cell killed by the 1h cap is SIGTERMed
+            # before benchmark.py writes its JSON, so it looks identical to a
+            # serve failure. The run log is the only place they differ.
+            if grep -q "⚠ $fw exceeded .* wall time" "$RESULTS_DIR/weekly_$DATE.log" 2>/dev/null; then
+                echo "CAPPED  $split $fw  (hit the 1h wall-time cap)"
+            else
+                echo "FAILED  $split $fw"
+            fi
+            continue
         fi
+        python - "$recent" "$fw" "$split" <<'PY'
+import json, sys
+path, fw, split = sys.argv[1:4]
+d = json.load(open(path))
+rows = d["concurrency_results"]
+tot  = sum(r["successful"] + r["failed"] for r in rows)
+fail = sum(r["failed"] for r in rows)
+pct  = 100.0 * fail / tot if tot else 100.0
+served  = str(d.get("model", ""))
+machine = (d.get("machine") or {}).get("chip", "unknown")
+status = "ok"
+if pct >= 99.9: status = "ALL-FAILED"
+elif pct >= 20: status = "DEGRADED"
+print(f"{status:<10} {split} {fw}  fail={pct:.0f}%  served={served}  machine={machine}")
+PY
     done
 done
 ```
 
-For each of the 9 frameworks × 2 splits = 18 cells, classify:
-- **ok** — has a result file from the last 24h in the split's subdirectory
-- **failed** — no recent result file in that split's subdirectory
+Classify each cell as:
+- **ok** — recent file, low failure rate, and the served model is the one you asked for
+- **degraded** — a result exists but a meaningful share of requests failed; usable only
+  with a caveat, and never comparable to a clean cell without one
+- **all-failed** — a result file full of failures. Treat as **failed**, not ok. Check
+  the `error_samples`: an HTTP 404/409 means the server never had your model loaded
+- **wrong-model** — `served` doesn't match the profile. The most dangerous outcome in
+  the suite: a complete, plausible result file for a model that was never benchmarked.
+  Always eyeball `served`
+- **capped** — killed at `FRAMEWORK_TIMEOUT_SECONDS`; **no JSON exists**, so it is only
+  distinguishable from a failure via the run log
+- **failed** — no recent result file and no cap line
 
 A framework can be `ok` in chat and `failed` in agent (or vice versa). Treat these as independent diagnoses — the agent split's larger context (~4K input tokens) exposes failure modes (KV cache OOM, prompt-length limits, tokenizer bugs on multi-turn payloads) that chat doesn't.
 
@@ -238,6 +288,30 @@ bash scripts/run_all.sh --split agent --skip-existing <fw3> <fw4> ...
 
 The `--skip-existing` flag ensures successful cells from Phase 1 (within that split's subdirectory) are preserved. Note that `--skip-existing` is per-split — it looks at `results/<MODEL>/<split>/`, so a chat retry will not touch agent results and vice versa.
 
+**Scope the resume to the model that was actually interrupted.** `--skip-existing`
+does two things at once: it skips frameworks with recent results, *and* it suppresses
+the startup cleanup that would otherwise clear the directory. That second effect
+applies to **every** model the resumed command covers — so pointing a resume at
+models that have not run yet leaves their old files in place. Those files then compete
+in `collect_results.py`'s **latest-by-mtime** selection, and a git operation touching
+them is enough to make a months-old result outrank a fresh one.
+
+This is not theoretical. A resumed 3-model sweep preserved a result from a *different
+machine* (`/Users/haorzhang/...`, dated 2026-07-09), which then won the mtime race and
+was published as a success for a cell that in fact segfaults on the current host.
+After any resume, verify provenance before trusting the report:
+
+```bash
+python - "$RESULTS_DIR/<split>/comparison.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+for fw, v in d["results"].items():
+    print(f"{fw:<18} {v.get('timestamp','?')}  {v.get('model','?')}")
+PY
+```
+Every timestamp should be from this run, and every model path should be this
+machine's. Anything else means a stale file won — remove it and regenerate.
+
 After this retry pass, re-inventory all 18 cells. Update the journal with final status.
 
 ### Phase 6 — Finalize
@@ -278,7 +352,11 @@ Write to `$RESULTS_DIR/weekly_<DATE>.journal.md` (one journal at the model level
 - Branch: weekly/<DATE>
 - Reports: results/<MODEL>/chat/REPORT.md, results/<MODEL>/agent/REPORT.md
 
-Cell status values: `ok` (benchmarked), `fixed` (auto-fix applied and verified), `skipped` (diagnosed but not fixed), `oom` (macOS jetsam killed the serving process during the run; distinct from `skipped` because the framework code is likely fine).
+Cell status values: `ok` (benchmarked, low failure rate, correct model), `fixed` (auto-fix applied and verified), `degraded` (result exists but a meaningful share of requests failed — usable only with a caveat), `all-failed` (result file exists but ~100% of requests failed; treat as failed, and record the HTTP status from `error_samples`), `wrong-model` (the server answered as a *different* model than the profile — a complete, plausible file for something never benchmarked), `capped` (killed at `FRAMEWORK_TIMEOUT_SECONDS`; **no JSON exists**, so the run log is the only evidence), `skipped` (diagnosed but not fixed), `oom` (macOS jetsam killed the serving process during the run; distinct from `skipped` because the framework code is likely fine).
+
+Record the machine for every run — `machine.chip` from any result file, or
+`sysctl -n machdep.cpu.brand_string`. Results from different Apple machines are not
+comparable, and the tree no longer implies which one produced them.
 
 ## Frameworks — chat split
 | Framework | Status | Notes |
@@ -341,6 +419,30 @@ Cell status values: `ok` (benchmarked), `fixed` (auto-fix applied and verified),
 ### <framework> (<split>)
 - **Observation**: <metric>: this week <N>, last week <M> (<X>x change)
 - **Note**: Not auto-fixed. Please review.
+
+### Two artifacts that masquerade as framework differences
+
+Check both before reporting a framework as unreliable or slow.
+
+**1. The agent split penalizes structured tool-call parsing.** `benchmark.py` counts
+any response with ≤1 generated token as a silent failure, but agent prompts (BFCL V3 /
+Hermes) frequently elicit a *tool call* as the correct next turn. Frameworks that parse
+it into a structured field leave `content` empty and score 0 tokens → "failure";
+frameworks that pass the raw `<tool_call>...` text through score tokens → "success".
+Same model, same prompt, opposite verdicts. Observed: mlx_lm at 30/100 "failed" while
+llamacpp and vllm_metal sat at 0/100 — the difference was serialization, not
+reliability. **Do not report agent-split failure counts as reliability** without
+checking `finish_reason` in `error_samples`:
+- `tool_calls`, 0 tokens → **artifact**, not a failure
+- `error`, 0 tokens → real server error
+- `None`, 0 tokens → real silent failure
+
+**2. Chunk-bundled streaming makes ITL unreliable.** When the run warns
+`N/100 requests had server completion_tokens diverging >5% from SSE chunk count`,
+per-request `throughput_avg_tps` and `itl_avg_ms` are chunk-derived and therefore
+suspect for that framework. This has fired across llamacpp, mlx_lm and sglang
+simultaneously (~1.2x), so it is not a per-framework signal. TTFT and aggregate token
+counts are unaffected. Note it before publishing any cross-framework ITL ranking.
 
 ## Timeline
 - HH:MM:SS — <event>

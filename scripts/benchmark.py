@@ -9,12 +9,49 @@ at specified concurrency levels.
 import argparse
 import asyncio
 import json
+import platform
+import subprocess
 import time
 import sys
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
 import aiohttp
+
+
+def machine_info():
+    """Identify the host that produced a result.
+
+    Results are otherwise addressed only by path, so nothing downstream can
+    tell one machine's numbers from another's. That is not hypothetical: a run
+    on a second Apple machine wrote into the same results/<MODEL>/<split>/ tree
+    the first machine used, and a stale file from the older host later won
+    collect_results.py's latest-by-mtime selection — reporting success for a
+    cell that in fact crashed on the current box.
+
+    Best-effort and never fatal: a benchmark must not fail because a probe did.
+    """
+    info = {"host": "", "chip": "", "os": ""}
+    try:
+        info["host"] = platform.node()
+        info["os"] = f"{platform.system()} {platform.release()}"
+        if platform.system() == "Darwin":
+            info["chip"] = subprocess.run(
+                ["sysctl", "-n", "machdep.cpu.brand_string"],
+                capture_output=True, text=True, timeout=5,
+            ).stdout.strip()
+        else:
+            # Linux/CUDA hosts (e.g. DGX Spark): prefer the GPU name, which is
+            # what actually distinguishes those boxes, and fall back to the CPU.
+            gpu = subprocess.run(
+                ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                capture_output=True, text=True, timeout=5,
+            )
+            info["chip"] = (gpu.stdout.strip().splitlines() or [""])[0] \
+                if gpu.returncode == 0 else platform.processor()
+    except Exception:
+        pass
+    return info
 
 
 @dataclass
@@ -411,6 +448,7 @@ def main():
         "model": model,
         "endpoint": base_url,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "machine": machine_info(),
         "concurrency_results": [],
     }
 

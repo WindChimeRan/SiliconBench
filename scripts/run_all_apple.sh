@@ -112,6 +112,44 @@ echo ""
 # Clean old result files so comparison.json reflects this run only
 # (skipped in resume mode so prior successful frameworks stay intact)
 if [ "$SKIP_EXISTING" = "false" ]; then
+    # Guard: this rm is destructive and, before results carried provenance, had
+    # no idea whose results it was deleting. A run on a second Apple machine
+    # wiped 40 of the first machine's result files out of this exact tree,
+    # because both default to results/<MODEL>/<split>/. Refuse to delete
+    # results that another machine demonstrably produced.
+    #
+    # Only a KNOWN-DIFFERENT chip blocks. Legacy files predating the "machine"
+    # field are treated as unknown and never trip the guard, so existing trees
+    # keep working — protection begins with results written from now on.
+    FOREIGN=$(python - "$SPLIT_RESULTS_DIR" "$(sysctl -n machdep.cpu.brand_string 2>/dev/null)" <<'PYGUARD'
+import glob, json, os, sys
+results_dir, current_chip = sys.argv[1], sys.argv[2]
+seen = {}
+for path in glob.glob(os.path.join(results_dir, "*.json")):
+    if path.endswith("comparison.json") or "_metalstat" in path:
+        continue
+    try:
+        chip = (json.load(open(path)).get("machine") or {}).get("chip", "")
+    except Exception:
+        continue
+    if chip and current_chip and chip != current_chip:
+        seen.setdefault(chip, []).append(os.path.basename(path))
+for chip, files in seen.items():
+    print(f"{chip}\t{len(files)}\t{files[0]}")
+PYGUARD
+)
+    if [ -n "$FOREIGN" ] && [ "${APPLEBENCH_ALLOW_FOREIGN_CLEANUP:-0}" != "1" ]; then
+        echo "ERROR: $SPLIT_RESULTS_DIR holds results from a different machine:"
+        echo "$FOREIGN" | while IFS=$'\t' read -r chip n example; do
+            echo "         $chip — $n file(s), e.g. $example"
+        done
+        echo "       This machine: $(sysctl -n machdep.cpu.brand_string 2>/dev/null)"
+        echo "       Refusing to delete them. Either scope this machine's results:"
+        echo "         APPLEBENCH_RESULTS_SUBDIR=<name> $0 ..."
+        echo "       or, to overwrite them anyway:"
+        echo "         APPLEBENCH_ALLOW_FOREIGN_CLEANUP=1 $0 ..."
+        exit 1
+    fi
     echo "Cleaning old result files..."
     rm -f "$SPLIT_RESULTS_DIR"/*_*.json "$SPLIT_RESULTS_DIR"/*_metalstat.jsonl "$SPLIT_RESULTS_DIR"/*_outputs.jsonl "$SPLIT_RESULTS_DIR/comparison.json"
 else
