@@ -203,10 +203,18 @@ for entry in "${FRAMEWORKS[@]}"; do
         fi
 
         echo "--- ${name} ${N}-shot score ---"
+        # Stamp which build produced these answers. scores.json carried no
+        # identity beyond its directory name, so an F1 change between runs could
+        # not be traced to a framework version. Probed per cell, not once per
+        # run, because a sweep can span an upgrade. Never fatal — an unstamped
+        # score is worth more than a lost one.
+        PROVENANCE=$(python3 "$APPLEBENCH_ROOT/scripts/framework_version.py" \
+            "$name" --provenance --model "$MODEL_SLUG" --shots "$N" 2>/dev/null) || PROVENANCE=""
         python3 "$SCRIPT_DIR/scripts/score_f1.py" \
             --responses "$RESULT_DIR/responses.jsonl" \
             --labels "$SCRIPT_DIR/prompts/${N}shot/labels.jsonl" \
-            --output "$RESULT_DIR/scores.json" || true
+            --output "$RESULT_DIR/scores.json" \
+            ${PROVENANCE:+--provenance "$PROVENANCE"} || true
         echo ""
     done
 

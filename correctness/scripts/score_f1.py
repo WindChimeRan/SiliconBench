@@ -114,6 +114,12 @@ def main():
     parser.add_argument("--categories", default=None,
                         help="categories.json path (default: ../data/categories.json)")
     parser.add_argument("--output", required=True, help="scores.json path")
+    parser.add_argument("--provenance", default=None,
+                        help="JSON object describing which build produced these "
+                             "responses (framework, version, model, machine, date). "
+                             "Embedded verbatim under 'provenance' in scores.json. "
+                             "Supplied by run_all_mac.sh so this script stays "
+                             "independent of scripts/.")
     args = parser.parse_args()
 
     script_dir = Path(__file__).resolve().parent
@@ -222,6 +228,15 @@ def main():
         "pred_label_distribution": dict(pred_counts),
         "per_class": report,
     }
+
+    # Provenance is best-effort and never fatal: a malformed blob must not cost
+    # us an eval that already ran. Record the parse failure instead of dropping
+    # it silently, so a missing block always means "not supplied", never "lost".
+    if args.provenance:
+        try:
+            summary["provenance"] = json.loads(args.provenance)
+        except Exception as e:
+            summary["provenance"] = {"error": f"unparseable provenance: {e}"}
 
     out_path = Path(args.output)
     out_path.parent.mkdir(parents=True, exist_ok=True)
