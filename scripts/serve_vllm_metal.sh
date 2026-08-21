@@ -16,10 +16,11 @@ source "$VENV_DIR/bin/activate"
 echo "=== Starting vllm-metal server on port $VLLM_METAL_PORT ==="
 
 VLLM_METAL_USE_PAGED_ATTENTION=1 \
-VLLM_METAL_MEMORY_FRACTION=0.5 \
+VLLM_METAL_MEMORY_FRACTION="${VLLM_METAL_MEMORY_FRACTION:-0.5}" \
 vllm serve "$HF_MODEL" \
     --port "$VLLM_METAL_PORT" \
     --host 0.0.0.0 \
+    --enable-prefix-caching \
     --max-model-len "${VLLM_METAL_MAX_MODEL_LEN:-4096}" \
     &> "$PROJECT_DIR/.frameworks/vllm_metal_server.log" &
 
