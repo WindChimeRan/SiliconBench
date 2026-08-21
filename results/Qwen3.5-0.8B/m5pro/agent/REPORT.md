@@ -1,65 +1,65 @@
-# SiliconBench Results — Qwen3.5-0.8B (agent)
+# SiliconBench Results — m5pro (agent)
 
-**Model:** Qwen3.5-0.8B
+**Model:** m5pro
 **Split:** agent
-**Generated:** 2026-08-16 16:01:29
+**Generated:** 2026-08-21 12:27:37
 
 ## Concurrency: 1
 
-| Metric | mlx_lm | vllm_mlx | omlx | vllm_metal | llamacpp |
+| Metric | llamacpp | vllm_metal | omlx | mlx_lm | vllm_mlx |
 |--------|--------|--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 |
-| TTFT avg (ms) | 391.6 | 399.4 | 480.3 | 545.5 | 436.3 |
-| TTFT p50 (ms) | 331.5 | 337.5 | 433.6 | 410.0 | 277.6 |
-| TTFT p99 (ms) | 881.2 | 969.4 | 1089.4 | 1419.3 | 2359.0 |
-| Throughput avg (tok/s) | 134.8 | 94.2 | 14.3 | 105.7 | 125.1 |
-| Output throughput (tok/s) | 79.0 | 67.4 | 76.9 | 53.5 | 70.6 |
-| Input throughput (tok/s) | 5631.0 | 3880.8 | 5638.4 | 4423.1 | 4910.9 |
-| Total token throughput (tok/s) | 5710.0 | 3948.2 | 5715.3 | 4476.7 | 4981.5 |
-| ITL avg (ms) | 7.1 | 10.0 | 76.1 | 9.1 | 7.7 |
-| ITL p50 (ms) | 7.0 | 10.0 | 71.8 | 9.1 | 7.6 |
-| Latency avg (s) | 0.82 | 1.19 | 0.82 | 1.04 | 0.94 |
-| Latency p99 (s) | 2.24 | 3.15 | 2.43 | 3.12 | 3.68 |
-| Wall time (s) | 82.0 | 118.6 | 81.9 | 104.4 | 94.0 |
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 25 / 75 | 100 / 0 |
+| TTFT avg (ms) | 441.5 | 248.1 | 306.3 | 556.7 | 407.9 |
+| TTFT p50 (ms) | 305.8 | 200.4 | 296.0 | 507.0 | 341.6 |
+| TTFT p99 (ms) | 1751.2 | 1112.6 | 429.2 | 1044.5 | 931.5 |
+| Throughput avg (tok/s) | 114.3 | 107.7 | 14.5 | 100.4 | 95.2 |
+| Output throughput (tok/s) | 66.9 | 76.2 | 98.3 | 44.3 | 67.6 |
+| Input throughput (tok/s) | 4658.3 | 6120.5 | 7203.2 | 1149.8 | 3851.1 |
+| Total token throughput (tok/s) | 4725.2 | 6196.8 | 7301.5 | 1194.1 | 3918.7 |
+| ITL avg (ms) | 8.4 | 9.0 | 74.4 | 13.7 | 9.9 |
+| ITL p50 (ms) | 8.4 | 8.9 | 70.8 | 7.9 | 9.9 |
+| Latency avg (s) | 0.99 | 0.75 | 0.64 | 1.97 | 1.19 |
+| Latency p99 (s) | 3.10 | 2.78 | 2.10 | 3.12 | 3.14 |
+| Wall time (s) | 99.1 | 75.4 | 64.1 | 102.2 | 119.5 |
 
 ## Concurrency: 8
 
-| Metric | mlx_lm | vllm_mlx | omlx | vllm_metal | llamacpp |
+| Metric | llamacpp | vllm_metal | omlx | mlx_lm | vllm_mlx |
 |--------|--------|--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 |
-| TTFT avg (ms) | 879.7 | 218.2 | 588.8 | 1381.2 | 2209.6 |
-| TTFT p50 (ms) | 655.3 | 212.4 | 510.5 | 1001.4 | 2020.4 |
-| TTFT p99 (ms) | 3446.3 | 390.8 | 2079.0 | 5678.1 | 5314.9 |
-| Throughput avg (tok/s) | 17.6 | 31.1 | 8.7 | 11.2 | 56.2 |
-| Output throughput (tok/s) | 106.1 | 239.8 | 145.3 | 60.9 | 138.6 |
-| Input throughput (tok/s) | 7734.2 | 17040.8 | 10795.8 | 5229.1 | 9647.2 |
-| Total token throughput (tok/s) | 7840.2 | 17280.6 | 10941.0 | 5290.0 | 9785.9 |
-| ITL avg (ms) | 71.7 | 29.2 | 119.6 | 119.3 | 24.1 |
-| ITL p50 (ms) | 64.8 | 29.1 | 115.4 | 104.7 | 16.1 |
-| Latency avg (s) | 4.62 | 2.10 | 3.28 | 6.95 | 3.74 |
-| Latency p99 (s) | 22.05 | 7.95 | 14.36 | 37.82 | 12.08 |
-| Wall time (s) | 59.7 | 27.0 | 42.8 | 88.3 | 47.9 |
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 26 / 74 | 100 / 0 |
+| TTFT avg (ms) | 2415.5 | 136.5 | 594.6 | 2472.3 | 917.5 |
+| TTFT p50 (ms) | 2242.9 | 118.9 | 515.1 | 2534.3 | 684.6 |
+| TTFT p99 (ms) | 6407.5 | 344.3 | 2074.1 | 5561.5 | 3549.3 |
+| Throughput avg (tok/s) | 51.1 | 34.3 | 8.8 | 14.9 | 21.1 |
+| Output throughput (tok/s) | 126.9 | 257.5 | 146.4 | 51.8 | 126.0 |
+| Input throughput (tok/s) | 8829.1 | 20385.8 | 10877.8 | 1415.8 | 6870.7 |
+| Total token throughput (tok/s) | 8955.9 | 20643.3 | 11024.2 | 1467.6 | 6996.7 |
+| ITL avg (ms) | 26.6 | 28.5 | 118.3 | 64.6 | 54.5 |
+| ITL p50 (ms) | 17.6 | 27.9 | 113.5 | 54.6 | 49.4 |
+| Latency avg (s) | 4.09 | 1.72 | 3.26 | 13.79 | 5.28 |
+| Latency p99 (s) | 13.79 | 7.82 | 14.23 | 33.88 | 21.64 |
+| Wall time (s) | 52.3 | 22.7 | 42.4 | 85.5 | 67.0 |
 
 ## Concurrency: 16
 
-| Metric | mlx_lm | vllm_mlx | omlx | vllm_metal | llamacpp |
+| Metric | llamacpp | vllm_metal | omlx | mlx_lm | vllm_mlx |
 |--------|--------|--------|--------|--------|--------|
-| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 | 100 / 0 |
-| TTFT avg (ms) | 1850.8 | 394.3 | 3404.5 | 3292.7 | 4960.0 |
-| TTFT p50 (ms) | 1223.8 | 375.9 | 3359.3 | 2270.8 | 5233.0 |
-| TTFT p99 (ms) | 8083.7 | 682.5 | 5467.1 | 15205.1 | 9126.6 |
-| Throughput avg (tok/s) | 8.8 | 17.8 | 8.1 | 6.0 | 59.3 |
-| Output throughput (tok/s) | 106.2 | 261.8 | 146.8 | 62.2 | 157.5 |
-| Input throughput (tok/s) | 7728.6 | 16281.9 | 10908.9 | 5234.9 | 10962.3 |
-| Total token throughput (tok/s) | 7834.8 | 16543.8 | 11055.7 | 5297.1 | 11119.8 |
-| ITL avg (ms) | 145.2 | 52.5 | 124.2 | 220.9 | 20.8 |
-| ITL p50 (ms) | 125.9 | 52.5 | 119.7 | 211.3 | 15.1 |
-| Latency avg (s) | 9.11 | 4.10 | 6.28 | 13.67 | 6.35 |
-| Latency p99 (s) | 38.08 | 13.87 | 17.91 | 65.75 | 13.86 |
-| Wall time (s) | 59.7 | 28.3 | 42.3 | 88.2 | 42.1 |
+| Successful / Failed | 100 / 0 | 100 / 0 | 100 / 0 | 28 / 72 | 100 / 0 |
+| TTFT avg (ms) | 5836.3 | 255.4 | 3388.3 | 4621.1 | 2284.5 |
+| TTFT p50 (ms) | 5930.6 | 181.5 | 3344.2 | 3080.4 | 1187.6 |
+| TTFT p99 (ms) | 10426.6 | 750.4 | 5518.1 | 14679.7 | 9076.7 |
+| Throughput avg (tok/s) | 53.6 | 21.7 | 8.2 | 4.6 | 8.6 |
+| Output throughput (tok/s) | 135.3 | 297.0 | 147.8 | 41.0 | 109.4 |
+| Input throughput (tok/s) | 9413.4 | 23789.3 | 10986.0 | 1036.9 | 6216.2 |
+| Total token throughput (tok/s) | 9548.6 | 24086.3 | 11133.8 | 1077.9 | 6325.6 |
+| ITL avg (ms) | 22.5 | 45.7 | 124.6 | 510.0 | 136.6 |
+| ITL p50 (ms) | 16.5 | 45.6 | 121.1 | 191.2 | 130.5 |
+| Latency avg (s) | 7.43 | 2.70 | 6.24 | 39.76 | 11.55 |
+| Latency p99 (s) | 16.55 | 12.23 | 17.80 | 68.16 | 37.59 |
+| Wall time (s) | 49.1 | 19.4 | 42.0 | 125.5 | 74.0 |
 
 ## Total Benchmark Duration
 
-| Framework | mlx_lm | vllm_mlx | omlx | vllm_metal | llamacpp |
+| Framework | llamacpp | vllm_metal | omlx | mlx_lm | vllm_mlx |
 |-----------|--------|--------|--------|--------|--------|
-| Duration | 3.5m | 3.0m | 2.9m | 4.8m | 3.2m |
+| Duration | 3.5m | 2.0m | 2.6m | 5.4m | 4.5m |
