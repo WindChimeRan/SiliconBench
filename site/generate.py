@@ -413,7 +413,7 @@ def meta_block(machine, machine_data, commit, versions):
                    "</details>")
     vnote = ("" if has_ver else flow("""Framework versions and update commits
       for each run are recorded in the
-      <a href="https://github.com/WindChimeRan/applebench/tree/main/results">
+      <a href="https://github.com/WindChimeRan/SiliconBench/tree/main/results">
       weekly journals</a>; structured version fields appear here once the
       harness emits them.""") + " ")
     return f"""
@@ -421,7 +421,7 @@ def meta_block(machine, machine_data, commit, versions):
       <p><span class="k">machine</span> {esc(machine['spec'])}
          <span class="k">run dates</span> {esc(when)}
          <span class="k">harness</span>
-         <a href="https://github.com/WindChimeRan/applebench/commit/{esc(commit)}">
+         <a href="https://github.com/WindChimeRan/SiliconBench/commit/{esc(commit)}">
          <code>{esc(commit[:9])}</code></a></p>
       <p class="note">{vnote}{esc(machine['note'])}</p>
       {details}
@@ -763,7 +763,7 @@ def paper_section():
         "<strong>Paper &amp; code.</strong> The paper is under review; a "
         "preprint link will appear here. The harness, per-run results, "
         "and weekly journals are public in the "
-        "<a href='https://github.com/WindChimeRan/applebench'>benchmark "
+        "<a href='https://github.com/WindChimeRan/SiliconBench'>benchmark "
         "repository</a>.")
     return f"""
 <section id="paper">
@@ -833,8 +833,8 @@ automatically from weekly benchmark runs.">
   unified-memory desktops. All requests hit an OpenAI-compatible endpoint at
   concurrency 1 / 8 / 16, BF16 weights, n=100 per level.""")}</p>
   <p class="links">
-    <a href="https://github.com/WindChimeRan/applebench">benchmark repo</a>
-    <a href="https://github.com/WindChimeRan/applebench/tree/main/results">weekly journals</a>
+    <a href="https://github.com/WindChimeRan/SiliconBench">benchmark repo</a>
+    <a href="https://github.com/WindChimeRan/SiliconBench/tree/main/results">weekly journals</a>
     <a href="#" title="paper link coming">paper (soon)</a>
   </p>
   <div class="about">
@@ -889,7 +889,7 @@ automatically from weekly benchmark runs.">
 
 <footer>
   Generated automatically from
-  <a href="https://github.com/WindChimeRan/applebench">committed benchmark
+  <a href="https://github.com/WindChimeRan/SiliconBench">committed benchmark
   results</a> on {today}. Page updates on every merge to main that changes
   results.
 </footer>
