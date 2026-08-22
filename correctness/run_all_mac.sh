@@ -82,7 +82,13 @@ FRAMEWORKS=(
     "llamacpp:$LLAMACPP_PORT:serve_llamacpp.sh:stop_llamacpp.sh:"
     "mlx_lm:$MLX_LM_PORT:serve_mlx_lm.sh:stop_mlx_lm.sh:$MLX_MODEL"
     "mistralrs:$MISTRALRS_PORT:serve_mistralrs.sh:stop_mistralrs.sh:"
-    "omlx:$OMLX_PORT:serve_omlx.sh:stop_omlx.sh:"
+    # Explicit id, not /v1/models[0]: omlx advertises every model in the HF
+    # cache (18 on this host), not just the one serve_omlx.sh symlinks, and
+    # data[0] is ASCII-ordered. "Qwen3*" happens to sort before the cached
+    # "RedHatAI--*" speculators, so Qwen profiles picked the right model by
+    # luck; lowercase "gemma-4-*" does not, and every request 409s. The
+    # served id is the symlink basename serve_omlx.sh creates.
+    "omlx:$OMLX_PORT:serve_omlx.sh:stop_omlx.sh:$(basename "$MLX_MODEL")"
     "ollama:$OLLAMA_PORT:serve_ollama.sh:stop_ollama.sh:$OLLAMA_MODEL_NAME"
     "vllm_mlx:$VLLM_MLX_PORT:serve_vllm_mlx.sh:stop_vllm_mlx.sh:$MLX_MODEL"
     "hf_transformers:$HF_TRANSFORMERS_PORT:serve_hf_transformers.sh:stop_hf_transformers.sh:$HF_MODEL"
