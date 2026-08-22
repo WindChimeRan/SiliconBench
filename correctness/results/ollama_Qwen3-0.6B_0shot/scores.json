@@ -2,16 +2,16 @@
   "n_scored": 1146,
   "n_missing_responses": 0,
   "n_extra_responses": 0,
-  "f1_weighted": 0.4087837223948219,
-  "f1_macro": 0.2680595303698413,
-  "exact_match": 0.45549738219895286,
+  "f1_weighted": 0.4172667525171371,
+  "f1_macro": 0.27237805428602285,
+  "exact_match": 0.45898778359511344,
   "request_errors": 0,
   "parse_failures": 0,
-  "oov_predictions_after_parse": 11,
+  "oov_predictions_after_parse": 15,
   "extraction_methods": {
-    "fuzzy_name": 779,
-    "json": 271,
-    "regex_category": 96
+    "fuzzy_name": 765,
+    "json": 277,
+    "regex_category": 104
   },
   "gold_label_distribution": {
     "Worker Strike": 178,
@@ -24,41 +24,40 @@
     "Others": 5
   },
   "pred_label_distribution": {
-    "Administrative Issue": 915,
-    "Accident": 97,
-    "Weather": 77,
-    "AccidentOkay, let": 4,
-    "AccOkay, let": 2,
-    "WorkerOkay, let": 1,
-    "Worker Strike": 34,
-    "WeatherOkay, let": 2,
-    "Human Error": 1,
+    "Administrative Issue": 899,
+    "Accident": 103,
+    "Okay, let": 7,
+    "Weather": 81,
+    "AccidentOkay, let": 3,
+    "Worker Strike": 32,
+    "WorkerOkay, let": 2,
+    "Human Error": 2,
     "AdministrativeOkay, let": 2,
-    "Administrative IssueOkay, let": 1,
-    "Bomb Threat": 1,
-    "Okay, let": 3,
-    "AdministrOkay, let": 2,
+    "Administrative IssueOkay, let": 2,
+    "WeatherOkay, let": 2,
+    "AdministrOkay, let": 4,
     "Cyber Attack": 2,
-    "Worker StrikeOkay, let": 1,
+    "Others": 2,
+    "Worker StrikeOkay, let": 2,
     "Terrorism": 1
   },
   "per_class": {
     "Weather": {
       "precision": 1.0,
-      "recall": 0.21584699453551912,
-      "f1-score": 0.3550561797752809,
+      "recall": 0.226775956284153,
+      "f1-score": 0.36971046770601335,
       "support": 366.0
     },
     "Worker Strike": {
-      "precision": 0.9714285714285714,
+      "precision": 1.0,
       "recall": 0.19101123595505617,
-      "f1-score": 0.3192488262910798,
+      "f1-score": 0.32075471698113206,
       "support": 178.0
     },
     "Administrative Issue": {
-      "precision": 0.3569868995633188,
-      "recall": 0.9819819819819819,
-      "f1-score": 0.5236188951160928,
+      "precision": 0.35738068812430634,
+      "recall": 0.9669669669669669,
+      "f1-score": 0.5218800648298217,
       "support": 333.0
     },
     "Human Error": {
@@ -80,9 +79,9 @@
       "support": 60.0
     },
     "Accident": {
-      "precision": 0.7920792079207921,
-      "recall": 0.418848167539267,
-      "f1-score": 0.547945205479452,
+      "precision": 0.8018867924528302,
+      "recall": 0.44502617801047123,
+      "f1-score": 0.5723905723905723,
       "support": 191.0
     },
     "Others": {
@@ -92,22 +91,36 @@
       "support": 5.0
     },
     "micro avg": {
-      "precision": 0.45991189427312773,
-      "recall": 0.45549738219895286,
-      "f1-score": 0.45769399386234105,
+      "precision": 0.4650751547303271,
+      "recall": 0.45898778359511344,
+      "f1-score": 0.46201141853315764,
       "support": 1146.0
     },
     "macro avg": {
-      "precision": 0.5150618348640853,
-      "recall": 0.28846104750147805,
-      "f1-score": 0.3015669716660715,
+      "precision": 0.5199084350721421,
+      "recall": 0.2912225421520809,
+      "f1-score": 0.30642531107177573,
       "support": 1146.0
     },
     "weighted avg": {
-      "precision": 0.709492191956145,
-      "recall": 0.45549738219895286,
-      "f1-score": 0.4087837223948219,
+      "precision": 0.715679010910894,
+      "recall": 0.45898778359511344,
+      "f1-score": 0.4172667525171371,
       "support": 1146.0
     }
+  },
+  "provenance": {
+    "framework": "ollama",
+    "framework_version": {
+      "version": "0.32.15"
+    },
+    "date": "2026-08-21T21:23:20-05:00",
+    "machine": {
+      "host": "ranzhang-mac",
+      "os": "Darwin 25.6.0",
+      "chip": "Apple M5 Pro"
+    },
+    "model": "Qwen3-0.6B",
+    "shots": 0
   }
 }

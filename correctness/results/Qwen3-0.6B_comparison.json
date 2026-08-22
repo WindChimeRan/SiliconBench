@@ -87,22 +87,22 @@
     },
     "ollama": {
       "0shot": {
-        "f1_weighted": 0.4087837223948219,
-        "f1_macro": 0.2680595303698413,
-        "exact_match": 0.45549738219895286,
+        "f1_weighted": 0.4172667525171371,
+        "f1_macro": 0.27237805428602285,
+        "exact_match": 0.45898778359511344,
         "n_scored": 1146,
         "request_errors": 0,
         "parse_failures": 0,
-        "oov_predictions_after_parse": 11
+        "oov_predictions_after_parse": 15
       },
       "5shot": {
-        "f1_weighted": 0.4462620683457086,
-        "f1_macro": 0.20572407490815647,
+        "f1_weighted": 0.44619970796613895,
+        "f1_macro": 0.20512357355369618,
         "exact_match": 0.47731239092495636,
         "n_scored": 1146,
         "request_errors": 0,
         "parse_failures": 0,
-        "oov_predictions_after_parse": 7
+        "oov_predictions_after_parse": 9
       }
     },
     "vllm_mlx": {
@@ -127,18 +127,18 @@
     },
     "hf_transformers": {
       "0shot": {
-        "f1_weighted": 0.39964015173183415,
-        "f1_macro": 0.2977649877151874,
-        "exact_match": 0.4397810218978102,
-        "n_scored": 1096,
+        "f1_weighted": 0.3995028323965036,
+        "f1_macro": 0.29769982459558064,
+        "exact_match": 0.4424083769633508,
+        "n_scored": 1146,
         "request_errors": 0,
         "parse_failures": 0,
         "oov_predictions_after_parse": 0
       },
       "5shot": {
-        "f1_weighted": 0.732535359934387,
-        "f1_macro": 0.39642593314571145,
-        "exact_match": 0.7329842931937173,
+        "f1_weighted": 0.7298859103051716,
+        "f1_macro": 0.39112823782838135,
+        "exact_match": 0.7303664921465969,
         "n_scored": 1146,
         "request_errors": 0,
         "parse_failures": 0,
