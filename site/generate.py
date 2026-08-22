@@ -49,24 +49,24 @@ DGX_ROSTER = ["llamacpp", "sglang", "vllm"]
 
 MACHINES = [
     {
-        "id": "m2max",
-        "label": "Apple M2 Max",
-        "spec": "64 GB unified memory · macOS 26 · Metal",
-        "subdir": None,          # legacy apple tree: results/<MODEL>/<split>/
-        "status": "live",
-        "note": "Primary audited track (nine stacks).",
-        "has_memory": True,
-        "roster": APPLE_ROSTER,
-    },
-    {
         "id": "m5pro",
         "label": "Apple M5 Pro",
         "spec": "18 cores · 64 GB unified memory · macOS 26.6 · Metal",
         "subdir": "m5pro",       # results/<MODEL>/m5pro/<split>/
         "status": "live",
-        "note": "Second Apple track. Gaps are genuine framework/model "
+        "note": "Current benchmarking machine, shown first. Gaps are genuine framework/model "
                 "incompatibilities, diagnosed per cell in that model's "
                 "m5pro/journal_*.md.",
+        "has_memory": True,
+        "roster": APPLE_ROSTER,
+    },
+    {
+        "id": "m2max",
+        "label": "Apple M2 Max",
+        "spec": "64 GB unified memory · macOS 26 · Metal",
+        "subdir": None,          # legacy apple tree: results/<MODEL>/<split>/
+        "status": "live",
+        "note": "The track the paper audits (nine stacks); its runs are the ones cited below.",
         "has_memory": True,
         "roster": APPLE_ROSTER,
     },
@@ -621,7 +621,7 @@ document.querySelectorAll('table').forEach(function (tb) {
     });
   });
 });
-pick('machine', 'm2max');
+pick('machine', 'm5pro');
 pick('model', 'Qwen3-0.6B');
 """
 
