@@ -1,5 +1,5 @@
 {
-  "model_name": "m5pro",
+  "model_name": "Qwen3.5-0.8B",
   "split": "chat",
   "frameworks": [
     "omlx",

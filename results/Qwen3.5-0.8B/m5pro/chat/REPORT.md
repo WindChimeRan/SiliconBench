@@ -1,8 +1,8 @@
-# SiliconBench Results — m5pro (chat)
+# SiliconBench Results — Qwen3.5-0.8B (chat)
 
-**Model:** m5pro
+**Model:** Qwen3.5-0.8B
 **Split:** chat
-**Generated:** 2026-08-21 12:02:51
+**Generated:** 2026-08-21 21:07:43
 
 ## Concurrency: 1
 

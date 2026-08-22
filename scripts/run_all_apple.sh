@@ -284,7 +284,12 @@ done
 echo "==========================================="
 echo " Collecting results and generating report"
 echo "==========================================="
-python "$SCRIPT_DIR/collect_results.py" --results-dir "$SPLIT_RESULTS_DIR"
+# --model-name explicitly: collect_results.py otherwise infers the model from
+# the parent of a chat/agent leaf, which is the machine subdir once one is in
+# play. That inference was fine while the subdir was opt-in and usually unset;
+# now that config.sh derives it from the hardware it is wrong on every host
+# except the M2 Max, and it silently mislabels REPORT.md ("Model: m5pro").
+python "$SCRIPT_DIR/collect_results.py" --results-dir "$SPLIT_RESULTS_DIR" --model-name "$MODEL_NAME"
 python "$SCRIPT_DIR/generate_report.py" --results-dir "$SPLIT_RESULTS_DIR"
 
 echo ""

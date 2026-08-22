@@ -1,8 +1,8 @@
-# SiliconBench Results — m5pro (agent)
+# SiliconBench Results — Qwen3.5-0.8B (agent)
 
-**Model:** m5pro
+**Model:** Qwen3.5-0.8B
 **Split:** agent
-**Generated:** 2026-08-21 12:27:37
+**Generated:** 2026-08-21 21:07:43
 
 ## Concurrency: 1
 

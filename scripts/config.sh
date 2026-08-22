@@ -36,15 +36,45 @@ GGUF_MODEL="$MODELS_DIR/$GGUF_FILE"
 MLX_MODEL="$MODELS_DIR/$MLX_DIR_NAME"
 HF_MODEL="$MODELS_DIR/$HF_DIR_NAME"
 # APPLEBENCH_RESULTS_SUBDIR scopes results to one machine within the apple
-# track, e.g. APPLEBENCH_RESULTS_SUBDIR=m5pro -> results/<MODEL>/m5pro/<split>/.
-# Unset (the default) keeps the legacy layout results/<MODEL>/<split>/, which is
-# the M2 Max tree the site renders under its "Apple M2 Max" tab. Without this,
-# a run on a second Apple machine overwrites the first machine's results in
-# place — run_all deletes stale results in the active split dir at startup.
-# No effect on dgxspark, which overrides RESULTS_DIR in config_dgxspark.sh.
-# NOTE: when set, pass --model-name to collect_results.py (the extra path
-# segment defeats its parent-dir inference), exactly as run_all_dgxspark.sh does.
+# track: results/<MODEL>/<subdir>/<split>/. It is now derived from the hardware
+# rather than remembered, because forgetting it was destructive, not merely
+# untidy — run_all deletes stale results in the active split dir at startup, so
+# a bare run on a second Apple machine wipes the first machine's tree in place.
+# That is exactly what happened on 2026-08-21, and the machine-provenance guard
+# added in b1e3f62 could not catch it: that guard only blocks a KNOWN-DIFFERENT
+# chip, and the legacy files predate the "machine" field it reads.
+#
+# Only a real M2 Max resolves to the legacy root results/<MODEL>/<split>/, which
+# is the tree the site renders under its "Apple M2 Max" tab. Every other
+# machine — recognised or not — gets its own subdir. An unrecognised host
+# therefore lands somewhere harmless and visibly empty rather than on top of
+# someone else's data: the failure mode is a missing tab, not lost results.
+#
+# An explicit APPLEBENCH_RESULTS_SUBDIR always wins, including an empty value,
+# which forces the legacy root. No effect on dgxspark, which overrides
+# RESULTS_DIR in config_dgxspark.sh after sourcing this file.
+if [ -z "${APPLEBENCH_RESULTS_SUBDIR+set}" ]; then
+    if [ "$(uname -s)" = "Darwin" ]; then
+        _ab_chip="$(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo "")"
+        case "$_ab_chip" in
+            "Apple M2 Max")
+                # The original host: legacy layout, no subdir.
+                APPLEBENCH_RESULTS_SUBDIR="" ;;
+            "")
+                APPLEBENCH_RESULTS_SUBDIR="unknown-apple" ;;
+            *)
+                # "Apple M5 Pro" -> "m5pro", "Apple M3 Ultra" -> "m3ultra".
+                APPLEBENCH_RESULTS_SUBDIR="$(echo "$_ab_chip" \
+                    | tr '[:upper:]' '[:lower:]' | sed -e 's/^apple //' -e 's/[^a-z0-9]//g')" ;;
+        esac
+        unset _ab_chip
+    else
+        APPLEBENCH_RESULTS_SUBDIR=""
+    fi
+fi
+export APPLEBENCH_RESULTS_SUBDIR
 RESULTS_DIR="$RESULTS_BASE_DIR/$MODEL_NAME${APPLEBENCH_RESULTS_SUBDIR:+/$APPLEBENCH_RESULTS_SUBDIR}"
+mkdir -p "$RESULTS_DIR" 2>/dev/null || true
 # Fallback only — model profiles should set OLLAMA_MODEL_NAME explicitly
 # (to an ollama registry tag like qwen3:0.6b-fp16). The older derived form
 # built a lowercase-<model>-bf16 tag used with a bare-FROM Modelfile, which
