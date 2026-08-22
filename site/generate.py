@@ -10,8 +10,11 @@ website (ranranhaoranzhang.com/siliconbench/), auto-updated by GitHub
 Actions whenever results change on main (.github/workflows/site.yml).
 
 Design rules (mirrors the paper):
-  - No speed-only leaderboard: the three lenses sit side by side and
-    rows are in a FIXED alphabetical order, never sorted by a metric.
+  - No speed-only leaderboard: the three lenses sit side by side. Tables
+    default-sort by tok/s at SORT_LEVEL (c=16) for ergonomics, but the
+    scopenote says plainly that this is a convenience and not a ranking,
+    and the fidelity table sits alongside so a fast-but-wrong stack cannot
+    be read as a winner. Rows were alphabetical until 2026-08-22.
   - Failure vocabulary carried over: partial cells show n/100, crashed
     cells show a cross, budget-skips say "skip".
   - Run dates, per-framework timestamps, and harness commit are meta
@@ -32,6 +35,7 @@ from pathlib import Path
 MODELS = ["Qwen3-0.6B", "Qwen3.5-0.8B", "Gemma-4-E4B-it"]
 LEVELS = [1, 8, 16]
 SPLITS = ["chat", "agent"]
+SORT_LEVEL = LEVELS[-1]   # tables default-sort by tok/s at this concurrency
 RETIRED = {"inferrs"}
 PARTIAL_THRESHOLD = 90   # >=90/100 counts as a clean run (paper convention)
 CRASH_THRESHOLD = 5      # <5/100 counts as crashed
@@ -302,9 +306,15 @@ def nostart_row(fw):
 def split_table(rows, has_memory, versions=None, roster=None):
     head = ('<tr><th data-sort="text" data-dir="asc" '
             'title="click to sort">Stack</th>'
-            + "".join(f'<th class="num" data-sort="num" data-dir="desc" '
-                      f'title="click to sort">tok/s c={c}</th>'
-                      for c in LEVELS)
+            + "".join(
+                f'<th class="num" data-sort="num" data-dir="desc"'
+                # Mark the column rows are already sorted by, using the same
+                # markup the JS writes, so its cleanup finds and removes it.
+                + (' data-active="desc"' if c == SORT_LEVEL else '')
+                + f' title="click to sort">tok/s c={c}'
+                + ('<span class="arr">\u25bc</span>' if c == SORT_LEVEL else '')
+                + '</th>'
+                for c in LEVELS)
             + '<th class="spark">trend</th>'
             + '<th class="num" data-sort="num" data-dir="asc" '
               'title="click to sort">TTFT p50 c=16</th>'
@@ -316,7 +326,22 @@ def split_table(rows, has_memory, versions=None, roster=None):
     for fw in rows:                       # keep any present engine not in roster
         if fw not in order:
             order.append(fw)
-    for fw in sorted(order, key=lambda f: NAMES.get(f, f).lower()):
+    def sort_key(f):
+        """Throughput at SORT_LEVEL, descending, failures last.
+
+        Mirrors the JS comparator exactly (tier first, then value) so the
+        server-rendered order matches what clicking that header produces —
+        otherwise the first click would appear to do nothing. Sorting here
+        rather than in JS avoids a flash of unsorted rows and keeps the order
+        meaningful with JS disabled. Name breaks ties so the order is stable.
+        """
+        lv = rows.get(f, {}).get("cells", {}).get(SORT_LEVEL)
+        tier = TIER[classify(lv)]
+        v = lv.get("output_throughput_tps") if lv else None
+        return (-tier, -(v if isinstance(v, (int, float)) else 0.0),
+                NAMES.get(f, f).lower())
+
+    for fw in sorted(order, key=sort_key):
         if fw in RETIRED:
             continue
         if fw not in rows:                # roster engine with no result file
@@ -856,9 +881,12 @@ automatically from weekly benchmark runs.">
   concurrency sweep is that single-stream rankings do not survive load.""")}</p>
   </div>
   <p class="scopenote">{flow("""Single-node serving only. Stacks are
-  listed alphabetically by default; click a column header to sort (failed
-  runs always sink to the bottom); no default ranking is implied; the
-  paper's central finding is that speed-only orderings mislead. ✕ =
+  sorted by tok/s at c=16 by default; click any column header to re-sort
+  (failed runs always sink to the bottom). That default is a convenience,
+  not a recommendation — read it against the fidelity table below before
+  treating it as a ranking, because the paper's central finding is that
+  speed-only orderings mislead: the fastest stack here is not always one
+  that answers correctly. ✕ =
   crashed (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not
   measured. Trend sparklines show each stack's own shape across c=1/8/16
   (per-row normalized; TTFT on a log scale); magnitudes are in the
