@@ -1,0 +1,98 @@
+{
+  "framework": "vllm_mlx",
+  "model": "/Users/ranzhang/workspace/applebench/.models/gemma-4-e4b-it-bf16-mlx",
+  "endpoint": "http://localhost:8008",
+  "timestamp": "2026-08-22T03:42:38",
+  "machine": {
+    "host": "ranzhang-mac",
+    "chip": "Apple M5 Pro",
+    "os": "Darwin 25.6.0"
+  },
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 7722,
+      "total_output_tokens": 7782,
+      "total_input_tokens": 98728,
+      "server_usage_available": true,
+      "ttft_avg_ms": 361.00010955982725,
+      "ttft_p50_ms": 239.27474999800324,
+      "ttft_p99_ms": 1114.4221660069888,
+      "throughput_avg_tps": 24.553550219178405,
+      "throughput_p50_tps": 26.548510419647286,
+      "itl_avg_ms": 37.14118487422016,
+      "itl_p50_ms": 37.161581709920995,
+      "latency_avg_s": 3.2258175491502334,
+      "latency_p50_s": 2.5724354579870123,
+      "latency_p99_s": 10.406049958997755,
+      "output_throughput_tps": 24.1234125172564,
+      "input_throughput_tps": 306.0468094324968,
+      "total_token_throughput_tps": 330.1702219497532,
+      "wall_time_s": 322.5911754580011,
+      "error_samples": [],
+      "sanity_warnings": [
+        "24/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.28x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 7627,
+      "total_output_tokens": 7687,
+      "total_input_tokens": 98728,
+      "server_usage_available": true,
+      "ttft_avg_ms": 909.9349600204732,
+      "ttft_p50_ms": 738.1493330030935,
+      "ttft_p99_ms": 3161.973374997615,
+      "throughput_avg_tps": 13.598428935809418,
+      "throughput_p50_tps": 13.657387120465073,
+      "itl_avg_ms": 66.68845052956466,
+      "itl_p50_ms": 64.48938427003293,
+      "latency_avg_s": 6.0847900200203,
+      "latency_p50_s": 5.036936833988875,
+      "latency_p99_s": 20.296738832999836,
+      "output_throughput_tps": 94.97541403043118,
+      "input_throughput_tps": 1219.8169216074423,
+      "total_token_throughput_tps": 1314.7923356378735,
+      "wall_time_s": 80.93673587500234,
+      "error_samples": [],
+      "sanity_warnings": [
+        "24/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.28x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 7672,
+      "total_output_tokens": 7732,
+      "total_input_tokens": 98728,
+      "server_usage_available": true,
+      "ttft_avg_ms": 1584.1282207801123,
+      "ttft_p50_ms": 1372.1703750052257,
+      "ttft_p99_ms": 4634.502707995125,
+      "throughput_avg_tps": 7.8022603090658205,
+      "throughput_p50_tps": 7.632868630936749,
+      "itl_avg_ms": 142.1854987332824,
+      "itl_p50_ms": 124.81332544050444,
+      "latency_avg_s": 10.304231884970358,
+      "latency_p50_s": 9.53513658400334,
+      "latency_p99_s": 34.03333691699663,
+      "output_throughput_tps": 110.55818527414871,
+      "input_throughput_tps": 1411.6901856888455,
+      "total_token_throughput_tps": 1522.2483709629944,
+      "wall_time_s": 69.9360249159945,
+      "error_samples": [],
+      "sanity_warnings": [
+        "24/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.28x). Framework may be bundling multiple tokens per chunk \u2014 per-request throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+      ]
+    }
+  ],
+  "total_duration_s": 493.5341052500007
+}

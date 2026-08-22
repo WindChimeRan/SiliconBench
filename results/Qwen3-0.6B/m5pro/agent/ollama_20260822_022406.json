@@ -1,0 +1,95 @@
+{
+  "framework": "ollama",
+  "model": "qwen3:0.6b-fp16",
+  "endpoint": "http://localhost:8006",
+  "timestamp": "2026-08-22T02:24:06",
+  "machine": {
+    "host": "ranzhang-mac",
+    "chip": "Apple M5 Pro",
+    "os": "Darwin 25.6.0"
+  },
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 23829,
+      "total_output_tokens": 24145,
+      "total_input_tokens": 410583,
+      "server_usage_available": true,
+      "ttft_avg_ms": 598.8330294540084,
+      "ttft_p50_ms": 369.90316699666437,
+      "ttft_p99_ms": 2351.1252909956966,
+      "throughput_avg_tps": 132.39103093803612,
+      "throughput_p50_tps": 136.0217836925027,
+      "itl_avg_ms": 7.6570740073765995,
+      "itl_p50_ms": 7.351070717144089,
+      "latency_avg_s": 2.428860361544525,
+      "latency_p50_s": 2.2331060410069767,
+      "latency_p99_s": 4.7638367080071475,
+      "output_throughput_tps": 100.30862831301364,
+      "input_throughput_tps": 1705.7369036505315,
+      "total_token_throughput_tps": 1806.045531963545,
+      "wall_time_s": 240.70710970800428,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a071_long_clawsbench' (requested max_tokens=256, finish_reason=stop)"
+      ]
+    },
+    {
+      "concurrency": 8,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 23831,
+      "total_output_tokens": 24145,
+      "total_input_tokens": 410583,
+      "server_usage_available": true,
+      "ttft_avg_ms": 1127.7595530200874,
+      "ttft_p50_ms": 780.5943749990547,
+      "ttft_p99_ms": 3367.857332996209,
+      "throughput_avg_tps": 18.36980263146406,
+      "throughput_p50_tps": 17.731230482256436,
+      "itl_avg_ms": 56.324278962767806,
+      "itl_p50_ms": 56.3963099446432,
+      "latency_avg_s": 14.615607673342861,
+      "latency_p50_s": 14.792947750000167,
+      "latency_p99_s": 21.23137495901028,
+      "output_throughput_tps": 132.00982225222035,
+      "input_throughput_tps": 2244.8121287961644,
+      "total_token_throughput_tps": 2376.8219510483846,
+      "wall_time_s": 182.9030566670117,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a071_long_clawsbench' (requested max_tokens=256, finish_reason=stop)"
+      ]
+    },
+    {
+      "concurrency": 16,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 23833,
+      "total_output_tokens": 24153,
+      "total_input_tokens": 410583,
+      "server_usage_available": true,
+      "ttft_avg_ms": 2016.6732689588875,
+      "ttft_p50_ms": 1151.7714169895044,
+      "ttft_p99_ms": 8609.458833001554,
+      "throughput_avg_tps": 14.133029747973602,
+      "throughput_p50_tps": 12.884276189974381,
+      "itl_avg_ms": 74.76543813056256,
+      "itl_p50_ms": 77.51982478168438,
+      "latency_avg_s": 20.03627570504981,
+      "latency_p50_s": 20.7493363340036,
+      "latency_p99_s": 33.04134804199566,
+      "output_throughput_tps": 189.7241660257794,
+      "input_throughput_tps": 3225.16943068615,
+      "total_token_throughput_tps": 3414.8935967119296,
+      "wall_time_s": 127.30586991600285,
+      "error_samples": [
+        "silent failure: server returned OK but generated only 0 token(s) for prompt 'a071_long_clawsbench' (requested max_tokens=256, finish_reason=stop)"
+      ]
+    }
+  ],
+  "total_duration_s": 579.0128720000066
+}
