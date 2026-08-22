@@ -16,8 +16,8 @@
         "oov_predictions_after_parse": 0
       },
       "5shot": {
-        "f1_weighted": 0.9107044917574857,
-        "f1_macro": 0.6906988849390324,
+        "f1_weighted": 0.9106562116524889,
+        "f1_macro": 0.6908265483489902,
         "exact_match": 0.9057591623036649,
         "n_scored": 1146,
         "request_errors": 0,
@@ -27,18 +27,18 @@
     },
     "mlx_lm": {
       "0shot": {
-        "f1_weighted": 0.7496909637356063,
-        "f1_macro": 0.6464669681224305,
-        "exact_match": 0.7617801047120419,
+        "f1_weighted": 0.84932232293732,
+        "f1_macro": 0.6808436737952648,
+        "exact_match": 0.8481675392670157,
         "n_scored": 1146,
         "request_errors": 0,
         "parse_failures": 0,
         "oov_predictions_after_parse": 0
       },
       "5shot": {
-        "f1_weighted": 0.8855591984691223,
-        "f1_macro": 0.6979382144042356,
-        "exact_match": 0.8848167539267016,
+        "f1_weighted": 0.9107549424505331,
+        "f1_macro": 0.6925521953469472,
+        "exact_match": 0.9066317626527051,
         "n_scored": 1146,
         "request_errors": 0,
         "parse_failures": 0,
@@ -47,18 +47,18 @@
     },
     "vllm_metal": {
       "0shot": {
-        "f1_weighted": 0.8201308628241679,
-        "f1_macro": 0.6702166259435685,
-        "exact_match": 0.8219895287958116,
+        "f1_weighted": 0.8512145658721799,
+        "f1_macro": 0.6829553049404987,
+        "exact_match": 0.849912739965096,
         "n_scored": 1146,
         "request_errors": 1,
         "parse_failures": 0,
         "oov_predictions_after_parse": 0
       },
       "5shot": {
-        "f1_weighted": 0.8888508470324551,
-        "f1_macro": 0.6873006580002092,
-        "exact_match": 0.8856893542757417,
+        "f1_weighted": 0.9106377910459589,
+        "f1_macro": 0.6917961312452299,
+        "exact_match": 0.9057591623036649,
         "n_scored": 1146,
         "request_errors": 1,
         "parse_failures": 0,
@@ -67,22 +67,42 @@
     },
     "omlx": {
       "0shot": {
-        "f1_weighted": 0.5523566205253088,
-        "f1_macro": 0.31822199705167314,
-        "exact_match": 0.462478184991274,
+        "f1_weighted": 0.8539014041829245,
+        "f1_macro": 0.6824887625475093,
+        "exact_match": 0.8525305410122164,
         "n_scored": 1146,
         "request_errors": 0,
-        "parse_failures": 378,
-        "oov_predictions_after_parse": 15
+        "parse_failures": 0,
+        "oov_predictions_after_parse": 0
       },
       "5shot": {
-        "f1_weighted": 0.04534630576531826,
-        "f1_macro": 0.028355625961949776,
-        "exact_match": 0.02356020942408377,
+        "f1_weighted": 0.9119530377205077,
+        "f1_macro": 0.6924098866000702,
+        "exact_match": 0.9075043630017452,
         "n_scored": 1146,
         "request_errors": 0,
-        "parse_failures": 1103,
-        "oov_predictions_after_parse": 6
+        "parse_failures": 0,
+        "oov_predictions_after_parse": 0
+      }
+    },
+    "vllm_mlx": {
+      "0shot": {
+        "f1_weighted": 0.8529879561410727,
+        "f1_macro": 0.6821605139697224,
+        "exact_match": 0.8516579406631762,
+        "n_scored": 1146,
+        "request_errors": 0,
+        "parse_failures": 0,
+        "oov_predictions_after_parse": 0
+      },
+      "5shot": {
+        "f1_weighted": 0.9106562116524889,
+        "f1_macro": 0.6908265483489902,
+        "exact_match": 0.9057591623036649,
+        "n_scored": 1146,
+        "request_errors": 0,
+        "parse_failures": 0,
+        "oov_predictions_after_parse": 0
       }
     },
     "vllm-nvidia": {

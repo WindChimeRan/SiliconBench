@@ -2,9 +2,9 @@
   "n_scored": 1146,
   "n_missing_responses": 0,
   "n_extra_responses": 0,
-  "f1_weighted": 0.7496909637356063,
-  "f1_macro": 0.6464669681224305,
-  "exact_match": 0.7617801047120419,
+  "f1_weighted": 0.84932232293732,
+  "f1_macro": 0.6808436737952648,
+  "exact_match": 0.8481675392670157,
   "request_errors": 0,
   "parse_failures": 0,
   "oov_predictions_after_parse": 0,
@@ -22,32 +22,32 @@
     "Others": 5
   },
   "pred_label_distribution": {
-    "Worker Strike": 170,
-    "Accident": 197,
-    "Administrative Issue": 542,
-    "Weather": 150,
-    "Terrorism": 68,
+    "Worker Strike": 176,
+    "Accident": 199,
+    "Administrative Issue": 431,
+    "Weather": 251,
+    "Terrorism": 69,
     "Human Error": 3,
-    "Others": 12,
-    "Cyber Attack": 4
+    "Cyber Attack": 4,
+    "Others": 13
   },
   "per_class": {
     "Weather": {
-      "precision": 0.9866666666666667,
-      "recall": 0.40437158469945356,
-      "f1-score": 0.5736434108527132,
+      "precision": 0.9880478087649402,
+      "recall": 0.6775956284153005,
+      "f1-score": 0.8038897893030794,
       "support": 366.0
     },
     "Worker Strike": {
-      "precision": 0.9705882352941176,
-      "recall": 0.9269662921348315,
-      "f1-score": 0.9482758620689655,
+      "precision": 0.9659090909090909,
+      "recall": 0.9550561797752809,
+      "f1-score": 0.96045197740113,
       "support": 178.0
     },
     "Administrative Issue": {
-      "precision": 0.5701107011070111,
-      "recall": 0.9279279279279279,
-      "f1-score": 0.7062857142857143,
+      "precision": 0.6983758700696056,
+      "recall": 0.9039039039039038,
+      "f1-score": 0.7879581151832461,
       "support": 333.0
     },
     "Human Error": {
@@ -63,35 +63,51 @@
       "support": 4.0
     },
     "Terrorism": {
-      "precision": 0.8529411764705882,
+      "precision": 0.8405797101449275,
       "recall": 0.9666666666666667,
-      "f1-score": 0.90625,
+      "f1-score": 0.8992248062015504,
       "support": 60.0
     },
     "Accident": {
-      "precision": 0.934010152284264,
-      "recall": 0.9633507853403142,
-      "f1-score": 0.9484536082474226,
+      "precision": 0.9346733668341709,
+      "recall": 0.9738219895287958,
+      "f1-score": 0.9538461538461539,
       "support": 191.0
     },
     "Others": {
-      "precision": 0.16666666666666666,
+      "precision": 0.15384615384615385,
       "recall": 0.4,
-      "f1-score": 0.23529411764705882,
+      "f1-score": 0.2222222222222222,
       "support": 5.0
     },
-    "accuracy": 0.7617801047120419,
+    "accuracy": 0.8481675392670157,
     "macro avg": {
-      "precision": 0.8101229498111643,
-      "recall": 0.7403270737628159,
-      "f1-score": 0.7272753391377343,
+      "precision": 0.822679000071111,
+      "recall": 0.7762972127029102,
+      "f1-score": 0.7659491330196728,
       "support": 1146.0
     },
     "weighted avg": {
-      "precision": 0.8439243563340757,
-      "recall": 0.7617801047120419,
-      "f1-score": 0.7496909637356063,
+      "precision": 0.8803168476145008,
+      "recall": 0.8481675392670157,
+      "f1-score": 0.84932232293732,
       "support": 1146.0
     }
+  },
+  "provenance": {
+    "framework": "mlx_lm",
+    "framework_version": {
+      "mlx-lm": "0.32.0",
+      "mlx": "0.32.1",
+      "version": "0.32.0"
+    },
+    "date": "2026-08-21T19:29:25-05:00",
+    "machine": {
+      "host": "ranzhang-mac",
+      "os": "Darwin 25.6.0",
+      "chip": "Apple M5 Pro"
+    },
+    "model": "Gemma-4-E4B-it",
+    "shots": 0
   }
 }

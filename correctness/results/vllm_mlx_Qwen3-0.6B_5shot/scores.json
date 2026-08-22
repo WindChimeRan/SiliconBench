@@ -2,15 +2,14 @@
   "n_scored": 1146,
   "n_missing_responses": 0,
   "n_extra_responses": 0,
-  "f1_weighted": 0.4804852136317077,
-  "f1_macro": 0.27342599296977865,
-  "exact_match": 0.3621291448516579,
-  "request_errors": 584,
+  "f1_weighted": 0.7183098834706502,
+  "f1_macro": 0.39037410118261906,
+  "exact_match": 0.7216404886561955,
+  "request_errors": 0,
   "parse_failures": 0,
-  "oov_predictions_after_parse": 3,
+  "oov_predictions_after_parse": 2,
   "extraction_methods": {
-    "json": 562,
-    "request_error": 584
+    "json": 1146
   },
   "gold_label_distribution": {
     "Worker Strike": 178,
@@ -23,35 +22,34 @@
     "Others": 5
   },
   "pred_label_distribution": {
-    "Worker Strike": 65,
-    "Accident": 106,
-    "<NO_PREDICTION>": 584,
-    "Administrative Issue": 234,
-    "Weather": 131,
-    "Cyber Attack": 12,
+    "Worker Strike": 121,
+    "Accident": 190,
+    "Administrative Issue": 538,
+    "Weather": 246,
+    "Cyber Attack": 23,
     "Human Error": 3,
-    "Others": 7,
-    "Tropical Storm": 2,
-    "Tropical Cyclone": 1,
-    "Terrorism": 1
+    "Terrorism": 6,
+    "Others": 17,
+    "Tropical Storm": 1,
+    "Hurricane Delphi": 1
   },
   "per_class": {
     "Weather": {
-      "precision": 0.9694656488549618,
-      "recall": 0.3469945355191257,
-      "f1-score": 0.5110663983903421,
+      "precision": 0.975609756097561,
+      "recall": 0.6557377049180327,
+      "f1-score": 0.7843137254901961,
       "support": 366.0
     },
     "Worker Strike": {
-      "precision": 0.9384615384615385,
-      "recall": 0.34269662921348315,
-      "f1-score": 0.5020576131687243,
+      "precision": 0.9421487603305785,
+      "recall": 0.6404494382022472,
+      "f1-score": 0.7625418060200669,
       "support": 178.0
     },
     "Administrative Issue": {
-      "precision": 0.6153846153846154,
-      "recall": 0.43243243243243246,
-      "f1-score": 0.5079365079365079,
+      "precision": 0.5929368029739777,
+      "recall": 0.9579579579579579,
+      "f1-score": 0.7324913892078071,
       "support": 333.0
     },
     "Human Error": {
@@ -61,21 +59,21 @@
       "support": 9.0
     },
     "Cyber Attack": {
-      "precision": 0.25,
-      "recall": 0.75,
-      "f1-score": 0.375,
+      "precision": 0.17391304347826086,
+      "recall": 1.0,
+      "f1-score": 0.2962962962962963,
       "support": 4.0
     },
     "Terrorism": {
       "precision": 1.0,
-      "recall": 0.016666666666666666,
-      "f1-score": 0.03278688524590164,
+      "recall": 0.1,
+      "f1-score": 0.18181818181818182,
       "support": 60.0
     },
     "Accident": {
-      "precision": 0.7452830188679245,
-      "recall": 0.41361256544502617,
-      "f1-score": 0.531986531986532,
+      "precision": 0.7578947368421053,
+      "recall": 0.7539267015706806,
+      "f1-score": 0.7559055118110236,
       "support": 191.0
     },
     "Others": {
@@ -85,22 +83,39 @@
       "support": 5.0
     },
     "micro avg": {
-      "precision": 0.7423971377459749,
-      "recall": 0.3621291448516579,
-      "f1-score": 0.4868035190615836,
+      "precision": 0.7229020979020979,
+      "recall": 0.7216404886561955,
+      "f1-score": 0.7222707423580786,
       "support": 1146.0
     },
     "macro avg": {
-      "precision": 0.5648243526961301,
-      "recall": 0.2878003536595918,
-      "f1-score": 0.307604242091001,
+      "precision": 0.5553128874653104,
+      "recall": 0.5135089753311148,
+      "f1-score": 0.43917086383044646,
       "support": 1146.0
     },
     "weighted avg": {
-      "precision": 0.8116428576386739,
-      "recall": 0.3621291448516579,
-      "f1-score": 0.4804852136317077,
+      "precision": 0.8094914069560558,
+      "recall": 0.7216404886561955,
+      "f1-score": 0.7183098834706502,
       "support": 1146.0
     }
+  },
+  "provenance": {
+    "framework": "vllm_mlx",
+    "framework_version": {
+      "vllm-mlx": "0.4.1",
+      "mlx": "0.32.1",
+      "commit": "7c7232a9687a9681f567790702ce71fa2ffe7a7a",
+      "version": "0.4.1"
+    },
+    "date": "2026-08-21T17:54:53-05:00",
+    "machine": {
+      "host": "ranzhang-mac",
+      "os": "Darwin 25.6.0",
+      "chip": "Apple M5 Pro"
+    },
+    "model": "Qwen3-0.6B",
+    "shots": 5
   }
 }

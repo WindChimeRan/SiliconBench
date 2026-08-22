@@ -2,9 +2,9 @@
   "n_scored": 1146,
   "n_missing_responses": 0,
   "n_extra_responses": 0,
-  "f1_weighted": 0.5940006430623013,
-  "f1_macro": 0.3765785547584579,
-  "exact_match": 0.5959860383944153,
+  "f1_weighted": 0.5921614400547545,
+  "f1_macro": 0.3797653726856865,
+  "exact_match": 0.5968586387434555,
   "request_errors": 0,
   "parse_failures": 0,
   "oov_predictions_after_parse": 0,
@@ -22,13 +22,13 @@
     "Others": 5
   },
   "pred_label_distribution": {
-    "Worker Strike": 184,
-    "Accident": 302,
-    "Others": 249,
+    "Worker Strike": 188,
+    "Accident": 303,
+    "Others": 247,
     "Weather": 331,
-    "Administrative Issue": 27,
-    "Cyber Attack": 17,
-    "Terrorism": 21,
+    "Administrative Issue": 24,
+    "Cyber Attack": 16,
+    "Terrorism": 22,
     "Human Error": 15
   },
   "per_class": {
@@ -39,15 +39,15 @@
       "support": 366.0
     },
     "Worker Strike": {
-      "precision": 0.8586956521739131,
-      "recall": 0.8876404494382022,
-      "f1-score": 0.8729281767955801,
+      "precision": 0.851063829787234,
+      "recall": 0.898876404494382,
+      "f1-score": 0.8743169398907104,
       "support": 178.0
     },
     "Administrative Issue": {
-      "precision": 0.9629629629629629,
-      "recall": 0.07807807807807808,
-      "f1-score": 0.14444444444444443,
+      "precision": 1.0,
+      "recall": 0.07207207207207207,
+      "f1-score": 0.13445378151260504,
       "support": 333.0
     },
     "Human Error": {
@@ -57,51 +57,52 @@
       "support": 9.0
     },
     "Cyber Attack": {
-      "precision": 0.23529411764705882,
+      "precision": 0.25,
       "recall": 1.0,
-      "f1-score": 0.38095238095238093,
+      "f1-score": 0.4,
       "support": 4.0
     },
     "Terrorism": {
-      "precision": 0.7619047619047619,
-      "recall": 0.26666666666666666,
-      "f1-score": 0.3950617283950617,
+      "precision": 0.7727272727272727,
+      "recall": 0.2833333333333333,
+      "f1-score": 0.4146341463414634,
       "support": 60.0
     },
     "Accident": {
-      "precision": 0.5894039735099338,
+      "precision": 0.5874587458745875,
       "recall": 0.9319371727748691,
-      "f1-score": 0.7221095334685599,
+      "f1-score": 0.7206477732793523,
       "support": 191.0
     },
     "Others": {
-      "precision": 0.008032128514056224,
+      "precision": 0.008097165991902834,
       "recall": 0.4,
-      "f1-score": 0.015748031496062992,
+      "f1-score": 0.015873015873015872,
       "support": 5.0
     },
-    "accuracy": 0.5959860383944153,
+    "accuracy": 0.5968586387434555,
     "macro avg": {
-      "precision": 0.5399521074440707,
-      "recall": 0.5476577822085248,
-      "f1-score": 0.4236508741032652,
+      "precision": 0.5465837846526096,
+      "recall": 0.5503948591731298,
+      "f1-score": 0.42723604427139733,
       "support": 1146.0
     },
     "weighted avg": {
-      "precision": 0.8406654351839968,
-      "recall": 0.5959860383944153,
-      "f1-score": 0.5940006430623013,
+      "precision": 0.8505361418474394,
+      "recall": 0.5968586387434555,
+      "f1-score": 0.5921614400547545,
       "support": 1146.0
     }
   },
   "provenance": {
-    "framework": "llamacpp",
+    "framework": "vllm_mlx",
     "framework_version": {
-      "commit": "d7fa69b7de2186b16c1024572273130d631038d7",
-      "version": "d7fa69b7d",
-      "commit_date": "2026-08-21T18:56:04+03:00"
+      "vllm-mlx": "0.4.1",
+      "mlx": "0.32.1",
+      "commit": "7c7232a9687a9681f567790702ce71fa2ffe7a7a",
+      "version": "0.4.1"
     },
-    "date": "2026-08-21T18:08:21-05:00",
+    "date": "2026-08-21T18:39:43-05:00",
     "machine": {
       "host": "ranzhang-mac",
       "os": "Darwin 25.6.0",

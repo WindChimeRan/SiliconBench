@@ -2,8 +2,8 @@
   "n_scored": 1146,
   "n_missing_responses": 0,
   "n_extra_responses": 0,
-  "f1_weighted": 0.9107044917574857,
-  "f1_macro": 0.6906988849390324,
+  "f1_weighted": 0.9106562116524889,
+  "f1_macro": 0.6908265483489902,
   "exact_match": 0.9057591623036649,
   "request_errors": 0,
   "parse_failures": 0,
@@ -23,9 +23,9 @@
   },
   "pred_label_distribution": {
     "Worker Strike": 177,
-    "Accident": 193,
+    "Accident": 194,
     "Administrative Issue": 362,
-    "Weather": 321,
+    "Weather": 320,
     "Terrorism": 63,
     "Human Error": 2,
     "Cyber Attack": 4,
@@ -33,9 +33,9 @@
   },
   "per_class": {
     "Weather": {
-      "precision": 0.9875389408099688,
-      "recall": 0.8661202185792349,
-      "f1-score": 0.9228529839883551,
+      "precision": 0.9875,
+      "recall": 0.8633879781420765,
+      "f1-score": 0.9212827988338192,
       "support": 366.0
     },
     "Worker Strike": {
@@ -69,9 +69,9 @@
       "support": 60.0
     },
     "Accident": {
-      "precision": 0.9481865284974094,
-      "recall": 0.9581151832460733,
-      "f1-score": 0.953125,
+      "precision": 0.9484536082474226,
+      "recall": 0.9633507853403142,
+      "f1-score": 0.9558441558441558,
       "support": 191.0
     },
     "Others": {
@@ -82,16 +82,32 @@
     },
     "accuracy": 0.9057591623036649,
     "macro avg": {
-      "precision": 0.8470239208281887,
-      "recall": 0.8093374186148086,
-      "f1-score": 0.7770362455564115,
+      "precision": 0.8470524381956941,
+      "recall": 0.8096503388219439,
+      "f1-score": 0.777179866892614,
       "support": 1146.0
     },
     "weighted avg": {
-      "precision": 0.9243795174879524,
+      "precision": 0.9244115941858618,
       "recall": 0.9057591623036649,
-      "f1-score": 0.9107044917574857,
+      "f1-score": 0.9106562116524889,
       "support": 1146.0
     }
+  },
+  "provenance": {
+    "framework": "llamacpp",
+    "framework_version": {
+      "commit": "d7fa69b7de2186b16c1024572273130d631038d7",
+      "version": "d7fa69b7d",
+      "commit_date": "2026-08-21T18:56:04+03:00"
+    },
+    "date": "2026-08-21T19:19:31-05:00",
+    "machine": {
+      "host": "ranzhang-mac",
+      "os": "Darwin 25.6.0",
+      "chip": "Apple M5 Pro"
+    },
+    "model": "Gemma-4-E4B-it",
+    "shots": 5
   }
 }
