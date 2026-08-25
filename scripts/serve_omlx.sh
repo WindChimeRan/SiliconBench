@@ -41,11 +41,20 @@ omlx serve \
 echo $! > "$PROJECT_DIR/.frameworks/omlx_server.pid"
 echo "PID: $(cat "$PROJECT_DIR/.frameworks/omlx_server.pid")"
 
-# Wait for server to be ready
+# Wait for server to be ready.
+# Verify OUR pid is alive first: /v1/models answers from whatever holds the
+# port, so a stale omlx-server from an earlier run makes a failed start
+# ("Address already in use") look successful.
+OMLX_PID=$(cat "$PROJECT_DIR/.frameworks/omlx_server.pid")
 echo "Waiting for server to be ready..."
 for i in $(seq 1 300); do
+    if ! kill -0 "$OMLX_PID" 2>/dev/null; then
+        echo "Error: omlx server process $OMLX_PID died during startup"
+        tail -20 "$PROJECT_DIR/.frameworks/omlx_server.log"
+        exit 1
+    fi
     if curl -s "http://localhost:$OMLX_PORT/v1/models" > /dev/null 2>&1; then
-        echo "omlx server is ready on port $OMLX_PORT"
+        echo "omlx server is ready on port $OMLX_PORT (pid $OMLX_PID)"
         exit 0
     fi
     sleep 1
