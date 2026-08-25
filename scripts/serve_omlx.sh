@@ -32,10 +32,18 @@ echo "omlx model dir reset to single entry: $ACTIVE_NAME -> $MLX_MODEL"
 
 echo "=== Starting omlx server on port $OMLX_PORT ==="
 
+# OMLX_SERVE_EXTRA_ARGS passes extra flags to `omlx serve`. omlx enables a
+# persistent SSD-backed prefix cache by default (~/.omlx/cache, 100GB) that no
+# other framework here has: it survives restarts and spans models, so it both
+# inflates results once warm and depresses them once saturated. A comparable
+# run points --paged-ssd-cache-dir at a fresh dir. Pass --hot-cache-max-size
+# explicitly too: omlx persists CLI args to ~/.omlx/settings.json, so its
+# documented defaults are not what you actually get.
 omlx serve \
     --model-dir "$OMLX_MODEL_DIR" \
     --port "$OMLX_PORT" \
     --host 0.0.0.0 \
+    ${OMLX_SERVE_EXTRA_ARGS:-} \
     &> "$PROJECT_DIR/.frameworks/omlx_server.log" &
 
 echo $! > "$PROJECT_DIR/.frameworks/omlx_server.pid"
