@@ -63,7 +63,10 @@ cleanup() {
     pkill -f mlx_lm 2>/dev/null || true
     pkill -f mistralrs 2>/dev/null || true
     pkill -f "vllm serve" 2>/dev/null || true
+    # omlx retitles its process to "omlx-server", so the pattern above never
+    # matched it and stale servers survived cleanup.
     pkill -f "omlx serve" 2>/dev/null || true
+    pkill -x "omlx-server" 2>/dev/null || true
     pkill -f "ollama serve" 2>/dev/null || true
     pkill -f "vllm-mlx serve" 2>/dev/null || true
     pkill -f "transformers serve" 2>/dev/null || true
