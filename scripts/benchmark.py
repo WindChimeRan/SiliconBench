@@ -62,6 +62,8 @@ class RequestResult:
     tokens_generated: int  # SSE content chunks received (client-side count)
     throughput: float    # tokens/sec, decode only (excludes TTFT); server-token denominator
     inter_token_latency: float  # mean ms per token; server-token denominator
+    decode_span: float = 0.0    # seconds between first and last content chunk
+    decode_tokens: int = 0      # server tokens attributable to decode_span (n_decoded - 1)
     prompt_tokens: int | None = None      # server-reported, from usage chunk
     completion_tokens: int | None = None  # server-reported, from usage chunk
     content: str = ""    # concatenated assistant content deltas
@@ -190,6 +192,8 @@ async def benchmark_single(
         tokens_generated=tokens_generated,
         throughput=throughput,
         inter_token_latency=itl,
+        decode_span=(token_times[-1] - token_times[0]) if len(token_times) > 1 else 0.0,
+        decode_tokens=max(n_decoded - 1, 0) if len(token_times) > 1 else 0,
         prompt_tokens=prompt_tokens,
         completion_tokens=completion_tokens,
         content="".join(content_chunks),
@@ -282,6 +286,8 @@ def summarize(results: list[RequestResult], errors: list[str], concurrency: int,
         return sorted_data[idx]
 
     total_chunks = sum(tokens)
+    agg_decode_span = sum(r.decode_span for r in results)
+    agg_decode_tokens = sum(r.decode_tokens for r in results)
 
     # Server-reported token counts from the usage chunk (None if any request missing it)
     completion_list = [r.completion_tokens for r in results]
@@ -311,9 +317,15 @@ def summarize(results: list[RequestResult], errors: list[str], concurrency: int,
         "ttft_avg_ms": sum(ttfts) / len(ttfts) * 1000,
         "ttft_p50_ms": percentile(ttfts, 50) * 1000,
         "ttft_p99_ms": percentile(ttfts, 99) * 1000,
-        "throughput_avg_tps": sum(throughputs) / len(throughputs),
+        # Token-weighted aggregates, NOT means of per-request rates. A request
+        # that arrives in very few SSE chunks has a near-zero span, so its
+        # individual rate explodes and poisons a plain mean: omlx on Qwen3-0.6B
+        # (47 tokens in 3 chunks) produced 8016 tok/s for a model whose
+        # bandwidth ceiling is ~330. Aggregating also keeps throughput_avg_tps
+        # and itl_avg_ms consistent with each other by construction.
+        "throughput_avg_tps": (agg_decode_tokens / agg_decode_span) if agg_decode_span > 0 else 0.0,
         "throughput_p50_tps": percentile(throughputs, 50),
-        "itl_avg_ms": sum(itls) / len(itls) if itls else 0.0,
+        "itl_avg_ms": (agg_decode_span / agg_decode_tokens * 1000) if agg_decode_tokens else 0.0,
         "itl_p50_ms": percentile(itls, 50) if itls else 0.0,
         "latency_avg_s": sum(total_times) / len(total_times),
         "latency_p50_s": percentile(total_times, 50),
