@@ -60,8 +60,8 @@ class RequestResult:
     ttft: float          # seconds
     total_time: float    # seconds
     tokens_generated: int  # SSE content chunks received (client-side count)
-    throughput: float    # tokens/sec (decode only, excludes TTFT)
-    inter_token_latency: float  # average ms between tokens
+    throughput: float    # tokens/sec, decode only (excludes TTFT); server-token denominator
+    inter_token_latency: float  # mean ms per token; server-token denominator
     prompt_tokens: int | None = None      # server-reported, from usage chunk
     completion_tokens: int | None = None  # server-reported, from usage chunk
     content: str = ""    # concatenated assistant content deltas
@@ -148,14 +148,22 @@ async def benchmark_single(
     ttft = t_first_token - t_start
     total_time = t_end - t_start
 
-    # Decode throughput: tokens after first / time after first
+    # Decode throughput: tokens after first / time after first.
+    # Denominator is the server's completion_tokens, not the client-side SSE
+    # chunk count: frameworks may pack several tokens into one delta and they
+    # differ (llamacpp/vllm_metal ~1.0 per chunk, omlx 2.0-4.0). Dividing by
+    # chunks scaled omlx's throughput down and its ITL up by exactly its
+    # bundling factor. summarize() reports tokens_per_chunk so it stays visible.
     decode_time = t_end - t_first_token if t_first_token else total_time
-    throughput = (tokens_generated - 1) / decode_time if decode_time > 0 and tokens_generated > 1 else 0.0
+    n_decoded = completion_tokens if (completion_tokens or 0) > 0 else tokens_generated
+    throughput = (n_decoded - 1) / decode_time if decode_time > 0 and n_decoded > 1 else 0.0
 
-    # Inter-token latency
-    if len(token_times) > 1:
-        intervals = [token_times[i+1] - token_times[i] for i in range(len(token_times)-1)]
-        itl = sum(intervals) / len(intervals) * 1000  # ms
+    # Inter-token latency (mean). Exact once the denominator is the real token
+    # count. The distribution is not recoverable when tokens arrive bundled —
+    # fewer timestamps than tokens — so itl_p50_ms stays chunk-derived and is
+    # not comparable across frameworks that bundle differently.
+    if len(token_times) > 1 and n_decoded > 1:
+        itl = (token_times[-1] - token_times[0]) / (n_decoded - 1) * 1000  # ms
     else:
         itl = 0.0
 
@@ -296,6 +304,8 @@ def summarize(results: list[RequestResult], errors: list[str], concurrency: int,
         "failed": len(errors),
         "total_tokens_generated": total_chunks,
         "total_output_tokens": total_output_tokens,
+        # Server tokens per SSE chunk; >1 means the framework bundles.
+        "tokens_per_chunk": (total_output_tokens / total_chunks) if total_chunks else None,
         "total_input_tokens": total_input_tokens,
         "server_usage_available": has_usage,
         "ttft_avg_ms": sum(ttfts) / len(ttfts) * 1000,
@@ -378,9 +388,10 @@ def validate_results(results: list[RequestResult], summary: dict, prompts_used: 
             avg_ratio = sum(divergent) / len(divergent)
             warnings.append(
                 f"{len(divergent)}/{successful} requests had server completion_tokens "
-                f"diverging >5% from SSE chunk count (avg ratio {avg_ratio:.2f}x). "
-                f"Framework may be bundling multiple tokens per chunk — per-request "
-                f"throughput_avg_tps and itl_avg_ms are chunk-based and therefore suspect."
+                f"diverging >5% from SSE chunk count (avg ratio {avg_ratio:.2f}x): the "
+                f"framework bundles multiple tokens per SSE delta. throughput_avg_tps and "
+                f"itl_avg_ms use the server token count and are unaffected; itl_p50_ms is "
+                f"still chunk-derived and is NOT comparable against a non-bundling framework."
             )
 
     for w in warnings:
