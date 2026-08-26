@@ -32,8 +32,26 @@ import json
 from datetime import date
 from pathlib import Path
 
-MODELS = ["Qwen3-0.6B", "Qwen3.5-0.8B", "Gemma-4-E4B-it"]
+MODELS = ["Qwen3-0.6B", "Qwen3.5-0.8B", "Gemma-4-E4B-it", "Qwen3.8-27B"]
 LEVELS = [1, 8, 16]
+
+# Per-model overrides. A model benchmarked at different concurrency levels, or
+# against a subset of the roster, declares it here rather than forcing the whole
+# page onto one shape.
+#   MODEL_LEVELS  - concurrency levels actually run for that model
+#   MODEL_ROSTER  - engines to render. An EMPTY list means "show only engines
+#                   with a result file", i.e. no "did not start" rows at all,
+#                   for a model that was deliberately run against a subset.
+#   MODEL_NOTE    - caveat shown above that model's tables.
+MODEL_LEVELS = {"Qwen3.8-27B": [1, 2, 4]}
+MODEL_ROSTER = {"Qwen3.8-27B": []}
+MODEL_NOTE = {
+    "Qwen3.8-27B":
+        "8-bit weights (GGUF Q8_0 for llama.cpp; the mlx-community affine-8bit "
+        "conversion for vllm-metal and omlx) \u2014 BF16 does not fit this box. "
+        "Run against three engines only, at concurrency 1/2/4; the other stacks "
+        "were not attempted, so their absence is not a failure.",
+}
 SPLITS = ["chat", "agent"]
 SORT_LEVEL = LEVELS[-1]   # tables default-sort by tok/s at this concurrency
 RETIRED = {"inferrs"}
@@ -239,18 +257,20 @@ def mem_cell(row, has_memory):
 import math
 
 
-def spark_svg(cells, key, log=False, title=""):
+def spark_svg(cells, key, log=False, title="", levels=None):
     """Tiny inline 3-point trend line for one stack row.
 
     Per-row normalized (shape, not magnitude; magnitudes are the numeric
     columns). Clean levels are filled dots, partial levels hollow, crashed
     levels a small cross at the baseline; missing levels are skipped.
     """
+    levels = levels or LEVELS
     W, H, PAD = 46, 18, 3.5
-    xs = {c: PAD + i * (W - 2 * PAD) / 2 for i, c in enumerate(LEVELS)}
+    n = max(len(levels) - 1, 1)
+    xs = {c: PAD + i * (W - 2 * PAD) / n for i, c in enumerate(levels)}
     pts, marks = [], []
     vals = []
-    for c in LEVELS:
+    for c in levels:
         lv = cells.get(c)
         cls = classify(lv)
         v = (lv or {}).get(key)
@@ -286,7 +306,7 @@ def spark_svg(cells, key, log=False, title=""):
             f'{poly}{"".join(dots)}</svg></td>')
 
 
-def nostart_row(fw):
+def nostart_row(fw, levels=None):
     """A roster framework with no result file for this split: the server never
     launched. Rendered as an explicit, de-emphasized failure row (grey ✕) so it
     reads as 'tested, did not start' rather than a red 'ran and crashed' ✕ or a
@@ -300,24 +320,26 @@ def nostart_row(fw):
             f'data-v="{esc(name.lower())}"><span class="prov" '
             f'title="did not start this run — no result file (server failed '
             f'to launch)">{esc(name)}</span></td>'
-            + x * len(LEVELS) + spark + dash + spark + dash + "</tr>")
+            + x * len(levels or LEVELS) + spark + dash + spark + dash + "</tr>")
 
 
-def split_table(rows, has_memory, versions=None, roster=None):
+def split_table(rows, has_memory, versions=None, roster=None, levels=None):
+    levels = levels or LEVELS
+    sort_level = levels[-1]
     head = ('<tr><th data-sort="text" data-dir="asc" '
             'title="click to sort">Stack</th>'
             + "".join(
                 f'<th class="num" data-sort="num" data-dir="desc"'
                 # Mark the column rows are already sorted by, using the same
                 # markup the JS writes, so its cleanup finds and removes it.
-                + (' data-active="desc"' if c == SORT_LEVEL else '')
+                + (' data-active="desc"' if c == sort_level else '')
                 + f' title="click to sort">tok/s c={c}'
-                + ('<span class="arr">\u25bc</span>' if c == SORT_LEVEL else '')
+                + ('<span class="arr">\u25bc</span>' if c == sort_level else '')
                 + '</th>'
-                for c in LEVELS)
+                for c in levels)
             + '<th class="spark">trend</th>'
             + '<th class="num" data-sort="num" data-dir="asc" '
-              'title="click to sort">TTFT p50 c=16</th>'
+              f'title="click to sort">TTFT p50 c={sort_level}</th>'
             + '<th class="spark">TTFT trend</th>'
             + '<th class="num" data-sort="num" data-dir="asc" '
               'title="click to sort">peak mem GB</th></tr>')
@@ -335,7 +357,7 @@ def split_table(rows, has_memory, versions=None, roster=None):
         rather than in JS avoids a flash of unsorted rows and keeps the order
         meaningful with JS disabled. Name breaks ties so the order is stable.
         """
-        lv = rows.get(f, {}).get("cells", {}).get(SORT_LEVEL)
+        lv = rows.get(f, {}).get("cells", {}).get(sort_level)
         tier = TIER[classify(lv)]
         v = lv.get("output_throughput_tps") if lv else None
         return (-tier, -(v if isinstance(v, (int, float)) else 0.0),
@@ -345,10 +367,10 @@ def split_table(rows, has_memory, versions=None, roster=None):
         if fw in RETIRED:
             continue
         if fw not in rows:                # roster engine with no result file
-            body.append(nostart_row(fw))
+            body.append(nostart_row(fw, levels))
             continue
         row = rows[fw]
-        tds = "".join(tput_cell(row["cells"].get(c)) for c in LEVELS)
+        tds = "".join(tput_cell(row["cells"].get(c)) for c in levels)
         name = NAMES.get(fw, fw)
         tip = []
         if row.get("timestamp"):
@@ -360,11 +382,13 @@ def split_table(rows, has_memory, versions=None, roster=None):
         body.append(
             f'<tr><td class="stack" data-v="{esc(name.lower())}">'
             f'<span class="prov"{tipattr}>{esc(name)}</span></td>{tds}'
-            + spark_svg(row["cells"], "output_throughput_tps",
-                        title=f"{name}: output tok/s across c=1/8/16")
-            + ms_cell(row["cells"].get(16))
-            + spark_svg(row["cells"], "ttft_p50_ms", log=True,
-                        title=f"{name}: TTFT p50 across c=1/8/16 (log)")
+            + spark_svg(row["cells"], "output_throughput_tps", levels=levels,
+                        title=f"{name}: output tok/s across "
+                              f"c={'/'.join(str(c) for c in levels)}")
+            + ms_cell(row["cells"].get(sort_level))
+            + spark_svg(row["cells"], "ttft_p50_ms", log=True, levels=levels,
+                        title=f"{name}: TTFT p50 across "
+                              f"c={'/'.join(str(c) for c in levels)} (log)")
             + mem_cell(row, has_memory) + "</tr>")
     return f'<table>{head}{"".join(body)}</table>'
 
@@ -682,6 +706,14 @@ def machine_section(repo, machine, commit):
                          f' {esc(machine["note"])}</div>')
         else:
             splits = data[model]
+            mlevels = MODEL_LEVELS.get(model, LEVELS)
+            # An explicit [] roster means "only engines with a result file":
+            # no "did not start" rows for a model run against a subset.
+            mroster = (MODEL_ROSTER[model] if model in MODEL_ROSTER
+                       else machine.get("roster"))
+            if MODEL_NOTE.get(model):
+                inner.append(f'<div class="placeholder">'
+                             f'{esc(MODEL_NOTE[model])}</div>')
             cols = []
             for split in SPLITS:
                 if split not in splits:
@@ -690,9 +722,9 @@ def machine_section(repo, machine, commit):
                          else "agent split (~4K-token prompts)")
                 cols.append(f'<div><h3>{esc(title)}</h3><div class="tablewrap">'
                             + split_table(splits[split], machine["has_memory"],
-                                          versions, machine.get("roster"))
+                                          versions, mroster, mlevels)
                             + "</div></div>")
-            inner.append(snapshot_line(splits, machine.get("roster")))
+            inner.append(snapshot_line(splits, mroster))
             inner.append(f'<div class="splits">{"".join(cols)}</div>')
             fid = load_fidelity(repo, model)
             if machine["id"] != "dgxspark" and fid:
