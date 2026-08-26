@@ -82,10 +82,10 @@ mkdir -p "$RESULTS_DIR" 2>/dev/null || true
 OLLAMA_MODEL_NAME="${OLLAMA_MODEL_NAME:-$(echo "$MODEL_NAME" | tr '[:upper:]' '[:lower:]')-bf16}"
 
 # Benchmark
-CONCURRENCY_LEVELS="1 8 16"
+CONCURRENCY_LEVELS="${CONCURRENCY_LEVELS:-1 8 16}"   # env-overridable
 COOLDOWN_SECONDS="${COOLDOWN_SECONDS:-60}"   # env-overridable; bump (e.g. 120) on hot/throttling hosts
 WARMUP_REQUESTS=3
-BENCHMARK_REQUESTS=100  # per concurrency level
+BENCHMARK_REQUESTS="${BENCHMARK_REQUESTS:-100}"  # per concurrency level; env-overridable
 
 # Ensure directories exist
 mkdir -p "$FRAMEWORKS_DIR" "$VENVS_DIR" "$MODELS_DIR" "$RESULTS_BASE_DIR" "$RESULTS_DIR"

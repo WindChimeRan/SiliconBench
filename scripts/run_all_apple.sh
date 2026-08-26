@@ -99,9 +99,9 @@ CONCURRENCY_ARG=$(echo $CONCURRENCY_LEVELS | tr ' ' ',')
 # Bump context window for agent split — prompts reach ~8.8K tokens.
 # llamacpp's --parallel 4 divides ctx across slots, so 65536 = 16384/slot.
 if [ "$SPLIT" = "agent" ]; then
-    export VLLM_METAL_MAX_MODEL_LEN=16384
-    export LLAMACPP_CTX_SIZE=65536
-    export OLLAMA_CONTEXT_LENGTH=16384
+    export VLLM_METAL_MAX_MODEL_LEN="${VLLM_METAL_MAX_MODEL_LEN:-16384}"
+    export LLAMACPP_CTX_SIZE="${LLAMACPP_CTX_SIZE:-65536}"
+    export OLLAMA_CONTEXT_LENGTH="${OLLAMA_CONTEXT_LENGTH:-16384}"
 fi
 
 # Per-split output directory: results/<MODEL>/<split>/
@@ -172,7 +172,8 @@ cleanup
 # levels combined). Backstops benchmark.py's own --max-wall-time, which only
 # checks *between* levels and can't stop a single pathologically slow one —
 # hf_transformers on the agent split has been projected at 6-10h for c=1 alone.
-FRAMEWORK_TIMEOUT_SECONDS=3600
+FRAMEWORK_TIMEOUT_SECONDS="${FRAMEWORK_TIMEOUT_SECONDS:-3600}"
+BENCHMARK_MAX_WALL_TIME="${BENCHMARK_MAX_WALL_TIME:-3600}"
 
 for entry in "${FRAMEWORKS[@]}"; do
     IFS=':' read -r name port serve stop model_override <<< "$entry"
@@ -243,6 +244,7 @@ for entry in "${FRAMEWORKS[@]}"; do
         --output "$BENCH_OUT" \
         --outputs "$OUTPUTS_OUT" \
         --split "$SPLIT" \
+        --max-wall-time "$BENCHMARK_MAX_WALL_TIME" \
         $MODEL_FLAG &
     BENCH_PID=$!
     sleep "$FRAMEWORK_TIMEOUT_SECONDS" &

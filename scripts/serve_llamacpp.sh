@@ -28,7 +28,7 @@ fi
     --port "$LLAMACPP_PORT" \
     --host 0.0.0.0 \
     -ngl 99 \
-    --parallel 4 \
+    --parallel "${LLAMACPP_PARALLEL:-4}" \
     $CTX_ARG \
     &> "$PROJECT_DIR/.frameworks/llamacpp_server.log" &
 

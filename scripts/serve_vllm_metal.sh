@@ -22,6 +22,7 @@ vllm serve "$HF_MODEL" \
     --host 0.0.0.0 \
     --enable-prefix-caching \
     --max-model-len "${VLLM_METAL_MAX_MODEL_LEN:-4096}" \
+    ${VLLM_METAL_SERVE_EXTRA_ARGS:-} \
     &> "$PROJECT_DIR/.frameworks/vllm_metal_server.log" &
 
 echo $! > "$PROJECT_DIR/.frameworks/vllm_metal_server.pid"
