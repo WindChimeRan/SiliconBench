@@ -2,6 +2,7 @@
   "model_name": "Gemma-4-E4B-it",
   "split": "agent",
   "frameworks": [
+    "vllm_metal_mtp",
     "llamacpp",
     "mlx_lm",
     "vllm_mlx",
@@ -9,6 +10,138 @@
     "vllm_metal"
   ],
   "results": {
+    "vllm_metal_mtp": {
+      "framework": "vllm_metal_mtp",
+      "model": "/Users/ranzhang/workspace/applebench/.models/Gemma-4-E4B-it",
+      "endpoint": "http://localhost:8004",
+      "timestamp": "2026-08-25T15:01:47",
+      "machine": {
+        "host": "ranzhang-mac",
+        "chip": "Apple M5 Pro",
+        "os": "Darwin 25.6.0"
+      },
+      "concurrency_results": [
+        {
+          "concurrency": 1,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 4923,
+          "total_output_tokens": 8614,
+          "tokens_per_chunk": 1.749746089782653,
+          "total_input_tokens": 436951,
+          "server_usage_available": true,
+          "ttft_avg_ms": 750.5355582582533,
+          "ttft_p50_ms": 512.5474579981528,
+          "ttft_p99_ms": 3367.7073750295676,
+          "throughput_avg_tps": 25.867528718459297,
+          "throughput_p50_tps": 25.178517531032167,
+          "itl_avg_ms": 37.27067150963896,
+          "itl_p50_ms": 39.04228725833959,
+          "latency_avg_s": 4.473218457894751,
+          "latency_p50_s": 3.2094621669966727,
+          "latency_p99_s": 12.4001773330383,
+          "output_throughput_tps": 20.49414370290727,
+          "input_throughput_tps": 1039.579357456354,
+          "total_token_throughput_tps": 1060.0735011592612,
+          "wall_time_s": 420.3151946659782,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "93/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.95x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+          ],
+          "spec_decode_draft_tokens": 4989.0,
+          "spec_decode_accepted_tokens": 3661.0,
+          "spec_decode_acceptance_rate": 0.7338143916616556,
+          "mem_used_gb": 49.68
+        },
+        {
+          "concurrency": 8,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 4817,
+          "total_output_tokens": 8436,
+          "tokens_per_chunk": 1.7512974880631098,
+          "total_input_tokens": 436951,
+          "server_usage_available": true,
+          "ttft_avg_ms": 1303.1081398035228,
+          "ttft_p50_ms": 867.8146249731071,
+          "ttft_p99_ms": 5524.931082967669,
+          "throughput_avg_tps": 11.14201870393193,
+          "throughput_p50_tps": 10.284965064019751,
+          "itl_avg_ms": 96.87352285325403,
+          "itl_p50_ms": 93.97042333032005,
+          "latency_avg_s": 10.907202745934258,
+          "latency_p50_s": 6.674756874970626,
+          "latency_p99_s": 34.145485542016104,
+          "output_throughput_tps": 64.24137224902418,
+          "input_throughput_tps": 3327.4456905622765,
+          "total_token_throughput_tps": 3391.6870628113006,
+          "wall_time_s": 131.31724470795598,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "93/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.96x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+          ],
+          "spec_decode_draft_tokens": 4886.0,
+          "spec_decode_accepted_tokens": 3589.0,
+          "spec_decode_acceptance_rate": 0.7345476872697503,
+          "mem_used_gb": 49.67
+        },
+        {
+          "concurrency": 16,
+          "num_requests": 100,
+          "successful": 93,
+          "failed": 7,
+          "total_tokens_generated": 4931,
+          "total_output_tokens": 8633,
+          "tokens_per_chunk": 1.7507604948286353,
+          "total_input_tokens": 436951,
+          "server_usage_available": true,
+          "ttft_avg_ms": 2184.326430988593,
+          "ttft_p50_ms": 1577.3306250339374,
+          "ttft_p99_ms": 6148.070042021573,
+          "throughput_avg_tps": 5.868011853762579,
+          "throughput_p50_tps": 5.135716866202252,
+          "itl_avg_ms": 187.2140981715983,
+          "itl_p50_ms": 186.68154161423445,
+          "latency_avg_s": 19.498966603926057,
+          "latency_p50_s": 13.541574583039619,
+          "latency_p99_s": 57.43226962501649,
+          "output_throughput_tps": 71.60258714541114,
+          "input_throughput_tps": 3624.096149168833,
+          "total_token_throughput_tps": 3695.6987363142443,
+          "wall_time_s": 120.56826916697901,
+          "error_samples": [
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a008_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a013_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a017_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a039_vlong_hermes' (requested max_tokens=256, finish_reason=stop)",
+            "silent failure: server returned OK but generated only 0 token(s) for prompt 'a058_vlong_hermes' (requested max_tokens=256, finish_reason=stop)"
+          ],
+          "sanity_warnings": [
+            "93/93 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.96x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+          ],
+          "spec_decode_draft_tokens": 5003.0,
+          "spec_decode_accepted_tokens": 3666.0,
+          "spec_decode_acceptance_rate": 0.7327603437937238,
+          "mem_used_gb": 49.47
+        }
+      ],
+      "total_duration_s": 690.810722208058,
+      "config_note": "vllm-metal + Gemma-4 MTP speculative decoding, agent split, 2026-08-25, 100 req/level.\nServe: --no-async-scheduling --speculative-config {\"method\":\"mtp\",\"model\":\"mlx-community/gemma-4-E4B-it-assistant-bf16\",\"num_speculative_tokens\":1}\nThe HF repo id resolves identically to a local copy (verified: same 355/517 draft acceptance either way), so the repo id is the portable form.\nnum_speculative_tokens=1 is not a tuning choice: the Gemma-4 assistant is a single MTP head and vllm_metal/v1/proposer.py:Gemma4MTPProposer calls propose_draft_token_ids once per step ('return one draft token per seed'). Setting 4 was measured to produce identical draft-token counts, acceptance and throughput -- it is silently ignored past the <=0 on/off check, not rejected. This is a Gemma-4 assistant limit; vllm-metal's draft-model and n-gram proposers do support multi-token drafts.\nLIMITATION: MTP on Metal hard-requires --no-async-scheduling (vllm_metal/v1/spec_decode.py:129 raises NotImplementedError otherwise), while the 2026-08-22 vllm_metal baseline ran with async scheduling ON. The delta vs that baseline bundles MTP with the switch to synchronous scheduling and does not isolate MTP.\nOtherwise matched to baseline: vllm-metal 0.3.0.dev20260821152549, max_num_batched_tokens=2048, --max-model-len 16384, memory fraction 0.5. The 7 failures/level are pre-existing (baseline also 93/100), not MTP-induced."
+    },
     "llamacpp": {
       "framework": "llamacpp",
       "model": "/Users/ranzhang/workspace/applebench/.models/gemma-4-E4B-it-BF16.gguf",
