@@ -489,18 +489,21 @@ CSS = """
         --crash:#ff8389; --partial:#d2b100; }
 }
 * { box-sizing: border-box; }
+html { font-size:17px; }
 body { margin:0; background:var(--bg); color:var(--ink);
-  font:16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+  font:1rem/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
   sans-serif; }
-.wrap { max-width: 1000px; margin: 0 auto; padding: 2.2rem 1.2rem 4rem; }
-header h1 { margin:0 0 .2rem; font-size:1.9rem; letter-spacing:-.01em; }
+.wrap { max-width: 910px; margin: 0 auto; padding: 2.2rem 1.2rem 4rem; }
+header h1 { margin:0 0 .2rem; font-size:1.9rem; letter-spacing:-.01em;
+  line-height:1.25; }
+header p.byline { margin:.3rem 0 .5rem; font-size:.92rem;
+  color:var(--muted); }
 header p.tag { margin:.1rem 0 .6rem; color:var(--muted); }
 header .links a { margin-right:1rem; color:var(--accent);
   text-decoration:none; }
 header .links a:hover { text-decoration:underline; }
 .scopenote { font-size:.85rem; color:var(--muted); margin:.3rem 0 0; }
-.about { max-width:46rem; }
-.about p { margin:.55rem 0; font-size:.95rem; }
+.about p { margin:.55rem 0; font-size:1.1rem; }
 .snapshot { font-size:.88rem; color:var(--muted); margin:.2rem 0 .8rem; }
 .controls { display:flex; flex-wrap:wrap; gap:.6rem 1.6rem;
   margin:1.6rem 0 1rem; align-items:center; }
@@ -537,6 +540,8 @@ td.spark svg { display:block; margin:0 auto; color:var(--accent); }
 td.spark .sx { stroke:var(--crash); stroke-width:1.1; fill:none; }
 tr.refrow td { background:var(--band); }
 .tablewrap { overflow-x:auto; }
+.tablewrap.fid { width:max-content; max-width:100%;
+  margin-left:auto; margin-right:auto; }
 .splits { display:grid; grid-template-columns:1fr; gap:1rem 2rem; }
 .splits > div { min-width:0; }
 .meta { border-top:1px solid var(--hair); margin-top:1.4rem;
@@ -563,20 +568,20 @@ details summary { cursor:pointer; }
 section { scroll-margin-top:.8rem; }
 .frozen { border:1px solid var(--hair); border-left:3px solid var(--accent);
   border-radius:.4rem; padding:.65rem .9rem; font-size:.88rem;
-  color:var(--muted); max-width:46rem; }
+  color:var(--muted); }
 .tldr { background:var(--band); border-radius:.6rem;
-  padding:.8rem 1.1rem; max-width:46rem; margin:1rem 0 1.4rem; }
+  padding:.8rem 1.1rem; margin:1rem 0 1.4rem; }
 .tldr p { margin:.1rem 0 .3rem; }
 .tldr ul { margin:.2rem 0 .2rem 1.1rem; padding:0; }
 .tldr li { margin:.35rem 0; font-size:.92rem; }
 #paper h3 { font-size:1.05rem; margin:1.6rem 0 .5rem; }
-#paper > p { max-width:46rem; font-size:.95rem; }
-figure { margin:.8rem 0 1rem; max-width:52rem; }
+#paper > p { font-size:1.1rem; }
+figure { margin:.8rem 0 1rem; }
 figure img { width:100%; height:auto; background:#fff;
   border:1px solid var(--hair); border-radius:.4rem; padding:.4rem;
   box-sizing:border-box; }
 figcaption { font-size:.8rem; color:var(--muted); margin-top:.3rem; }
-.linksbox { margin-top:1.8rem; max-width:46rem; }
+.linksbox { margin-top:1.8rem; }
 footer { margin-top:3rem; font-size:.8rem; color:var(--muted); }
 footer a { color:var(--accent); text-decoration:none; }
 """
@@ -730,7 +735,7 @@ def machine_section(repo, machine, commit):
             if machine["id"] != "dgxspark" and fid:
                 inner.append(
                     "<h3>fidelity (weighted F1, GMRID, vs. one NVIDIA A100 "
-                    'reference)</h3><div class="tablewrap" style="max-width:26rem">'
+                    'reference)</h3><div class="tablewrap fid">'
                     + fidelity_table(fid) + "</div>")
         blocks.append(f'<div data-model="{esc(model)}" hidden>'
                       + "".join(inner) + "</div>")
@@ -876,7 +881,7 @@ def build(repo, commit):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SiliconBench — LLM serving on unified-memory desktops</title>
+<title>SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops</title>
 <meta name="description" content="Speed, memory, and fidelity for LLM serving
 engines on unified-memory desktops (Apple Silicon, DGX Spark). Updated
 automatically from weekly benchmark runs.">
@@ -885,9 +890,9 @@ automatically from weekly benchmark runs.">
 <body>
 <div class="wrap">
 <header>
-  <h1>SiliconBench</h1>
-  <p class="tag">{flow("""Speed, memory, and fidelity for LLM serving on
-  unified-memory desktops. All requests hit an OpenAI-compatible endpoint at
+  <h1>SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops</h1>
+  <p class="byline">Ranran Haoran Zhang, Aysa Xuemo Fan, David Munhá Correia, Alex Cheema, Rui Zhang</p>
+  <p class="tag">{flow("""All requests hit an OpenAI-compatible endpoint at
   concurrency 1 / 8 / 16, BF16 weights, n=100 per level.""")}</p>
   <p class="links">
     <a href="https://github.com/WindChimeRan/SiliconBench">benchmark repo</a>
