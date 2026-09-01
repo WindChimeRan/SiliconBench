@@ -15,8 +15,20 @@ source "$VENV_DIR/bin/activate"
 
 echo "=== Starting vllm-metal server on port $VLLM_METAL_PORT ==="
 
+# VLLM_METAL_MEMORY_FRACTION: vllm-metal's own default is `auto`, which defers
+# to --gpu-memory-utilization and so resolves to 0.92 (vllm_metal/config.py:
+# effective_memory_fraction). Pinning 0.5 here handed vllm-metal half the
+# machine while oMLX ran its own memory guard at soft 0.85 / hard 0.95 and
+# llama.cpp had no comparable cap -- not an apples-to-apples budget. Measured
+# on Qwen3.6-35B-A3B 4-bit the pin cost 25/36/52% of output throughput at
+# concurrency 1/2/4, and on Qwen3.8-27B 12/28/38%. Default to the engine's own
+# default; override the env var explicitly to study the cap.
+#
+# Keep these assignments on unbroken continuation lines: a comment between them
+# terminates the chain, so the ones above it silently become shell-local
+# assignments instead of being exported to the server process.
 VLLM_METAL_USE_PAGED_ATTENTION=1 \
-VLLM_METAL_MEMORY_FRACTION="${VLLM_METAL_MEMORY_FRACTION:-0.5}" \
+VLLM_METAL_MEMORY_FRACTION="${VLLM_METAL_MEMORY_FRACTION:-auto}" \
 vllm serve "$HF_MODEL" \
     --port "$VLLM_METAL_PORT" \
     --host 0.0.0.0 \
