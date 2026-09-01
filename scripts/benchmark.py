@@ -426,6 +426,31 @@ def get_model_name(base_url: str) -> str:
     return "unknown"
 
 
+
+def _framework_version(label):
+    """Stamp the build that produced this run. Best-effort: a version lookup
+    must never fail a benchmark, and an unknown version is reported as null
+    rather than omitted, so a reader cannot assume two runs matched.
+
+    Variant labels (vllm_metal_mtp, omlx_bounded) probe their base engine.
+    """
+    try:
+        from framework_version import describe
+    except Exception:
+        return None
+    import re as _re
+    base = _re.sub(r"_n\d+$", "", label)
+    for suffix in ("_mtp", "_bounded", "_ssd"):
+        if base.endswith(suffix):
+            base = base[: -len(suffix)]
+    try:
+        d = describe(base)
+    except Exception:
+        return None
+    if base != label:
+        d = dict(d, variant_of=base)
+    return d
+
 def main():
     parser = argparse.ArgumentParser(description="SiliconBench — LLM inference benchmark")
     parser.add_argument("--port", type=int, required=True, help="Server port")
@@ -468,6 +493,7 @@ def main():
 
     all_results = {
         "framework": args.framework,
+        "framework_version": _framework_version(args.framework),
         "model": model,
         "endpoint": base_url,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
