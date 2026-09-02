@@ -55,6 +55,37 @@ def _peak_memory_per_level(result_path, concurrency_results):
     return out
 
 
+
+def _warn_on_methodology_mismatch(frameworks, paths):
+    """Shout when arms about to share axes were not measured the same way.
+
+    Diffs the whole run_config rather than named fields, so a knob added later
+    is covered without touching this function. Warns rather than fails: a mixed
+    set is sometimes deliberate, and refusing would strand results on disk.
+    """
+    configs = {fw: d.get("run_config") for fw, d in frameworks.items()}
+    missing = sorted(fw for fw, c in configs.items() if not c)
+    known = {fw: c for fw, c in configs.items() if c}
+
+    lines = []
+    for key in sorted({k for c in known.values() for k in c}):
+        vals = {fw: json.dumps(c.get(key), sort_keys=True) for fw, c in known.items()}
+        if len(set(vals.values())) > 1:
+            lines.append(f"{key} differs:")
+            lines += [f"    {fw}: {v}" for fw, v in sorted(vals.items())]
+    if missing:
+        lines.append("no run_config (measured before provenance was added): "
+                     + ", ".join(missing))
+
+    if lines:
+        print("=" * 72)
+        print("WARNING: these arms were not measured identically; sharing axes "
+              "may mislead.")
+        for line in lines:
+            print("  " + line)
+        print("=" * 72)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--results-dir", default=None, help="Results directory")
@@ -98,6 +129,8 @@ def main():
     if not frameworks:
         print("No results found")
         sys.exit(1)
+
+    _warn_on_methodology_mismatch(frameworks, frameworks_path)
 
     # Enrich each cell with peak memory (GB) from the metalstat sidecar, so
     # comparison.json is a self-contained, tracked source for memory-axis

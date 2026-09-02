@@ -427,6 +427,36 @@ def get_model_name(base_url: str) -> str:
 
 
 
+
+
+# Engine knobs are captured by prefix, not by an allowlist: the variable that
+# silently broke a comparison last time (LLAMACPP_CTX_SIZE) would not have been
+# on a list written the week before.
+_SERVE_ENV_PREFIXES = ("VLLM_METAL_", "OMLX_", "LLAMACPP_", "OLLAMA_")
+
+
+def _run_config(args, concurrency_levels):
+    """Record how this run was measured, not just what it measured.
+
+    A single-level arm and a level drawn from a multi-level sweep are not
+    comparable: the sweep reaches later levels with caches warmed by the
+    earlier ones. Serve flags that change the memory budget or context size do
+    the same thing more quietly. Nothing used to record either.
+    """
+    import os
+
+    return {
+        "concurrency_levels": list(concurrency_levels),
+        # levels after the first reuse the server, and therefore its caches
+        "levels_share_server": len(concurrency_levels) > 1,
+        "requests_per_level": args.requests,
+        "warmup": args.warmup,
+        "split": args.split,
+        "serve_env": {k: v for k, v in sorted(os.environ.items())
+                      if k.startswith(_SERVE_ENV_PREFIXES)},
+    }
+
+
 def _framework_version(label):
     """Stamp the build that produced this run. Best-effort: a version lookup
     must never fail a benchmark, and an unknown version is reported as null
@@ -494,6 +524,7 @@ def main():
     all_results = {
         "framework": args.framework,
         "framework_version": _framework_version(args.framework),
+        "run_config": _run_config(args, concurrency_levels),
         "model": model,
         "endpoint": base_url,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
