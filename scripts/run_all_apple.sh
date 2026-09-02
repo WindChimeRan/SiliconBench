@@ -94,8 +94,6 @@ FRAMEWORKS=(
     "sglang:$SGLANG_PORT:serve_sglang.sh:stop_sglang.sh:$HF_MODEL"
 )
 
-CONCURRENCY_ARG=$(echo $CONCURRENCY_LEVELS | tr ' ' ',')
-
 # Bump context window for agent split — prompts reach ~8.8K tokens.
 # llamacpp's --parallel 4 divides ctx across slots, so 65536 = 16384/slot.
 if [ "$SPLIT" = "agent" ]; then
@@ -200,6 +198,24 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo " Benchmarking: $name (port $port)"
     echo "==========================================="
 
+    # One server per concurrency level, so each level is an independent
+    # cold-start measurement. Sharing a server shares its caches: on the agent
+    # split, whose prompts repeat, level 1 warms a prefix cache that later
+    # levels hit — worth 1.67x throughput and 4.1x TTFT on Gemma at concurrency
+    # 8, enough to invert conclusions. Costs one server start per level.
+    # Shared timestamp so the benchmark JSON, metalstat sidecar, and outputs
+    # sidecar share a suffix. Fixed once per framework: the per-level loop below
+    # must write every level under the same stem.
+    RUN_TS=$(date +%Y%m%d_%H%M%S)
+    BENCH_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}.json"
+    OUTPUTS_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_outputs.jsonl"
+
+    LEVEL_PARTS=()
+    LEVEL_FAILED=false
+
+    for LEVEL_ARG in $CONCURRENCY_LEVELS; do
+    LEVEL_OUT="$SPLIT_RESULTS_DIR/.${name}_${RUN_TS}_level_${LEVEL_ARG//,/_}.json"
+
     # Start server. Guarded: under `set -e`, an unguarded non-zero exit here
     # (server never becomes ready — bad build, unsupported model arch, port
     # conflict, etc.) would otherwise kill this whole script and silently
@@ -211,7 +227,8 @@ for entry in "${FRAMEWORKS[@]}"; do
         echo "Cooling down for ${COOLDOWN_SECONDS}s..."
         sleep "$COOLDOWN_SECONDS"
         echo ""
-        continue
+        LEVEL_FAILED=true
+        break
     fi
     echo ""
 
@@ -220,11 +237,6 @@ for entry in "${FRAMEWORKS[@]}"; do
     if [ -n "$model_override" ]; then
         MODEL_FLAG="--model $model_override"
     fi
-
-    # Shared timestamp so the benchmark JSON, metalstat sidecar, and outputs sidecar share a suffix
-    RUN_TS=$(date +%Y%m%d_%H%M%S)
-    BENCH_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}.json"
-    OUTPUTS_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_outputs.jsonl"
 
     # Optional metalstat sidecar (gated — A/B showed wrapping perturbs tok/s ~10%; sidecar is <1%)
     METAL_PID=""
@@ -238,10 +250,10 @@ for entry in "${FRAMEWORKS[@]}"; do
     python "$SCRIPT_DIR/benchmark.py" \
         --framework "$name" \
         --port "$port" \
-        --concurrency "$CONCURRENCY_ARG" \
+        --concurrency "$LEVEL_ARG" \
         --requests "$BENCHMARK_REQUESTS" \
         --warmup "$WARMUP_REQUESTS" \
-        --output "$BENCH_OUT" \
+        --output "$LEVEL_OUT" \
         --outputs "$OUTPUTS_OUT" \
         --split "$SPLIT" \
         --max-wall-time "$BENCHMARK_MAX_WALL_TIME" \
@@ -284,6 +296,19 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo "Cooling down for ${COOLDOWN_SECONDS}s..."
     sleep "$COOLDOWN_SECONDS"
     echo ""
+
+    LEVEL_PARTS+=("$LEVEL_OUT")
+    done   # per-level loop
+
+    # Stitch the per-level files back into the one-file-per-framework shape the
+    # rest of the pipeline expects. The merged run_config records that the
+    # levels did not share a server.
+    if [ "$LEVEL_FAILED" = "true" ]; then
+        echo "  skipping merge for $name — a level failed to start"
+    else
+        python "$SCRIPT_DIR/merge_levels.py" --output "$BENCH_OUT" "${LEVEL_PARTS[@]}" \
+            && rm -f "${LEVEL_PARTS[@]}"
+    fi
 done
 
 echo "==========================================="
