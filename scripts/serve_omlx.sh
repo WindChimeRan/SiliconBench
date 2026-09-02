@@ -35,14 +35,34 @@ echo "=== Starting omlx server on port $OMLX_PORT ==="
 # OMLX_SERVE_EXTRA_ARGS passes extra flags to `omlx serve`. omlx enables a
 # persistent SSD-backed prefix cache by default (~/.omlx/cache, 100GB) that no
 # other framework here has: it survives restarts and spans models, so it both
-# inflates results once warm and depresses them once saturated. A comparable
-# run points --paged-ssd-cache-dir at a fresh dir. Pass --hot-cache-max-size
-# explicitly too: omlx persists CLI args to ~/.omlx/settings.json, so its
-# documented defaults are not what you actually get.
+# inflates results once warm and depresses them once saturated.
+#
+# Default to a fresh cache directory per server start. Restarting the server
+# between concurrency levels is not enough on its own for omlx: its cache is on
+# disk and outlives the process, so without a new directory each level would
+# still inherit the one before it. Pass --hot-cache-max-size explicitly too,
+# because omlx persists CLI args to ~/.omlx/settings.json and its documented
+# defaults are not what you actually get. Override either by naming them in
+# OMLX_SERVE_EXTRA_ARGS.
+OMLX_CACHE_ARGS=""
+case "${OMLX_SERVE_EXTRA_ARGS:-}" in
+    *--paged-ssd-cache-dir*|*--no-cache*) ;;
+    *)
+        OMLX_FRESH_CACHE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/omlx-ssd-XXXXXX")"
+        OMLX_CACHE_ARGS="--paged-ssd-cache-dir $OMLX_FRESH_CACHE_DIR --paged-ssd-cache-max-size 100GB"
+        echo "omlx: fresh SSD cache dir $OMLX_FRESH_CACHE_DIR"
+        ;;
+esac
+case "${OMLX_SERVE_EXTRA_ARGS:-}" in
+    *--hot-cache-max-size*) ;;
+    *) OMLX_CACHE_ARGS="$OMLX_CACHE_ARGS --hot-cache-max-size 0" ;;
+esac
+
 omlx serve \
     --model-dir "$OMLX_MODEL_DIR" \
     --port "$OMLX_PORT" \
     --host 0.0.0.0 \
+    ${OMLX_CACHE_ARGS} \
     ${OMLX_SERVE_EXTRA_ARGS:-} \
     &> "$PROJECT_DIR/.frameworks/omlx_server.log" &
 
