@@ -67,8 +67,6 @@ FRAMEWORKS=(
     "sglang:$SGLANG_PORT:dgxspark/serve_sglang.sh:dgxspark/stop_sglang.sh:$HF_MODEL"
 )
 
-CONCURRENCY_ARG=$(echo $CONCURRENCY_LEVELS | tr ' ' ',')
-
 # llama.cpp serves at most --parallel requests concurrently; anything beyond
 # that queues (huge TTFT) and can't batch. Set it to the max concurrency
 # tested so the comparison against vllm/sglang is apples-to-apples. Note -c is
@@ -103,6 +101,7 @@ echo ""
 if [ "$SKIP_EXISTING" = "false" ]; then
     echo "Cleaning old result files..."
     rm -f "$SPLIT_RESULTS_DIR"/*_*.json "$SPLIT_RESULTS_DIR"/*_outputs.jsonl "$SPLIT_RESULTS_DIR/comparison.json"
+    rm -rf "$SPLIT_RESULTS_DIR/.levels"
 else
     echo "Resume mode — keeping existing results."
 fi
@@ -135,38 +134,62 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo " Benchmarking: $name (port $port)"
     echo "==========================================="
 
-    # Start server. Guarded: under `set -e`, an unguarded non-zero exit here
-    # (server never becomes ready — bad build, unsupported model arch, port
-    # conflict, etc.) would otherwise kill this whole script and silently
-    # skip every remaining framework, not just this one.
-    echo "Starting $name server..."
-    if ! bash "$SCRIPT_DIR/$serve"; then
-        echo "ERROR: $name server failed to start — skipping this framework"
-        cleanup
-        echo "Cooling down for ${COOLDOWN_SECONDS}s..."
-        sleep "$COOLDOWN_SECONDS"
-        echo ""
-        continue
-    fi
-    echo ""
-
     # Run benchmark
     MODEL_FLAG=""
     if [ -n "$model_override" ]; then
         MODEL_FLAG="--model $model_override"
     fi
 
+    # Shared timestamp so the benchmark JSON and the outputs sidecar share a
+    # suffix. Fixed once per framework: the per-level loop below must write
+    # every level under the same stem.
     RUN_TS=$(date +%Y%m%d_%H%M%S)
     BENCH_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}.json"
     OUTPUTS_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_outputs.jsonl"
 
+    # Per-level parts live in a subdirectory, not next to the results. A part
+    # left behind by a skipped merge is itself a valid one-level result file,
+    # and collect_results.py globs this directory — it would pick the part up
+    # and publish a single level as the framework's arm for the whole run.
+    LEVEL_DIR="$SPLIT_RESULTS_DIR/.levels"
+    mkdir -p "$LEVEL_DIR"
+
+    LEVEL_PARTS=()
+    LEVEL_FAILED=false
+
+    # One server per concurrency level, so each level is an independent
+    # cold-start measurement. Levels sharing a server share its caches, and on
+    # this platform every engine caches prefixes by default: vllm's automatic
+    # prefix caching, sglang's RadixAttention, llama.cpp's per-slot prompt
+    # reuse. On the agent split, whose prompts repeat, level 1 then warms the
+    # cache that later levels hit and the levels stop being independent
+    # measurements. Costs one server start per level.
+    for LEVEL_ARG in $CONCURRENCY_LEVELS; do
+    LEVEL_OUT="$LEVEL_DIR/${name}_${RUN_TS}_level_${LEVEL_ARG//,/_}.json"
+
+    # Start server. Guarded: under `set -e`, an unguarded non-zero exit here
+    # (server never becomes ready — bad build, unsupported model arch, port
+    # conflict, etc.) would otherwise kill this whole script and silently
+    # skip every remaining framework, not just this one.
+    echo "Starting $name server (concurrency $LEVEL_ARG)..."
+    if ! bash "$SCRIPT_DIR/$serve"; then
+        echo "ERROR: $name server failed to start — skipping remaining levels"
+        cleanup
+        echo "Cooling down for ${COOLDOWN_SECONDS}s..."
+        sleep "$COOLDOWN_SECONDS"
+        echo ""
+        LEVEL_FAILED=true
+        break
+    fi
+    echo ""
+
     python "$SCRIPT_DIR/benchmark.py" \
         --framework "$name" \
         --port "$port" \
-        --concurrency "$CONCURRENCY_ARG" \
+        --concurrency "$LEVEL_ARG" \
         --requests "$BENCHMARK_REQUESTS" \
         --warmup "$WARMUP_REQUESTS" \
-        --output "$BENCH_OUT" \
+        --output "$LEVEL_OUT" \
         --outputs "$OUTPUTS_OUT" \
         --split "$SPLIT" \
         $MODEL_FLAG || true
@@ -183,6 +206,45 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo "Cooling down for ${COOLDOWN_SECONDS}s..."
     sleep "$COOLDOWN_SECONDS"
     echo ""
+
+    LEVEL_PARTS+=("$LEVEL_OUT")
+    done   # per-level loop
+
+    # Stitch the per-level files back into the one-file-per-framework shape the
+    # rest of the pipeline expects. The merged run_config records that the
+    # levels did not share a server.
+    if [ "$LEVEL_FAILED" = "true" ]; then
+        echo "  $name: stopped early — a level's server failed to start"
+    fi
+    # Merge the levels that produced a file. A missing part means that level
+    # died; keeping the levels that did run beats discarding them, and
+    # run_config.concurrency_levels records which those were. Guarded: an
+    # unguarded merge failure would take the whole script down under `set -e`
+    # and skip every remaining framework.
+    PRESENT_PARTS=()
+    MISSING_PARTS=()
+    for part in "${LEVEL_PARTS[@]}"; do
+        if [ -s "$part" ]; then
+            PRESENT_PARTS+=("$part")
+        else
+            MISSING_PARTS+=("$(basename "$part")")
+        fi
+    done
+    if [ ${#MISSING_PARTS[@]} -gt 0 ]; then
+        echo "  ⚠ $name produced no result for: ${MISSING_PARTS[*]}"
+    fi
+    if [ ${#PRESENT_PARTS[@]} -eq 0 ]; then
+        echo "  no levels completed for $name — no result file written"
+    elif ! python "$SCRIPT_DIR/merge_levels.py" --output "$BENCH_OUT" "${PRESENT_PARTS[@]}"; then
+        echo "  ⚠ merge failed for $name — no result file written"
+        rm -f "$BENCH_OUT"
+    fi
+    # Always drop the parts, merged or not: a stray part is a valid one-level
+    # result file that the next collect_results would adopt as this
+    # framework's arm.
+    if [ ${#LEVEL_PARTS[@]} -gt 0 ]; then
+        rm -f "${LEVEL_PARTS[@]}"
+    fi
 done
 
 echo "==========================================="
