@@ -1,0 +1,129 @@
+{
+  "framework": "llamacpp",
+  "framework_version": {
+    "commit": "0eadefebd3f8f92a86d634a0e5b8fffc9dc792c0",
+    "version": "0eadefebd",
+    "commit_date": "2026-09-01T06:24:49+02:00"
+  },
+  "run_config": {
+    "concurrency_levels": [
+      1,
+      2,
+      4
+    ],
+    "levels_share_server": false,
+    "requests_per_level": 100,
+    "warmup": 3,
+    "split": "agent",
+    "serve_env": {
+      "LLAMACPP_CTX_SIZE": "65536",
+      "OLLAMA_CONTEXT_LENGTH": "16384",
+      "VLLM_METAL_MAX_MODEL_LEN": "16384",
+      "VLLM_METAL_MEMORY_FRACTION": "auto"
+    }
+  },
+  "model": "/Users/ranzhang/workspace/applebench/.models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "endpoint": "http://localhost:8001",
+  "timestamp": "2026-09-02T07:09:36",
+  "machine": {
+    "host": "ranzhang-mac",
+    "chip": "Apple M5 Pro",
+    "os": "Darwin 25.6.0"
+  },
+  "concurrency_results": [
+    {
+      "concurrency": 1,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 7983,
+      "total_output_tokens": 8076,
+      "tokens_per_chunk": 1.0116497557309283,
+      "total_input_tokens": 459779,
+      "server_usage_available": true,
+      "ttft_avg_ms": 2523.725010065428,
+      "ttft_p50_ms": 1885.554249980487,
+      "ttft_p99_ms": 8108.58574998565,
+      "throughput_avg_tps": 60.29242730548339,
+      "throughput_p50_tps": 59.433506322190496,
+      "itl_avg_ms": 16.58583083632218,
+      "itl_p50_ms": 16.389474832348828,
+      "latency_avg_s": 3.875168712981365,
+      "latency_p50_s": 3.242869000067003,
+      "latency_p99_s": 10.036053915973753,
+      "output_throughput_tps": 21.050417261460243,
+      "input_throughput_tps": 1198.4323672680694,
+      "total_token_throughput_tps": 1219.4827845295297,
+      "wall_time_s": 383.6503523749998,
+      "error_samples": [
+        "400, message='Bad Request', url='http://localhost:8001/v1/chat/completions'"
+      ],
+      "sanity_warnings": [
+        "24/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+      ]
+    },
+    {
+      "concurrency": 2,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 7866,
+      "total_output_tokens": 7959,
+      "tokens_per_chunk": 1.0118230358504958,
+      "total_input_tokens": 459779,
+      "server_usage_available": true,
+      "ttft_avg_ms": 2717.9171094221697,
+      "ttft_p50_ms": 1955.9711249312386,
+      "ttft_p99_ms": 12350.076374947093,
+      "throughput_avg_tps": 17.02902640719237,
+      "throughput_p50_tps": 27.43688872486111,
+      "itl_avg_ms": 58.72326321472146,
+      "itl_p50_ms": 34.79593149885269,
+      "latency_avg_s": 7.420690991584155,
+      "latency_p50_s": 6.192677999963053,
+      "latency_p99_s": 39.384553333045915,
+      "output_throughput_tps": 21.629956696760395,
+      "input_throughput_tps": 1249.5288177006908,
+      "total_token_throughput_tps": 1271.158774397451,
+      "wall_time_s": 367.96190170792397,
+      "error_samples": [
+        "400, message='Bad Request', url='http://localhost:8001/v1/chat/completions'"
+      ],
+      "sanity_warnings": [
+        "25/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+      ]
+    },
+    {
+      "concurrency": 4,
+      "num_requests": 100,
+      "successful": 99,
+      "failed": 1,
+      "total_tokens_generated": 7873,
+      "total_output_tokens": 7967,
+      "tokens_per_chunk": 1.0119395402006859,
+      "total_input_tokens": 459779,
+      "server_usage_available": true,
+      "ttft_avg_ms": 3060.088861491437,
+      "ttft_p50_ms": 2278.533041011542,
+      "ttft_p99_ms": 10241.652750060894,
+      "throughput_avg_tps": 8.361140620775112,
+      "throughput_p50_tps": 10.91269826647482,
+      "itl_avg_ms": 119.6009067848085,
+      "itl_p50_ms": 88.85596817879774,
+      "latency_avg_s": 12.629663068937571,
+      "latency_p50_s": 7.7167060419451445,
+      "latency_p99_s": 53.97268033400178,
+      "output_throughput_tps": 25.335026408666348,
+      "input_throughput_tps": 1462.095281429673,
+      "total_token_throughput_tps": 1487.4303078383393,
+      "wall_time_s": 314.46582575002685,
+      "error_samples": [
+        "400, message='Bad Request', url='http://localhost:8001/v1/chat/completions'"
+      ],
+      "sanity_warnings": [
+        "25/99 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 1.06x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+      ]
+    }
+  ],
+  "total_duration_s": 1110.8094995829742
+}

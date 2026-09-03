@@ -32,7 +32,8 @@ import json
 from datetime import date
 from pathlib import Path
 
-MODELS = ["Qwen3-0.6B", "Qwen3.5-0.8B", "Gemma-4-E4B-it", "Qwen3.8-27B"]
+MODELS = ["Qwen3-0.6B", "Qwen3.5-0.8B", "Gemma-4-E4B-it", "Qwen3.8-27B",
+          "Qwen3.6-35B-A3B-4bit"]
 LEVELS = [1, 8, 16]
 
 # Per-model overrides. A model benchmarked at different concurrency levels, or
@@ -43,14 +44,26 @@ LEVELS = [1, 8, 16]
 #                   with a result file", i.e. no "did not start" rows at all,
 #                   for a model that was deliberately run against a subset.
 #   MODEL_NOTE    - caveat shown above that model's tables.
-MODEL_LEVELS = {"Qwen3.8-27B": [1, 2, 4]}
-MODEL_ROSTER = {"Qwen3.8-27B": []}
+MODEL_LEVELS = {"Qwen3.8-27B": [1, 2, 4], "Qwen3.6-35B-A3B-4bit": [1, 2, 4]}
+MODEL_ROSTER = {"Qwen3.8-27B": [], "Qwen3.6-35B-A3B-4bit": []}
 MODEL_NOTE = {
     "Qwen3.8-27B":
         "8-bit weights (GGUF Q8_0 for llama.cpp; the mlx-community affine-8bit "
         "conversion for vllm-metal and omlx) \u2014 BF16 does not fit this box. "
         "Run against three engines only, at concurrency 1/2/4; the other stacks "
         "were not attempted, so their absence is not a failure.",
+    "Qwen3.6-35B-A3B-4bit":
+        "4-bit MoE (35B total, ~3B active per token), agent split only, at "
+        "concurrency 1/2/4. Four engines were attempted plus one oMLX variant; "
+        "the rest of the roster was not run, so its absence is not a failure. "
+        "mlx_lm is marked partial at every level \u2014 around six in ten "
+        "requests came back OK with zero generated tokens, so its rates "
+        "describe only the ~38 that completed and are not a like-for-like "
+        "comparison with the engines that finished 99\u2013100. "
+        "\u201comlx (bounded)\u201d is the same build served with --no-cache. "
+        "No peak-memory column: the memory sidecar traced only the last "
+        "concurrency level of each run, so this model's memory needs a "
+        "re-measure.",
 }
 SPLITS = ["chat", "agent"]
 SORT_LEVEL = LEVELS[-1]   # tables default-sort by tok/s at this concurrency
@@ -107,6 +120,7 @@ NAMES = {
     "vllm_metal": "vllm-metal", "vllm_mlx": "vllm-mlx", "omlx": "omlx",
     "ollama": "ollama", "sglang": "sglang", "hf_transformers": "hf_transformers",
     "vllm": "vllm", "vllm-nvidia": "vllm-nvidia (ref)",
+    "omlx_bounded": "omlx (bounded)",
 }
 
 

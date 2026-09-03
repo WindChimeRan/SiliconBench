@@ -1,0 +1,46 @@
+{
+  "framework": "omlx_bounded_pl",
+  "framework_version": {
+    "version": null
+  },
+  "model": "Qwen3.6-35B-A3B-4bit-mlx",
+  "endpoint": "http://localhost:8005",
+  "timestamp": "2026-09-01T20:29:36",
+  "machine": {
+    "host": "ranzhang-mac",
+    "chip": "Apple M5 Pro",
+    "os": "Darwin 25.6.0"
+  },
+  "concurrency_results": [
+    {
+      "concurrency": 2,
+      "num_requests": 100,
+      "successful": 100,
+      "failed": 0,
+      "total_tokens_generated": 1554,
+      "total_output_tokens": 7849,
+      "tokens_per_chunk": 5.050836550836551,
+      "total_input_tokens": 461760,
+      "server_usage_available": true,
+      "ttft_avg_ms": 3314.767579167383,
+      "ttft_p50_ms": 2962.67037501093,
+      "ttft_p99_ms": 7467.015041969717,
+      "throughput_avg_tps": 38.066940794528016,
+      "throughput_p50_tps": 46.79874013299957,
+      "itl_avg_ms": 26.26951310318444,
+      "itl_p50_ms": 18.059768322855234,
+      "latency_avg_s": 5.3997591020795515,
+      "latency_p50_s": 5.045237084035762,
+      "latency_p99_s": 12.419456208939664,
+      "output_throughput_tps": 29.029424013859998,
+      "input_throughput_tps": 1707.8133306969032,
+      "total_token_throughput_tps": 1736.8427547107633,
+      "wall_time_s": 270.3808382919524,
+      "error_samples": [],
+      "sanity_warnings": [
+        "100/100 requests had server completion_tokens diverging >5% from SSE chunk count (avg ratio 6.31x): the framework bundles multiple tokens per SSE delta. throughput_avg_tps and itl_avg_ms use the server token count and are unaffected; itl_p50_ms is still chunk-derived and is NOT comparable against a non-bundling framework."
+      ]
+    }
+  ],
+  "total_duration_s": 283.4380157919368
+}
