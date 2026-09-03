@@ -56,6 +56,20 @@ export PYTHONUNBUFFERED=1
 # expired, so the gate at line ~162 would otherwise fall through to off.
 export APPLEBENCH_METALSTAT="${APPLEBENCH_METALSTAT:-1}"
 
+# How oMLX reuses repeated prompt prefixes: ram (memory only, the comparable
+# setting), ssd (disk-backed, oMLX's own shape, reproduces results published
+# before 2026-09-03) or none. serve_omlx.sh turns this into flags; see its
+# comment for why they cannot simply be passed by hand.
+#
+# Exported from here rather than set inside serve_omlx.sh so that benchmark.py,
+# a sibling process that never sees that script's environment, inherits it:
+# _run_config captures every OMLX_-prefixed variable, so the mode lands in each
+# result's run_config.serve_env. Settings built inside the serve script are
+# invisible to the results — the 2026-09-02 oMLX arms record no OMLX_ key at
+# all despite being started with three cache flags.
+export OMLX_CACHE_MODE="${OMLX_CACHE_MODE:-ram}"
+export OMLX_HOT_CACHE_SIZE="${OMLX_HOT_CACHE_SIZE:-8GB}"
+
 # Hard cleanup: kill any leftover inference processes
 cleanup() {
     echo "  Cleaning up all inference processes..."

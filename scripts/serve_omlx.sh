@@ -32,60 +32,74 @@ echo "omlx model dir reset to single entry: $ACTIVE_NAME -> $MLX_MODEL"
 
 echo "=== Starting omlx server on port $OMLX_PORT ==="
 
-# OMLX_SERVE_EXTRA_ARGS passes extra flags to `omlx serve`.
+# OMLX_CACHE_MODE picks how oMLX reuses repeated prompt prefixes. It is one
+# word instead of a combination of flags because the flags interact in ways
+# that are easy to get wrong (see below), and because run_all_apple.sh exports
+# it, so benchmark.py records it in every result's run_config.serve_env — the
+# setting a reader needs to know is then in the file, not just in this script.
 #
-# oMLX is the only engine in this roster with a DISK-backed prefix cache
-# (~/.omlx/cache, 100 GB by default, survives restarts, spans models). Every
-# other engine reuses repeated prompt prefixes from memory and nothing else:
-# llama.cpp per slot, vllm-metal's automatic prefix caching, sglang's
-# RadixAttention. Comparing oMLX with its SSD tier on is comparing it against a
-# capability nobody else has.
+#   ram   (default) Prefix reuse in memory, nothing written to disk. This is
+#         the comparable setting: every other engine in the roster reuses
+#         prefixes from RAM and none has a disk tier — llama.cpp per slot,
+#         vllm-metal's automatic prefix caching, sglang's RadixAttention.
+#   ssd   Prefix reuse backed by disk, memory tier off. This is oMLX's own
+#         shape and the protocol every published result before 2026-09-03 used,
+#         so it reproduces them. A capability nothing else here has.
+#   none  No prefix reuse at all. oMLX then does strictly less than the others.
 #
-# So the default here is a bounded IN-MEMORY prefix cache with no SSD tier —
-# oMLX reuses prefixes like everyone else, and writes nothing to disk. Three
-# settings are needed together, all verified against omlx dc312e6e:
-#   * OMLX_HOT_CACHE_ONLY=true — skips directory init, the writer thread and
-#     every SSD read/write (omlx/cache/paged_ssd_cache.py); read from the
-#     environment at omlx/settings.py:1134, there is no CLI flag for it.
-#   * --paged-ssd-cache-dir — still required, because omlx/cache/factory.py
-#     builds no cache at all when the dir is None. In this mode it stays empty.
-#   * --hot-cache-max-size > 0 — omlx/cli.py honours it ONLY when a cache dir
-#     is set, and forces it to 0 otherwise, so the two go together.
+# Mechanics, all read from omlx dc312e6e:
+#   * OMLX_HOT_CACHE_ONLY=true skips directory init, the writer thread and all
+#     SSD I/O (cache/paged_ssd_cache.py). There is no CLI flag for it; it is
+#     read from the environment at settings.py:1134.
+#   * --paged-ssd-cache-dir is required even in ram mode, because
+#     cache/factory.py builds no cache at all when the dir is None. In ram mode
+#     the directory stays empty.
+#   * --hot-cache-max-size is honoured by cli.py ONLY when a cache dir is set,
+#     and forced to 0 otherwise — so --no-cache silently ignores it. That is
+#     why "none" passes no size: a recorded setting that never applied is worse
+#     than no setting.
+#   * The dir is a fresh mktemp per start in both caching modes. In ssd mode
+#     that is what stops one concurrency level inheriting the previous level's
+#     cache; in ram mode nothing is written there, but a fresh dir keeps that
+#     protection if hot-cache-only ever stops applying.
+#   * omlx persists CLI args to ~/.omlx/settings.json (cli.py lists the
+#     persistable fields), so a flag passed once becomes the default for every
+#     later run. Everything is therefore passed explicitly on every start.
 #
-# --no-cache is NOT this. It disables prefix reuse entirely and silently
-# ignores --hot-cache-max-size (same cli.py gate), which leaves oMLX the only
-# engine in the comparison with no prefix reuse at all — unfair in the other
-# direction. It stays available through OMLX_SERVE_EXTRA_ARGS as a deliberate
-# "no reuse" arm.
-#
-# The dir is a fresh mktemp per start even though nothing should be written to
-# it: if hot-cache-only ever stops applying, a fresh dir still stops one
-# concurrency level from inheriting the previous level's cache.
-#
-# omlx persists CLI args to ~/.omlx/settings.json (omlx/cli.py lists the
-# persistable fields), so a flag passed once silently becomes the default for
-# every later run. That is why these are passed explicitly on every start.
+# OMLX_SERVE_EXTRA_ARGS still passes flags through. If it names any cache flag,
+# this script adds none of its own and the caller owns the whole configuration.
+OMLX_CACHE_MODE="${OMLX_CACHE_MODE:-ram}"
 OMLX_HOT_CACHE_SIZE="${OMLX_HOT_CACHE_SIZE:-8GB}"
 OMLX_CACHE_ARGS=""
+
 case "${OMLX_SERVE_EXTRA_ARGS:-}" in
-    *--no-cache*)
-        echo "omlx: prefix reuse disabled entirely (--no-cache from OMLX_SERVE_EXTRA_ARGS)"
-        ;;
-    *--paged-ssd-cache-dir*)
-        echo "omlx: cache dir supplied by OMLX_SERVE_EXTRA_ARGS"
+    *--no-cache*|*--paged-ssd-cache-dir*|*--hot-cache-max-size*)
+        echo "omlx: cache flags supplied by OMLX_SERVE_EXTRA_ARGS; OMLX_CACHE_MODE ignored"
         ;;
     *)
-        OMLX_FRESH_CACHE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/omlx-cache-XXXXXX")"
-        OMLX_CACHE_ARGS="--paged-ssd-cache-dir $OMLX_FRESH_CACHE_DIR --paged-ssd-cache-max-size 100GB"
-        export OMLX_HOT_CACHE_ONLY=true
-        echo "omlx: in-memory prefix cache ($OMLX_HOT_CACHE_SIZE), no SSD tier"
+        case "$OMLX_CACHE_MODE" in
+            ram)
+                OMLX_FRESH_CACHE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/omlx-cache-XXXXXX")"
+                OMLX_CACHE_ARGS="--paged-ssd-cache-dir $OMLX_FRESH_CACHE_DIR --paged-ssd-cache-max-size 100GB --hot-cache-max-size $OMLX_HOT_CACHE_SIZE"
+                export OMLX_HOT_CACHE_ONLY=true
+                echo "omlx: cache mode ram — prefix reuse in memory ($OMLX_HOT_CACHE_SIZE), nothing on disk"
+                ;;
+            ssd)
+                OMLX_FRESH_CACHE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/omlx-cache-XXXXXX")"
+                OMLX_CACHE_ARGS="--paged-ssd-cache-dir $OMLX_FRESH_CACHE_DIR --paged-ssd-cache-max-size 100GB --hot-cache-max-size 0"
+                export OMLX_HOT_CACHE_ONLY=false
+                echo "omlx: cache mode ssd — prefix reuse on disk, fresh dir $OMLX_FRESH_CACHE_DIR"
+                ;;
+            none)
+                OMLX_CACHE_ARGS="--no-cache"
+                echo "omlx: cache mode none — no prefix reuse"
+                ;;
+            *)
+                echo "Error: OMLX_CACHE_MODE must be ram, ssd or none (got '$OMLX_CACHE_MODE')"
+                exit 1
+                ;;
+        esac
         ;;
-esac
-case "${OMLX_SERVE_EXTRA_ARGS:-}" in
-    # Adding a hot-cache size next to --no-cache would be inert and would put a
-    # setting into the recorded serve_env that never applied.
-    *--no-cache*|*--hot-cache-max-size*) ;;
-    *) OMLX_CACHE_ARGS="$OMLX_CACHE_ARGS --hot-cache-max-size $OMLX_HOT_CACHE_SIZE" ;;
 esac
 
 omlx serve \
