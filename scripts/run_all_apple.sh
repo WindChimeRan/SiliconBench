@@ -158,7 +158,8 @@ PYGUARD
         exit 1
     fi
     echo "Cleaning old result files..."
-    rm -f "$SPLIT_RESULTS_DIR"/*_*.json "$SPLIT_RESULTS_DIR"/*_metalstat.jsonl "$SPLIT_RESULTS_DIR"/*_outputs.jsonl "$SPLIT_RESULTS_DIR/comparison.json"
+    rm -f "$SPLIT_RESULTS_DIR"/*_*.json "$SPLIT_RESULTS_DIR"/*_metalstat.jsonl "$SPLIT_RESULTS_DIR"/*_metalstat_c*.jsonl "$SPLIT_RESULTS_DIR"/*_outputs.jsonl "$SPLIT_RESULTS_DIR/comparison.json"
+    rm -rf "$SPLIT_RESULTS_DIR/.levels"
 else
     echo "Resume mode — keeping existing results."
 fi
@@ -203,18 +204,31 @@ for entry in "${FRAMEWORKS[@]}"; do
     # split, whose prompts repeat, level 1 warms a prefix cache that later
     # levels hit — worth 1.67x throughput and 4.1x TTFT on Gemma at concurrency
     # 8, enough to invert conclusions. Costs one server start per level.
-    # Shared timestamp so the benchmark JSON, metalstat sidecar, and outputs
+    # Shared timestamp so the benchmark JSON, metalstat sidecars, and outputs
     # sidecar share a suffix. Fixed once per framework: the per-level loop below
     # must write every level under the same stem.
     RUN_TS=$(date +%Y%m%d_%H%M%S)
     BENCH_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}.json"
     OUTPUTS_OUT="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_outputs.jsonl"
 
+    # Per-level parts live in a subdirectory, not next to the results. A part
+    # left behind by a skipped merge is itself a valid one-level result file,
+    # and collect_results.py globs this directory — it would pick the part up
+    # and publish a single level as the framework's arm for the whole run.
+    LEVEL_DIR="$SPLIT_RESULTS_DIR/.levels"
+    mkdir -p "$LEVEL_DIR"
+
+    # metalstat --meta-json is static machine description, identical for every
+    # level, so write it once per framework. The traces below are what differ.
+    if [ "${APPLEBENCH_METALSTAT:-0}" = "1" ]; then
+        metalstat --meta-json > "$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_metalstat.meta.json" 2>/dev/null || true
+    fi
+
     LEVEL_PARTS=()
     LEVEL_FAILED=false
 
     for LEVEL_ARG in $CONCURRENCY_LEVELS; do
-    LEVEL_OUT="$SPLIT_RESULTS_DIR/.${name}_${RUN_TS}_level_${LEVEL_ARG//,/_}.json"
+    LEVEL_OUT="$LEVEL_DIR/${name}_${RUN_TS}_level_${LEVEL_ARG//,/_}.json"
 
     # Start server. Guarded: under `set -e`, an unguarded non-zero exit here
     # (server never becomes ready — bad build, unsupported model arch, port
@@ -222,7 +236,7 @@ for entry in "${FRAMEWORKS[@]}"; do
     # skip every remaining framework, not just this one.
     echo "Starting $name server..."
     if ! bash "$SCRIPT_DIR/$serve"; then
-        echo "ERROR: $name server failed to start — skipping this framework"
+        echo "ERROR: $name server failed to start — skipping remaining levels"
         cleanup
         echo "Cooling down for ${COOLDOWN_SECONDS}s..."
         sleep "$COOLDOWN_SECONDS"
@@ -239,11 +253,15 @@ for entry in "${FRAMEWORKS[@]}"; do
     fi
 
     # Optional metalstat sidecar (gated — A/B showed wrapping perturbs tok/s ~10%; sidecar is <1%)
+    # One trace per level, named by concurrency. A single path shared by every
+    # level is truncated by each level in turn, so only the last level's trace
+    # survives — under a name that claims to cover the whole run.
+    # collect_results.py then lays that trace out across all the levels and
+    # reports the last level's memory as the first level's.
     METAL_PID=""
     if [ "${APPLEBENCH_METALSTAT:-0}" = "1" ]; then
-        METAL_PREFIX="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_metalstat"
-        metalstat --meta-json > "${METAL_PREFIX}.meta.json" 2>/dev/null || true
-        metalstat --jsonl -i 1 --show-all > "${METAL_PREFIX}.jsonl" 2>/dev/null &
+        METAL_JSONL="$SPLIT_RESULTS_DIR/${name}_${RUN_TS}_metalstat_c${LEVEL_ARG//,/_}.jsonl"
+        metalstat --jsonl -i 1 --show-all > "$METAL_JSONL" 2>/dev/null &
         METAL_PID=$!
     fi
 
@@ -304,10 +322,36 @@ for entry in "${FRAMEWORKS[@]}"; do
     # rest of the pipeline expects. The merged run_config records that the
     # levels did not share a server.
     if [ "$LEVEL_FAILED" = "true" ]; then
-        echo "  skipping merge for $name — a level failed to start"
-    else
-        python "$SCRIPT_DIR/merge_levels.py" --output "$BENCH_OUT" "${LEVEL_PARTS[@]}" \
-            && rm -f "${LEVEL_PARTS[@]}"
+        echo "  $name: stopped early — a level's server failed to start"
+    fi
+    # Merge the levels that produced a file. A missing part means that level
+    # died (mistralrs at concurrency 16, for one); keeping the levels that did
+    # run beats discarding them, and run_config.concurrency_levels records
+    # which those were. Guarded: an unguarded merge failure would take the
+    # whole script down under `set -e` and skip every remaining framework.
+    PRESENT_PARTS=()
+    MISSING_PARTS=()
+    for part in "${LEVEL_PARTS[@]}"; do
+        if [ -s "$part" ]; then
+            PRESENT_PARTS+=("$part")
+        else
+            MISSING_PARTS+=("$(basename "$part")")
+        fi
+    done
+    if [ ${#MISSING_PARTS[@]} -gt 0 ]; then
+        echo "  ⚠ $name produced no result for: ${MISSING_PARTS[*]}"
+    fi
+    if [ ${#PRESENT_PARTS[@]} -eq 0 ]; then
+        echo "  no levels completed for $name — no result file written"
+    elif ! python "$SCRIPT_DIR/merge_levels.py" --output "$BENCH_OUT" "${PRESENT_PARTS[@]}"; then
+        echo "  ⚠ merge failed for $name — no result file written"
+        rm -f "$BENCH_OUT"
+    fi
+    # Always drop the parts, merged or not: a stray part is a valid one-level
+    # result file that the next collect_results would adopt as this
+    # framework's arm.
+    if [ ${#LEVEL_PARTS[@]} -gt 0 ]; then
+        rm -f "${LEVEL_PARTS[@]}"
     fi
 done
 

@@ -16,35 +16,77 @@ from pathlib import Path
 RETIRED_FRAMEWORKS = {"inferrs"}
 
 
-def _peak_memory_per_level(result_path, concurrency_results):
-    """Peak ``mem_used_gb`` per concurrency from the result's metalstat sidecar.
-
-    Phases are laid out contiguously from the start of the trace in concurrency
-    order, each taking its recorded ``wall_time_s`` (same approximation as
-    draw/parse.py). Returns {concurrency: peak_gb}; empty if no sidecar so the
-    field is simply omitted (loaders treat it as missing).
-    """
-    sidecar = result_path.with_name(result_path.stem + "_metalstat.jsonl")
-    if not sidecar.exists():
-        return {}
+def _read_mem_trace(path):
+    """Rows of a metalstat JSONL trace, skipping anything unparseable."""
     rows = []
-    for line in sidecar.read_text().splitlines():
+    for line in path.read_text().splitlines():
         if line.strip():
             try:
                 rows.append(json.loads(line))
             except json.JSONDecodeError:
                 continue
-    if not rows:
-        return {}
+    return rows
+
+
+def _peak_memory_per_level(result_path, concurrency_results):
+    """Peak ``mem_used_gb`` per concurrency from the result's metalstat sidecars.
+
+    Preferred shape is one trace per level, ``<stem>_metalstat_c<N>.jsonl``,
+    written by a run that restarts the server for every level: the trace *is*
+    the level, so its peak needs no time arithmetic to attribute.
+
+    Legacy runs shared one server across levels and wrote a single
+    ``<stem>_metalstat.jsonl`` spanning the whole sweep. Those are still read,
+    with the levels laid out contiguously from the start of the trace in
+    concurrency order, each taking its recorded ``wall_time_s`` (same
+    approximation as draw/parse.py) — but only when the trace is actually long
+    enough to span the levels it is being cut into. A trace that falls short
+    is not a whole-run trace, and slicing it anyway reports the level it does
+    cover as whichever level happens to sit at that offset.
+
+    Returns {concurrency: peak_gb}, empty when there is nothing trustworthy to
+    report, so the field is simply omitted (loaders treat it as missing).
+    """
     walls = {c["concurrency"]: (c.get("wall_time_s") or 0.0)
              for c in concurrency_results if c.get("concurrency") is not None}
+
+    out = {}
+    for c in sorted(walls):
+        sidecar = result_path.with_name(f"{result_path.stem}_metalstat_c{c}.jsonl")
+        if not sidecar.exists():
+            continue
+        vals = [r.get("mem_used_gb") for r in _read_mem_trace(sidecar)]
+        vals = [v for v in vals if v is not None]
+        if vals:
+            out[c] = max(vals)
+    if out:
+        return out
+
+    sidecar = result_path.with_name(result_path.stem + "_metalstat.jsonl")
+    if not sidecar.exists():
+        return {}
+    rows = _read_mem_trace(sidecar)
+    if not rows:
+        return {}
+    elapsed = [r.get("elapsed_s") for r in rows]
+    mem = [r.get("mem_used_gb") for r in rows]
+
+    # A genuine whole-sweep trace runs slightly longer than the benchmark it
+    # wraps (started before the first level, killed after the last): observed
+    # ratios are 1.02-1.03. One that covers a third of the run is a per-level
+    # trace that was written to the shared path and truncated by its
+    # successors. Report nothing rather than the wrong level.
+    span = max((e for e in elapsed if e is not None), default=0.0)
+    total_wall = sum(walls.values())
+    if total_wall > 0 and span < 0.9 * total_wall:
+        print(f"Warning: {sidecar.name} spans {span:.0f}s of a {total_wall:.0f}s "
+              f"run — cannot attribute memory to levels, omitting")
+        return {}
+
     offset, bounds = 0.0, {}
     for c in sorted(walls):
         bounds[c] = (offset, offset + walls[c])
         offset += walls[c]
-    elapsed = [r.get("elapsed_s") for r in rows]
-    mem = [r.get("mem_used_gb") for r in rows]
-    out = {}
     for c, (start, end) in bounds.items():
         if end - start < 1.0:
             continue
