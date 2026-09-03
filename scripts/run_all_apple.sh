@@ -167,10 +167,18 @@ fi
 # Initial cleanup
 cleanup
 
-# Hard per-framework wall-time cap (whole benchmark.py call, all concurrency
-# levels combined). Backstops benchmark.py's own --max-wall-time, which only
-# checks *between* levels and can't stop a single pathologically slow one —
+# Hard wall-time cap on one level's benchmark.py call. Backstops a single
+# pathologically slow level, which benchmark.py cannot stop by itself —
 # hf_transformers on the agent split has been projected at 6-10h for c=1 alone.
+#
+# The cap is per level, but a level that overruns also ends the framework, so
+# the per-framework worst case stays one cap. Without that, splitting the sweep
+# into one invocation per level tripled the ceiling: benchmark.py's own
+# --max-wall-time only skips levels *within* an invocation, and there is now
+# one level per invocation, so nothing carried "this framework is too slow"
+# from one level to the next. Keep the cap above the slowest legitimate level
+# (mlx_lm at c=16 on the agent split has taken 35 min warm, and cold levels run
+# longer), and let the skip below do the bounding.
 FRAMEWORK_TIMEOUT_SECONDS="${FRAMEWORK_TIMEOUT_SECONDS:-3600}"
 BENCHMARK_MAX_WALL_TIME="${BENCHMARK_MAX_WALL_TIME:-3600}"
 
@@ -229,6 +237,7 @@ for entry in "${FRAMEWORKS[@]}"; do
 
     for LEVEL_ARG in $CONCURRENCY_LEVELS; do
     LEVEL_OUT="$LEVEL_DIR/${name}_${RUN_TS}_level_${LEVEL_ARG//,/_}.json"
+    LEVEL_OVERRAN=false
 
     # Start server. Guarded: under `set -e`, an unguarded non-zero exit here
     # (server never becomes ready — bad build, unsupported model arch, port
@@ -289,9 +298,10 @@ for entry in "${FRAMEWORKS[@]}"; do
     done
 
     if kill -0 "$BENCH_PID" 2>/dev/null; then
-        echo "  ⚠ $name exceeded ${FRAMEWORK_TIMEOUT_SECONDS}s wall time — killing"
+        echo "  ⚠ $name c=$LEVEL_ARG exceeded ${FRAMEWORK_TIMEOUT_SECONDS}s wall time — killing"
         kill -TERM "$BENCH_PID" 2>/dev/null
         wait "$BENCH_PID" 2>/dev/null || true
+        LEVEL_OVERRAN=true
     else
         kill "$SLEEP_PID" 2>/dev/null || true
         wait "$SLEEP_PID" 2>/dev/null || true
@@ -316,6 +326,29 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo ""
 
     LEVEL_PARTS+=("$LEVEL_OUT")
+
+    # Adaptive skip, restored across the per-level loop. A level that had to be
+    # killed, or that finished slower than BENCHMARK_MAX_WALL_TIME, means the
+    # higher levels will not be faster: stop this framework and keep what it
+    # already produced, rather than paying the cap again for each one.
+    if [ "$LEVEL_OVERRAN" = "true" ]; then
+        echo "  skipping $name's remaining levels — c=$LEVEL_ARG was killed at the cap"
+        break
+    fi
+    LEVEL_WALL=$(python - "$LEVEL_OUT" <<'PYWALL'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    print(int(max((c.get("wall_time_s") or 0) for c in d["concurrency_results"])))
+except Exception:
+    print(0)
+PYWALL
+)
+    LEVEL_WALL="${LEVEL_WALL:-0}"
+    if [ "$LEVEL_WALL" -gt "$BENCHMARK_MAX_WALL_TIME" ]; then
+        echo "  skipping $name's remaining levels — c=$LEVEL_ARG took ${LEVEL_WALL}s (limit ${BENCHMARK_MAX_WALL_TIME}s)"
+        break
+    fi
     done   # per-level loop
 
     # Stitch the per-level files back into the one-file-per-framework shape the

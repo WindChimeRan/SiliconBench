@@ -82,6 +82,12 @@ else
     export LLAMACPP_CTX_SIZE=$((LLAMACPP_PARALLEL * 8192))   # 8192/slot — chat prompts reach ~4K tokens
 fi
 
+# A level slower than this ends the framework. benchmark.py's --max-wall-time
+# only skips levels *within* one invocation, and there is now one level per
+# invocation, so without this a framework that crawled at c=1 was still given
+# every higher level in full.
+BENCHMARK_MAX_WALL_TIME="${BENCHMARK_MAX_WALL_TIME:-3600}"
+
 # Per-split output directory: results/<MODEL>/dgxspark/<split>/
 SPLIT_RESULTS_DIR="$RESULTS_DIR/$SPLIT"
 mkdir -p "$SPLIT_RESULTS_DIR"
@@ -208,6 +214,24 @@ for entry in "${FRAMEWORKS[@]}"; do
     echo ""
 
     LEVEL_PARTS+=("$LEVEL_OUT")
+
+    # Adaptive skip across levels: a level slower than the limit means the
+    # higher ones will not be faster. Keep what this framework produced and
+    # move on rather than paying for every remaining level.
+    LEVEL_WALL=$(python - "$LEVEL_OUT" <<'PYWALL'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    print(int(max((c.get("wall_time_s") or 0) for c in d["concurrency_results"])))
+except Exception:
+    print(0)
+PYWALL
+)
+    LEVEL_WALL="${LEVEL_WALL:-0}"
+    if [ "$LEVEL_WALL" -gt "$BENCHMARK_MAX_WALL_TIME" ]; then
+        echo "  skipping $name's remaining levels — c=$LEVEL_ARG took ${LEVEL_WALL}s (limit ${BENCHMARK_MAX_WALL_TIME}s)"
+        break
+    fi
     done   # per-level loop
 
     # Stitch the per-level files back into the one-file-per-framework shape the
