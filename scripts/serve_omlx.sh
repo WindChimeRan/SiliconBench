@@ -86,9 +86,21 @@ case "${OMLX_SERVE_EXTRA_ARGS:-}" in
                 ;;
             ssd)
                 OMLX_FRESH_CACHE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/omlx-cache-XXXXXX")"
+                # Two deliberate departures from a stock install, both forced:
+                #   * the cache directory. oMLX defaults to ~/.omlx/cache, which
+                #     persists across restarts and models — exactly what let one
+                #     concurrency level inherit the previous level's cache.
+                #   * the size cap. oMLX's own default is "auto" (10% of SSD
+                #     capacity, settings.py CacheSettings.ssd_cache_max_size),
+                #     but "auto" is only understood on the settings path:
+                #     parse_size() raises ValueError on it, so passing it as a
+                #     CLI flag fails at startup. 100GB is stated explicitly and
+                #     is what "auto" resolves to on this 1 TB machine anyway.
+                #     The cap never binds either way — these runs write under 1 GB.
+                # The hot tier stays at 0, which IS oMLX's shipped default.
                 OMLX_CACHE_ARGS="--paged-ssd-cache-dir $OMLX_FRESH_CACHE_DIR --paged-ssd-cache-max-size 100GB --hot-cache-max-size 0"
                 export OMLX_HOT_CACHE_ONLY=false
-                echo "omlx: cache mode ssd — prefix reuse on disk, fresh dir $OMLX_FRESH_CACHE_DIR"
+                echo "omlx: cache mode ssd — oMLX's own default (disk cache, no memory tier), fresh dir per start"
                 ;;
             none)
                 OMLX_CACHE_ARGS="--no-cache"

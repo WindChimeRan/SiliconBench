@@ -1,0 +1,6 @@
+omlx model dir reset to single entry: Qwen3.6-35B-A3B-4bit-mlx -> /Users/ranzhang/workspace/applebench/.models/Qwen3.6-35B-A3B-4bit-mlx
+=== Starting omlx server on port 8005 ===
+omlx: cache mode ram — prefix reuse in memory (8GB), nothing on disk
+PID: 33643
+Waiting for server to be ready...
+omlx server is ready on port 8005 (pid 33643)

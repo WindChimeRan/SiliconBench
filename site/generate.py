@@ -60,7 +60,10 @@ MODEL_NOTE = {
         "requests came back OK with zero generated tokens, so its rates "
         "describe only the ~38 that completed and are not a like-for-like "
         "comparison with the engines that finished 99\u2013100. "
-        "\u201comlx (bounded)\u201d is the same build served with --no-cache. "
+        "\u201comlx (RAM cache)\u201d is the same build with its prefix cache held "
+        "in memory and nothing written to disk, which is what every other engine "
+        "here does; the plain oMLX row keeps its own default, a prefix cache "
+        "backed by SSD. "
         "No peak-memory column: the memory sidecar traced only the last "
         "concurrency level of each run, so this model's memory needs a "
         "re-measure.",
@@ -120,7 +123,11 @@ NAMES = {
     "vllm_metal": "vllm-metal", "vllm_mlx": "vllm-mlx", "omlx": "omlx",
     "ollama": "ollama", "sglang": "sglang", "hf_transformers": "hf_transformers",
     "vllm": "vllm", "vllm-nvidia": "vllm-nvidia (ref)",
-    "omlx_bounded": "omlx (bounded)",
+    # oMLX's prefix cache has two tiers and the harness can run either. Both
+    # labels name the tier, so no row reads as plain "omlx" and leaves a reader
+    # to assume the default.
+    "omlx_ram": "omlx (RAM cache)",
+    "omlx_bounded": "omlx (no cache)",
 }
 
 
