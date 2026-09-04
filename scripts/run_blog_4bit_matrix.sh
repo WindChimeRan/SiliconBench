@@ -113,6 +113,20 @@ fi
 
 MTP_BASE='{"method":"mtp","model":"mlx-community/gemma-4-E4B-it-assistant-bf16","num_speculative_tokens":%d}'
 
+# ---- re-measure the MTP draft-depth arms at concurrency 8 ----
+# The post compares output throughput across draft depths at c=8. Depth 1 is
+# measured as part of the Gemma arm above; depths 2 and 3 exist only here.
+if [ "${1:-}" = "--mtp-depth" ]; then
+  log "=== re-measuring MTP draft depths 2 and 3 at c=8 ==="
+  for n in 2 3; do
+    export VLLM_METAL_SERVE_EXTRA_ARGS="--no-async-scheduling --speculative-config $(printf "$MTP_BASE" $n)"
+    run_variant gemma-4-e4b-it-4bit "vllm_metal_mtp_n$n" 8004 "8" 5400 serve_vllm_metal.sh stop_vllm_metal.sh
+    unset VLLM_METAL_SERVE_EXTRA_ARGS
+  done
+  log "=== MTP draft-depth re-measure complete ==="
+  exit 0
+fi
+
 ########## 1. Qwen3.8-27B (priority) ##########
 run_standard qwen3.8-27b-4bit "1 2 4" 9000
 export OMLX_SERVE_EXTRA_ARGS="--no-cache --hot-cache-max-size 8GB"
