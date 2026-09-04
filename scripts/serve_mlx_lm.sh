@@ -23,11 +23,22 @@ python -m mlx_lm.server \
 echo $! > "$PROJECT_DIR/.frameworks/mlx_lm_server.pid"
 echo "PID: $(cat "$PROJECT_DIR/.frameworks/mlx_lm_server.pid")"
 
-# Wait for server to be ready
+# Wait for server to be ready.
+# Verify OUR pid is alive first: /v1/models answers from whatever holds the
+# port, so a stale mlx_lm server left over from an earlier run makes a failed
+# start look successful — and the benchmark then measures that older process,
+# with whatever prompt cache it had already warmed. Same guard serve_omlx.sh
+# got in 5ee128e; this script never had it.
+MLX_LM_PID=$(cat "$PROJECT_DIR/.frameworks/mlx_lm_server.pid")
 echo "Waiting for server to be ready..."
 for i in $(seq 1 300); do
+    if ! kill -0 "$MLX_LM_PID" 2>/dev/null; then
+        echo "Error: mlx_lm server process $MLX_LM_PID died during startup"
+        tail -20 "$PROJECT_DIR/.frameworks/mlx_lm_server.log"
+        exit 1
+    fi
     if curl -s "http://localhost:$MLX_LM_PORT/v1/models" > /dev/null 2>&1; then
-        echo "mlx_lm server is ready on port $MLX_LM_PORT"
+        echo "mlx_lm server is ready on port $MLX_LM_PORT (pid $MLX_LM_PID)"
         exit 0
     fi
     sleep 1
