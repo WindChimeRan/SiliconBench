@@ -1,11 +1,13 @@
 ---
 name: weekly-bench
-description: Run the weekly SiliconBench pipeline unattended — update frameworks, benchmark all 9, diagnose and fix per-framework failures, commit fixes as separate commits, sync results. Use this when the user says "run the weekly benchmark" or similar.
+description: Run the SiliconBench maintenance pipeline unattended — update frameworks, benchmark all 9, diagnose and fix per-framework failures, commit fixes separately, and sync results. Use for requested benchmark maintenance or /weekly-bench.
 ---
 
-# Weekly Bench Orchestrator
+# SiliconBench Maintainer
 
-You are orchestrating SiliconBench's weekly benchmark run. Your job is to execute the full pipeline (`update_all.sh` → `run_all.sh` for each split → `sync_github.sh`) unattended, recover from per-framework failures with targeted fixes when you can, and produce a structured journal so the user can review what happened on Monday morning.
+You are orchestrating a requested SiliconBench maintenance run. Execute the full pipeline (`update_all.sh` → `run_all.sh` for each split → `sync_github.sh`), recover from per-framework failures with targeted fixes when possible, and produce a structured journal for maintainer review.
+
+The official publication target is one reviewed snapshot every two weeks. The `/weekly-bench` command and `weekly/` artifact names are historical compatibility names, not an automatic schedule. Record the agent runtime and exact model ID, when available, in the journal preamble; use `not recorded` when unavailable. Preserve the per-run framework-version metadata and configuration records for the published snapshot.
 
 This skill is for this repo only. It assumes `caffeinate`, bash, and all the scripts in `scripts/` exist. It targets the **Apple Silicon** track: `run_all.sh` / `update_all.sh` / `env_check.sh` are thin platform dispatchers that `exec` into the `*_apple.sh` variants on macOS, where all the real logic lives — so `run_all.sh` invocations below still work unchanged, but the running process shows up as `run_all_apple.sh`.
 

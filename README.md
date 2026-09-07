@@ -1,14 +1,14 @@
 # SiliconBench
 
-Benchmarks 9 local LLM inference frameworks on Apple Silicon side-by-side, re-run weekly by a Claude Code agent so the numbers don't rot. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
+Benchmarks 9 local LLM inference frameworks on Apple Silicon side-by-side, maintained through dated runs by a Claude Code agent. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
 
-Run the whole weekly pipeline — update, benchmark, diagnose failures, fix, publish — with one command: **`/weekly-bench`** in Claude Code.
+Run the maintenance pipeline — update, benchmark, diagnose failures, fix, publish — with one command: **`/weekly-bench`** in Claude Code.
 
 Latest results (primary model, Qwen3-0.6B): **[chat REPORT](results/Qwen3-0.6B/chat/REPORT.md)** · **[agent REPORT](results/Qwen3-0.6B/agent/REPORT.md)**
 
 ## Platforms
 
-**Apple Silicon** is the primary track (macOS, all 9 frameworks below, re-run weekly). **NVIDIA DGX Spark** (Grace CPU + Blackwell GB10 GPU, Linux) is a secondary track covering the 3 frameworks common to both: llama.cpp, vllm, sglang — the latter two built from source against nightly CUDA-13 PyTorch, since no stable CUDA-13 wheel exists yet for either. Results live in separate trees: `results/<MODEL>/{chat,agent}/` for Apple, `results/<MODEL>/dgxspark/{chat,agent}/` for DGX Spark.
+**Apple Silicon** is the primary track (macOS, all 9 frameworks below, refreshed for reviewed snapshots). **NVIDIA DGX Spark** (Grace CPU + Blackwell GB10 GPU, Linux) is a secondary track covering the 3 frameworks common to both: llama.cpp, vllm, sglang — the latter two built from source against nightly CUDA-13 PyTorch, since no stable CUDA-13 wheel exists yet for either. Results live in separate trees: `results/<MODEL>/{chat,agent}/` for Apple, `results/<MODEL>/dgxspark/{chat,agent}/` for DGX Spark.
 
 `scripts/run_all.sh`/`install_all.sh`/`update_all.sh`/`env_check.sh` auto-detect which platform they're running on (`uname`-based, override with `--platform apple|dgxspark`) and dispatch to a full, independent `_apple`/`_dgxspark` script — the two platforms share no control flow, so a change on one side can't affect the other. See [CLAUDE.md](CLAUDE.md) for the DGX Spark setup details and current caveats.
 
@@ -63,7 +63,7 @@ Because agent prompts reach ~8.8K tokens, `run_all.sh` bumps the context window 
 
 ## Models
 
-**Primary — [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B)** in BF16 across three formats. Every weekly run targets it, and the headline numbers are Qwen3-0.6B: small enough for fast turnaround (~1.2 GB), available in every format we need, and runs without quantization for a fair apple-to-apple comparison.
+**Primary — [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B)** in BF16 across three formats. Each maintenance run targets it, and the headline numbers are Qwen3-0.6B: small enough for fast turnaround (~1.2 GB), available in every format we need, and runs without quantization for a fair apple-to-apple comparison.
 
 | Format | Source | Used by |
 |--------|--------|---------|
@@ -78,7 +78,7 @@ Because agent prompts reach ~8.8K tokens, `run_all.sh` bumps the context window 
 | [Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) | `qwen3.5-0.8b` | next-gen small dense model — tracks how frameworks handle a newer architecture |
 | [Gemma-4-E4B-it](https://huggingface.co/google/gemma-4-E4B-it) | `gemma-4-e4b-it` | different vendor, larger head dims (256/512), multimodal-capable port — exercises code paths Qwen doesn't |
 
-**Additional profiles** in `models/`, downloaded on demand for heavier spot checks (not part of the routine weekly): [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) (`qwen3-8b`) and the [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) MoE (`qwen3-30b-a3b`).
+**Additional profiles** in `models/`, downloaded on demand for heavier spot checks (not part of the routine maintenance pass): [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) (`qwen3-8b`) and the [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) MoE (`qwen3-30b-a3b`).
 
 Switch models with the `--model` flag or `APPLEBENCH_MODEL` env var, e.g. `scripts/run_all.sh --model qwen3.5-0.8b`. Each model's results live under `results/<MODEL_NAME>/`.
 
@@ -94,7 +94,9 @@ Tested at concurrency 1, 8, 16. Each level runs 100 requests with 3 warmup. A 60
 
 ## How it stays fresh
 
-SiliconBench is re-run weekly by a Claude Code agent. The agent:
+The publication target is one reviewed snapshot every two weeks. A Claude Code agent runs the maintenance pipeline on request. The `/weekly-bench` command, `weekly/<date>` branches, and dated journal names retain their historical names; they do not establish an automatic schedule. The April and August journals document shakedown runs rather than a sustained publication cadence.
+
+The agent:
 
 1. **Updates** each framework from upstream (`update_all.sh`)
 2. **Runs** the full benchmark across all 9 frameworks (`run_all.sh`, resumable via `--skip-existing`)
@@ -114,3 +116,20 @@ Invoke it with `/weekly-bench` from Claude Code in this repo. Or for the happy-p
 **DGX Spark track**: DGX OS (Ubuntu-based Linux), CUDA 13.x toolkit, GB10 GPU (compute capability sm_121).
 
 Developer setup, script layout, known framework quirks, and extension guides live in [CLAUDE.md](CLAUDE.md).
+
+
+## License
+
+Original SiliconBench harness code and documentation are licensed under the
+[MIT License](LICENSE). Third-party inference engines, model weights, and source
+datasets retain their upstream licenses and access conditions. This license does
+not relicense those assets or third-party text retained in prompts and outputs.
+
+## Paper snapshot
+
+The paper's retained results are pinned to benchmark commit
+[`616aa51c450383ee9309d2149d6765f9bd117119`](https://github.com/WindChimeRan/SiliconBench/tree/616aa51c450383ee9309d2149d6765f9bd117119).
+The paper repository's `reproducibility/paper_snapshot.json` lists the selected
+files, hashes, dates, and retained settings. Historical engine-build and agent
+model IDs are incomplete; the manifest records missing values instead of using
+current installations to fill them. Later benchmark runs remain separate.
