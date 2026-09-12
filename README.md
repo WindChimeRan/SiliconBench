@@ -1,122 +1,47 @@
 # SiliconBench
 
-Benchmarks 9 local LLM inference frameworks on Apple Silicon side-by-side, maintained through dated runs by a Claude Code agent. Measures throughput, TTFT, ITL, and latency under concurrent load on both a classic chat workload and a multi-turn agentic workload composed from popular tool-calling benchmarks.
+**Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops**
 
-Run the maintenance pipeline — update, benchmark, diagnose failures, fix, publish — with one command: **`/weekly-bench`** in Claude Code.
+**[Live benchmarks and findings](https://ranranhaoranzhang.com/siliconbench/)** · **Paper: submitted to arXiv (pending)**
 
-Latest results (primary model, Qwen3-0.6B): **[chat REPORT](results/Qwen3-0.6B/chat/REPORT.md)** · **[agent REPORT](results/Qwen3-0.6B/agent/REPORT.md)**
+SiliconBench evaluates local LLM serving through three lenses: speed, memory,
+and fidelity. Throughput and latency measure performance under concurrent
+load; memory measurements show how much headroom remains for other applications;
+and a classification task checks for quality regressions against an NVIDIA
+reference.
 
-## Platforms
+The main audit covers nine Apple Silicon serving engines on chat and agent
+workloads, using Qwen3, Qwen3.5, and Gemma 4. A complementary NVIDIA DGX Spark
+track evaluates serving performance for three shared engine families. The
+[benchmark page](https://ranranhaoranzhang.com/siliconbench/) presents the results,
+figures, and paper findings.
 
-**Apple Silicon** is the primary track (macOS, all 9 frameworks below, refreshed for reviewed snapshots). **NVIDIA DGX Spark** (Grace CPU + Blackwell GB10 GPU, Linux) is a secondary track covering the 3 frameworks common to both: llama.cpp, vllm, sglang — the latter two built from source against nightly CUDA-13 PyTorch, since no stable CUDA-13 wheel exists yet for either. Results live in separate trees: `results/<MODEL>/{chat,agent}/` for Apple, `results/<MODEL>/dgxspark/{chat,agent}/` for DGX Spark.
+## Quick start
 
-`scripts/run_all.sh`/`install_all.sh`/`update_all.sh`/`env_check.sh` auto-detect which platform they're running on (`uname`-based, override with `--platform apple|dgxspark`) and dispatch to a full, independent `_apple`/`_dgxspark` script — the two platforms share no control flow, so a change on one side can't affect the other. See [CLAUDE.md](CLAUDE.md) for the DGX Spark setup details and current caveats.
+Open this repository in your coding agent and ask it to run the
+[benchmark skill](.claude/skills/weekly-bench/SKILL.md):
+
+> Read `.claude/skills/weekly-bench/SKILL.md` and run SiliconBench.
+
+In Claude Code, invoke the skill directly with `/weekly-bench`.
 
 ## Frameworks
 
-| Framework | Backend | Model Format |
-|-----------|---------|-------------|
-| [llama.cpp](https://github.com/ggerganov/llama.cpp) | C++ / Metal | GGUF |
-| [mlx_lm](https://github.com/ml-explore/mlx-examples) | MLX / Metal | MLX BF16 |
-| [mistral.rs](https://github.com/EricLBuehler/mistral.rs) | Rust / Metal | GGUF |
-| [vllm-metal](https://github.com/vllm-project/vllm-metal) | Python / MLX | Safetensors |
-| [vllm-mlx](https://github.com/waybarrios/vllm-mlx) | Python / MLX (vLLM plugin) | MLX BF16 |
-| [omlx](https://github.com/jundot/omlx) | MLX / Metal | MLX BF16 |
-| [ollama](https://github.com/ollama/ollama) | Go + Metal | GGUF |
-| [transformers](https://github.com/huggingface/transformers) | PyTorch / MPS | Safetensors |
-| [sglang](https://github.com/sgl-project/sglang) | Python / SGLang (MLX) | Safetensors |
+The Apple Silicon audit includes:
 
-All frameworks serve an OpenAI-compatible API. The benchmark hits `/v1/chat/completions` with streaming enabled and measures from the client side — no special instrumentation per framework.
+- [llama.cpp](https://github.com/ggml-org/llama.cpp)
+- [MLX LM](https://github.com/ml-explore/mlx-lm)
+- [mistral.rs](https://github.com/EricLBuehler/mistral.rs)
+- [vllm-metal](https://github.com/vllm-project/vllm-metal)
+- [vllm-mlx](https://github.com/waybarrios/vllm-mlx)
+- [oMLX](https://github.com/jundot/omlx)
+- [Ollama](https://github.com/ollama/ollama)
+- [Hugging Face Transformers](https://github.com/huggingface/transformers)
+- [SGLang](https://github.com/sgl-project/sglang)
 
-`transformers` is included as a PyTorch-native baseline — it uses the built-in `transformers serve` with continuous batching and `paged|sdpa`, the only CB-compatible attention backend that works on MPS (no FlashAttention or varlen kernel exists on Metal). Useful for measuring what PyTorch-native serving costs on Apple Silicon now that the algorithmic gap to vLLM has closed.
-
-## Workloads
-
-Two splits, 100 prompts each. Select with `--split chat|agent`.
-
-### Chat split
-
-Single-turn prompts sampled from [Open-Orca/OpenOrca](https://huggingface.co/datasets/Open-Orca/OpenOrca) and [CNN/DailyMail](https://huggingface.co/datasets/abisee/cnn_dailymail), distributed across four input-length buckets and two output-length targets:
-
-| Bucket | Input tokens | Output tokens | Count |
-|--------|-------------|--------------|-------|
-| Short | 10–80 | 64 / 256 | 20 |
-| Medium | 80–500 | 64 / 256 | 20 |
-| Long | 500–2,000 | 64 / 256 | 30 |
-| Very long | 2,000–4,000 | 64 / 256 | 30 |
-
-Covers realistic workloads from quick Q&A through long-document processing. All prompts are real natural language (not synthetic tokens), seeded for reproducibility.
-
-### Agent split
-
-Multi-turn agentic prompts with tool calls and tool responses already baked into the conversation history. Tests how frameworks handle realistic agent workloads — long contexts, tool-calling payloads, heterogeneous roles — without needing an actual agent runtime to drive the loop. Composed from three popular agentic benchmarks:
-
-| Source | Count | Content |
-|--------|-------|---------|
-| [BFCL V3 multi-turn](https://gorilla.cs.berkeley.edu/blogs/13_bfcl_v3_multi_turn.html) | 35 | File system, trading, travel, vehicle control, messaging tools |
-| [Hermes Agent Reasoning Traces](https://huggingface.co/datasets/lambda/hermes-agent-reasoning-traces) | 35 | Real multi-turn agent sessions with tool calls + results |
-| [ClawsBench](https://clawsbench.benchflow.ai) | 30 | Gmail, Slack, Calendar, Drive, Docs productivity tasks |
-
-Average ~4K input tokens, ~12 messages per prompt, 99/100 contain tool_calls and tool response messages in the conversation history. The model's job is to generate the next assistant turn.
-
-Because agent prompts reach ~8.8K tokens, `run_all.sh` bumps the context window to 16384/slot for llamacpp, ollama, and vllm-metal when running this split — the three frameworks that otherwise cap below that and would either reject (vllm-metal) or silently truncate (llamacpp, ollama). The other frameworks inherit Qwen3-0.6B's native 40K context and need no adjustment. Chat runs each framework untouched, so historical chat numbers remain comparable.
-
-## Models
-
-**Primary — [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B)** in BF16 across three formats. Each maintenance run targets it, and the headline numbers are Qwen3-0.6B: small enough for fast turnaround (~1.2 GB), available in every format we need, and runs without quantization for a fair apple-to-apple comparison.
-
-| Format | Source | Used by |
-|--------|--------|---------|
-| GGUF BF16 | [unsloth/Qwen3-0.6B-GGUF](https://huggingface.co/unsloth/Qwen3-0.6B-GGUF) | llama.cpp, mistral.rs, ollama |
-| MLX BF16 | [mlx-community/Qwen3-0.6B-bf16](https://huggingface.co/mlx-community/Qwen3-0.6B-bf16) | mlx_lm, omlx, vllm-mlx |
-| Safetensors BF16 | [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) | vllm-metal |
-
-**Also benchmarked** — run periodically alongside the primary, same three formats each (GGUF / MLX / Safetensors via their `models/*.sh` profiles):
-
-| Model | Profile | Why |
-|-------|---------|-----|
-| [Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) | `qwen3.5-0.8b` | next-gen small dense model — tracks how frameworks handle a newer architecture |
-| [Gemma-4-E4B-it](https://huggingface.co/google/gemma-4-E4B-it) | `gemma-4-e4b-it` | different vendor, larger head dims (256/512), multimodal-capable port — exercises code paths Qwen doesn't |
-
-**Additional profiles** in `models/`, downloaded on demand for heavier spot checks (not part of the routine maintenance pass): [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) (`qwen3-8b`) and the [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) MoE (`qwen3-30b-a3b`).
-
-Switch models with the `--model` flag or `APPLEBENCH_MODEL` env var, e.g. `scripts/run_all.sh --model qwen3.5-0.8b`. Each model's results live under `results/<MODEL_NAME>/`.
-
-## Metrics
-
-- **TTFT** — time to first token (ms)
-- **Throughput** — tokens per second per request, decode phase
-- **Aggregate throughput** — total tokens / wall time across concurrent requests
-- **ITL** — inter-token latency (ms)
-- **Latency** — end-to-end request latency (s)
-
-Tested at concurrency 1, 8, 16. Each level runs 100 requests with 3 warmup. A 60-second cooldown between frameworks keeps thermal throttling from skewing results.
-
-## How it stays fresh
-
-The publication target is one reviewed snapshot every two weeks. A Claude Code agent runs the maintenance pipeline on request. The `/weekly-bench` command, `weekly/<date>` branches, and dated journal names retain their historical names; they do not establish an automatic schedule. The April and August journals document shakedown runs rather than a sustained publication cadence.
-
-The agent:
-
-1. **Updates** each framework from upstream (`update_all.sh`)
-2. **Runs** the full benchmark across all 9 frameworks (`run_all.sh`, resumable via `--skip-existing`)
-3. **Diagnoses** per-framework failures by reading the error, the framework's upstream changelog, and prior journals
-4. **Fixes** adapter scripts when it can (a renamed CLI flag, a new required parameter) within a tightly scoped write allowlist — never touching `benchmark.py`, `config.sh`, or framework source
-5. **Verifies** each fix in isolation by starting the server and running a few requests before committing
-6. **Commits** auto-fixes to a dated `weekly/<date>` branch so the human reviews before anything lands on main
-7. **Publishes** a structured journal at `results/<MODEL>/weekly_<date>.journal.md` recording what succeeded, what was fixed, what was skipped, and why
-
-Skipping a framework is a valid outcome — if the agent can't confidently diagnose a failure, it logs the evidence and moves on, rather than over-fixing and masking a real regression. The full skill prompt lives at [`.claude/skills/weekly-bench/SKILL.md`](.claude/skills/weekly-bench/SKILL.md) if you're curious how it's instructed.
-
-Invoke it with `/weekly-bench` from Claude Code in this repo. Or for the happy-path-only wrapper (no intelligence layer), just run `scripts/weekly_bench.sh`.
-
-## Requirements
-
-**Apple Silicon track**: macOS 15+ on Apple Silicon.
-**DGX Spark track**: DGX OS (Ubuntu-based Linux), CUDA 13.x toolkit, GB10 GPU (compute capability sm_121).
-
-Developer setup, script layout, known framework quirks, and extension guides live in [CLAUDE.md](CLAUDE.md).
-
+The DGX Spark track covers llama.cpp, [vLLM](https://github.com/vllm-project/vllm),
+and SGLang. The paper's multi-node study also includes
+[EXO](https://github.com/exo-explore/exo), alongside MLX LM and llama.cpp.
 
 ## License
 
@@ -124,12 +49,3 @@ Original SiliconBench harness code and documentation are licensed under the
 [MIT License](LICENSE). Third-party inference engines, model weights, and source
 datasets retain their upstream licenses and access conditions. This license does
 not relicense those assets or third-party text retained in prompts and outputs.
-
-## Paper snapshot
-
-The paper's retained results are pinned to benchmark commit
-[`616aa51c450383ee9309d2149d6765f9bd117119`](https://github.com/WindChimeRan/SiliconBench/tree/616aa51c450383ee9309d2149d6765f9bd117119).
-The paper repository's `reproducibility/paper_snapshot.json` lists the selected
-files, hashes, dates, and retained settings. Historical engine-build and agent
-model IDs are incomplete; the manifest records missing values instead of using
-current installations to fill them. Later benchmark runs remain separate.
