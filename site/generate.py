@@ -586,23 +586,8 @@ details summary { cursor:pointer; }
 .sechint { font-size:.78rem; font-weight:400; color:var(--muted);
   margin-left:.6rem; }
 section { scroll-margin-top:.8rem; }
-.frozen { border:1px solid var(--hair); border-left:3px solid var(--accent);
-  border-radius:.4rem; padding:.65rem .9rem; font-size:.88rem;
-  color:var(--muted); }
-.tldr { background:var(--band); border-radius:.6rem;
-  padding:.8rem 1.1rem; margin:1rem 0 1.4rem; }
-.tldr p { margin:.1rem 0 .3rem; }
-.tldr ul { margin:.2rem 0 .2rem 1.1rem; padding:0; }
-.tldr li { margin:.35rem 0; font-size:.92rem; }
-#paper h3 { font-size:1.05rem; margin:1.6rem 0 .5rem; }
-#paper > p { font-size:1.1rem; }
-figure { margin:.8rem 0 1rem; }
-figure img { width:100%; height:auto; background:#fff;
-  border:1px solid var(--hair); border-radius:.4rem; padding:.4rem;
-  box-sizing:border-box; }
-figcaption { font-size:.8rem; color:var(--muted); margin-top:.3rem; }
 .linksbox { margin-top:1.8rem; }
-.frozen a, .linksbox a { color:var(--accent); }
+.linksbox a { color:var(--accent); }
 pre.citation { white-space:pre-wrap; overflow-wrap:anywhere;
   padding:1rem; background:var(--band); border:1px solid var(--hair);
   border-radius:.4rem; font-size:.78rem; line-height:1.5; }
@@ -769,9 +754,6 @@ def machine_section(repo, machine, commit):
             + "".join(blocks) + meta + "</section>")
 
 
-PAPER_RUNS = ("Apple M5 Pro, August 22–26, 2026; "
-              "DGX Spark, July 3–4, 2026; Qwen3-0.6B BF16")
-PAPER_BENCHMARK_COMMIT = "616aa51c450383ee9309d2149d6765f9bd117119"
 PAPER_CITATION = r"""@misc{zhang2026siliconbench,
   title  = {{SiliconBench}: Speed, Memory, and Fidelity for {LLM} Serving on Unified-Memory Desktops},
   author = {Ranran Haoran Zhang and Aysa Xuemo Fan and David Munh{\'a} Correia and Alex Cheema and Rui Zhang},
@@ -781,103 +763,19 @@ PAPER_CITATION = r"""@misc{zhang2026siliconbench,
 
 
 def paper_section():
-    """Frozen narrative reusing paper figures and findings.
-
-    Deliberately NOT generated from live data: these paragraphs and the
-    two figures describe the paper's fixed runs (PAPER_RUNS) and are
-    refreshed when the paper itself changes. The banner identifies the
-    retained snapshot; the live tables above show subsequent benchmark runs.
-    """
-    banner = flow(
-        "<strong>Paper snapshot.</strong> These findings accompany the submitted "
-        "paper and use fixed benchmark runs (" + PAPER_RUNS + "). "
-        "The <a href='https://github.com/WindChimeRan/SiliconBench/tree/" +
-        PAPER_BENCHMARK_COMMIT + "'>retained benchmark snapshot</a> preserves "
-        "the inputs to these comparisons. The live tables above are updated "
-        "as new reviewed results are merged.")
-    tldr = [
-        "<strong>Three stacks meet the paper's completion, fidelity, and "
-        "model-coverage criteria:</strong> llama.cpp, vllm-metal, and omlx.",
-        "<strong>Explicit memory budgets do not guarantee headroom.</strong> "
-        "Two stacks complete every request while system memory approaches "
-        "physical capacity and throughput declines.",
-        "<strong>CUDA vLLM and SGLang sustain stronger concurrency scaling "
-        "on Qwen3-0.6B.</strong>",
-        "<strong>An agent proposes fixes;</strong> maintainers review changes "
-        "before rerunning official results.",
-    ]
-    tldr_html = "".join(f"<li>{flow(t)}</li>" for t in tldr)
-    fig3_cap = flow(
-        "Qwen3-0.6B BF16 on the 64 GB Apple M5 Pro. Each stack traces "
-        "throughput and peak system memory across concurrency 1, 8, and 16; "
-        "marker size increases with concurrency. Filled markers indicate "
-        "at least 90 successful requests out of 100; hollow markers indicate "
-        "partial runs.")
-    fig3_para = flow(
-        "vllm-metal scales throughput at nearly constant memory use. "
-        "sglang and vllm-mlx complete every request while memory approaches "
-        "physical capacity and throughput declines. ollama maintains a "
-        "flat but high footprint, leaving little headroom. Memory discipline "
-        "requires control over the engine's total footprint.")
-    fig5_cap = flow(
-        "The three engine families shared by Apple Silicon and DGX Spark, "
-        "using the same Qwen3-0.6B workload. Line-end labels show throughput "
-        "scaling from concurrency 1 to 16.")
-    fig5_para = flow(
-        "CUDA vLLM and SGLang scale throughput by 4.3–7.7 times across chat "
-        "and agent workloads while first-token latency remains stable. "
-        "llama.cpp's agent throughput flattens on both platforms, while its "
-        "Metal build finishes ahead on chat at concurrency 16. These "
-        "comparisons include differences in hardware, builds, and settings; "
-        "they do not isolate the contribution of each.")
-    maintain = flow(
-        "An agent updates frameworks, runs benchmarks, and proposes fixes "
-        "to adapters and model profiles. Maintainers review the changes "
-        "before rerunning official results. Early maintenance runs "
-        "documented failures after shared-dependency updates and a "
-        "chat-template error; the journals record the diagnosis and fixes.")
+    """Publication status, code link, and citation after the live tables."""
     links = flow(
-        "<strong>Paper &amp; code.</strong> The paper has been submitted "
-        "to arXiv. A link will be added when available. Benchmark code, "
-        "per-run results, and maintenance journals are available in the "
+        "The paper has been submitted to arXiv. A link will be added when "
+        "available. Benchmark code, per-run results, and maintenance journals "
+        "are available in the "
         "<a href='https://github.com/WindChimeRan/SiliconBench'>benchmark "
         "repository</a>.")
     return f"""
-<section id="paper">
-<h2 class="sechead">Findings from the paper
-  <span class="sechint">findings from the retained benchmark snapshot</span></h2>
-
-<div class="frozen">{banner}</div>
-
-<div class="tldr">
-<p><strong>Main findings</strong></p>
-<ul>{tldr_html}</ul>
-</div>
-
-<h3>Explicit memory budgets do not guarantee headroom</h3>
-<figure>
-<img src="paper_f3_trajectory.png" loading="eager"
-     alt="Speed-memory trajectories per stack on chat and agent splits">
-<figcaption>{fig3_cap}</figcaption>
-</figure>
-<p>{fig3_para}</p>
-
-<h3>CUDA vLLM and SGLang sustain stronger concurrency scaling</h3>
-<figure>
-<img src="paper_f5_bridge_pairs.png" loading="eager"
-     alt="Bridge pairs: same engine family on Apple Silicon and DGX Spark">
-<figcaption>{fig5_cap}</figcaption>
-</figure>
-<p>{fig5_para}</p>
-
-<h3>Maintainers review changes before rerunning official results</h3>
-<p>{maintain}</p>
-
-<div id="links" class="linksbox">
+<section id="links" class="linksbox">
+<h2 class="sechead">Paper &amp; code</h2>
 <p>{links}</p>
 <h3 id="citation">Citation</h3>
 <pre class="citation"><code>{esc(PAPER_CITATION)}</code></pre>
-</div>
 </section>
 """
 
@@ -899,8 +797,8 @@ def build(repo, commit):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops</title>
 <meta name="description" content="Speed, memory, and fidelity for LLM serving
-engines on unified-memory desktops, with live benchmark results and findings
-from the SiliconBench paper.">
+engines on unified-memory desktops, with live Apple Silicon results and a
+complementary DGX Spark performance track.">
 <style>{CSS}</style>
 </head>
 <body>
@@ -928,7 +826,6 @@ from the SiliconBench paper.">
   </div>
   <nav class="pagenav">
     <a href="#live">Live results</a>
-    <a href="#paper">Findings from the paper</a>
     <a href="#links">Paper &amp; code</a>
   </nav>
 </header>

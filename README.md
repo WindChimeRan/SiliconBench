@@ -28,8 +28,8 @@ reference.
 The main audit covers nine Apple Silicon serving engines on chat and agent
 workloads, using Qwen3, Qwen3.5, and Gemma 4. A complementary NVIDIA DGX Spark
 track evaluates serving performance for three shared engine families. The
-[benchmark page](https://ranranhaoranzhang.com/siliconbench/) presents the results,
-figures, and paper findings.
+[benchmark page](https://ranranhaoranzhang.com/siliconbench/) presents the latest
+recorded results and run details.
 
 ## Quick start
 
