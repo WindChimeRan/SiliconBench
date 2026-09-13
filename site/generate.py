@@ -13,14 +13,13 @@ Design rules (mirrors the paper):
   - No speed-only leaderboard: the three lenses sit side by side. Tables
     default-sort by tok/s at SORT_LEVEL (c=16) for ergonomics, but the
     scopenote says plainly that this is a convenience and not a ranking,
-    and the fidelity table sits alongside so a fast-but-wrong stack cannot
-    be read as a winner. Rows were alphabetical until 2026-08-22.
+    and memory and fidelity remain visible alongside it.
   - Failure vocabulary carried over: partial cells show n/100, crashed
     cells show a cross, budget-skips say "skip".
   - Run dates, per-framework timestamps, and harness commit are meta
     info in a muted footer block, not headline info.
   - Machines are a first-class dimension: adding a machine is one entry
-    in MACHINES (M5 Pro ships as a planned/empty tab today).
+    in MACHINES (M5 Pro is the paper's main audit platform).
   - Light and dark themes; system default plus a manual toggle.
 
 Usage:
@@ -88,9 +87,8 @@ MACHINES = [
         "spec": "18 cores · 64 GB unified memory · macOS 26.6 · Metal",
         "subdir": "m5pro",       # results/<MODEL>/m5pro/<split>/
         "status": "live",
-        "note": "Current benchmarking machine, shown first. Gaps are genuine framework/model "
-                "incompatibilities, diagnosed per cell in that model's "
-                "m5pro/journal_*.md.",
+        "note": "Main platform in the paper's audit. Run details and model coverage "
+                "appear in the tables above.",
         "has_memory": True,
         "roster": APPLE_ROSTER,
     },
@@ -100,7 +98,8 @@ MACHINES = [
         "spec": "64 GB unified memory · macOS 26 · Metal",
         "subdir": None,          # legacy apple tree: results/<MODEL>/<split>/
         "status": "live",
-        "note": "The track the paper audits (nine stacks); its runs are the ones cited below.",
+        "note": "Earlier benchmark runs and maintenance case studies. The paper's "
+                "main audit uses the M5 Pro.",
         "has_memory": True,
         "roster": APPLE_ROSTER,
     },
@@ -110,9 +109,9 @@ MACHINES = [
         "spec": "GB10 Grace-Blackwell · 128 GB unified · Linux / CUDA",
         "subdir": "dgxspark",
         "status": "live",
-        "note": "CUDA-native reference track: the three engines with "
-                "upstream siblings in the Apple roster. Memory is not "
-                "measured on this track yet.",
+        "note": "Complementary serving-performance reference for three engine "
+                "families shared with the Apple Silicon audit. Memory measurements "
+                "are not included in this track.",
         "has_memory": False,
         "roster": DGX_ROSTER,
     },
@@ -484,7 +483,7 @@ def meta_block(machine, machine_data, commit, versions):
     vnote = ("" if has_ver else flow("""Framework versions and update commits
       for each run are recorded in the
       <a href="https://github.com/WindChimeRan/SiliconBench/tree/main/results">
-      weekly journals</a>; structured version fields appear here once the
+      maintenance journals</a>; structured version fields appear here once the
       harness emits them.""") + " ")
     return f"""
     <div class="meta">
@@ -603,6 +602,10 @@ figure img { width:100%; height:auto; background:#fff;
   box-sizing:border-box; }
 figcaption { font-size:.8rem; color:var(--muted); margin-top:.3rem; }
 .linksbox { margin-top:1.8rem; }
+.frozen a, .linksbox a { color:var(--accent); }
+pre.citation { white-space:pre-wrap; overflow-wrap:anywhere;
+  padding:1rem; background:var(--band); border:1px solid var(--hair);
+  border-radius:.4rem; font-size:.78rem; line-height:1.5; }
 footer { margin-top:3rem; font-size:.8rem; color:var(--muted); }
 footer a { color:var(--accent); text-decoration:none; }
 """
@@ -766,8 +769,15 @@ def machine_section(repo, machine, commit):
             + "".join(blocks) + meta + "</section>")
 
 
-PAPER_RUNS = ("Apple chat 2026-07-03, Apple agent 2026-05-19/20, "
-              "DGX Spark 2026-07-03/04, all on Qwen3-0.6B BF16")
+PAPER_RUNS = ("Apple M5 Pro, August 22–26, 2026; "
+              "DGX Spark, July 3–4, 2026; Qwen3-0.6B BF16")
+PAPER_BENCHMARK_COMMIT = "616aa51c450383ee9309d2149d6765f9bd117119"
+PAPER_CITATION = r"""@misc{zhang2026siliconbench,
+  title  = {{SiliconBench}: Speed, Memory, and Fidelity for {LLM} Serving on Unified-Memory Desktops},
+  author = {Ranran Haoran Zhang and Aysa Xuemo Fan and David Munh{\'a} Correia and Alex Cheema and Rui Zhang},
+  year   = {2026},
+  note   = {Submitted to arXiv}
+}"""
 
 
 def paper_section():
@@ -775,113 +785,98 @@ def paper_section():
 
     Deliberately NOT generated from live data: these paragraphs and the
     two figures describe the paper's fixed runs (PAPER_RUNS) and are
-    refreshed only by hand when the paper itself changes. The banner
-    says so; the live tables above are the current truth and may
-    diverge as engines evolve.
+    refreshed when the paper itself changes. The banner identifies the
+    retained snapshot; the live tables above show subsequent benchmark runs.
     """
     banner = flow(
-        "<strong>Frozen section.</strong> Everything below is analysis "
-        "from the paper, based on fixed benchmark runs (" + PAPER_RUNS +
-        "). It is written once and updated only with the paper. The live "
-        "tables above rebuild automatically and may diverge from these "
-        "numbers as engines evolve.")
+        "<strong>Paper snapshot.</strong> These findings accompany the submitted "
+        "paper and use fixed benchmark runs (" + PAPER_RUNS + "). "
+        "The <a href='https://github.com/WindChimeRan/SiliconBench/tree/" +
+        PAPER_BENCHMARK_COMMIT + "'>retained benchmark snapshot</a> preserves "
+        "the inputs to these comparisons. The live tables above are updated "
+        "as new reviewed results are merged.")
     tldr = [
-        "<strong>Nine stacks enter; four remain viable.</strong> Only "
-        "llama.cpp, vllm-metal, mlx_lm, and omlx pass all three lenses. "
-        "The chat-split throughput leader holds a near-constant 47 GB "
-        "claim and fails 5-shot fidelity, so a speed-only leaderboard "
-        "recommends a stack the multi-lens reading rules out.",
-        "<strong>Declared memory budgets are not enforced ones.</strong> "
-        "Two stacks that configure explicit budgets still grow to within "
-        "a few GB of physical RAM on the agent split and degrade or "
-        "crash.",
-        "<strong>The platform gap is serving software, not "
-        "silicon.</strong> Upstream engines on DGX Spark scale 4 to 8x "
-        "from c=1 to c=16 at matching single-stream speed, while the "
-        "best Apple stack reaches 3.3x.",
-        "<strong>The benchmark maintains itself.</strong> A weekly agent "
-        "updates every engine, re-runs both splits, repairs what breaks "
-        "inside a write allowlist, and publishes a journal; this page "
-        "rebuilds from its commits.",
+        "<strong>Three stacks meet the paper's completion, fidelity, and "
+        "model-coverage criteria:</strong> llama.cpp, vllm-metal, and omlx.",
+        "<strong>Explicit memory budgets do not guarantee headroom.</strong> "
+        "Two stacks complete every request while system memory approaches "
+        "physical capacity and throughput declines.",
+        "<strong>CUDA vLLM and SGLang sustain stronger concurrency scaling "
+        "on Qwen3-0.6B.</strong>",
+        "<strong>An agent proposes fixes;</strong> maintainers review changes "
+        "before rerunning official results.",
     ]
     tldr_html = "".join(f"<li>{flow(t)}</li>" for t in tldr)
     fig3_cap = flow(
-        "Figure from the paper. Each stack traces its (throughput, peak "
-        "memory) position across concurrency 1, 8, 16; linestyle is the "
-        "stack's declared budget policy.")
+        "Qwen3-0.6B BF16 on the 64 GB Apple M5 Pro. Each stack traces "
+        "throughput and peak system memory across concurrency 1, 8, and 16; "
+        "marker size increases with concurrency. Filled markers indicate "
+        "at least 90 successful requests out of 100; hollow markers indicate "
+        "partial runs.")
     fig3_para = flow(
-        "Stacks with enforced budgets trace flat paths: throughput grows "
-        "while memory stays put (vllm-metal holds 33 to 39 GB while "
-        "scaling 3.3x). The sharpest finding cuts against the audit "
-        "table: mistral.rs and sglang declare explicit budgets, yet both "
-        "dive to about 60 GB on a 64 GB machine and degrade to partial "
-        "completion or crash on the agent split. A declared budget is a "
-        "configuration knob; discipline has to be enforced end to end "
-        "through the allocator. ollama sits at 98 percent of Metal's "
-        "48 GB advisory working-set hint from the first request, sized "
-        "to the hint rather than to demand.")
+        "vllm-metal scales throughput at nearly constant memory use. "
+        "sglang and vllm-mlx complete every request while memory approaches "
+        "physical capacity and throughput declines. ollama maintains a "
+        "flat but high footprint, leaving little headroom. Memory discipline "
+        "requires control over the engine's total footprint.")
     fig5_cap = flow(
-        "Figure from the paper. The three engine families the two "
-        "platforms share, same workload; line-end labels give c=1 to "
-        "c=16 scaling.")
+        "The three engine families shared by Apple Silicon and DGX Spark, "
+        "using the same Qwen3-0.6B workload. Line-end labels show throughput "
+        "scaling from concurrency 1 to 16.")
     fig5_para = flow(
-        "Upstream vllm on GB10 scales 7.7x on chat and 4.3x on agent "
-        "with median TTFT of 52 and 134 ms at c=16; sglang behaves "
-        "alike. The attribution is engine-local: sglang scales 6.9x on "
-        "CUDA but declines below single-stream on its MLX backend, and "
-        "llama.cpp plateaus on both platforms, so its ceiling is the "
-        "engine design, not the hardware. The silicon itself is "
-        "competitive: single-stream speed matches across platforms, and "
-        "llama.cpp on the M-series finishes ahead of its own CUDA build "
-        "at chat c=16 (252 vs 193 tok/s).")
+        "CUDA vLLM and SGLang scale throughput by 4.3–7.7 times across chat "
+        "and agent workloads while first-token latency remains stable. "
+        "llama.cpp's agent throughput flattens on both platforms, while its "
+        "Metal build finishes ahead on chat at concurrency 16. These "
+        "comparisons include differences in hardware, builds, and settings; "
+        "they do not isolate the contribution of each.")
     maintain = flow(
-        "A maintainer agent re-runs the benchmark weekly: it pulls each "
-        "engine from upstream, runs both splits, diagnoses failures, "
-        "applies bounded fixes inside a write allowlist, and commits a "
-        "structured journal. In one week a single MLX library bump broke "
-        "three stacks through three distinct failure modes; two were "
-        "repaired within the same cycle. The journals are the provenance "
-        "record behind the live tables above.")
+        "An agent updates frameworks, runs benchmarks, and proposes fixes "
+        "to adapters and model profiles. Maintainers review the changes "
+        "before rerunning official results. Early maintenance runs "
+        "documented failures after shared-dependency updates and a "
+        "chat-template error; the journals record the diagnosis and fixes.")
     links = flow(
-        "<strong>Paper &amp; code.</strong> The paper is under review; a "
-        "preprint link will appear here. The harness, per-run results, "
-        "and weekly journals are public in the "
+        "<strong>Paper &amp; code.</strong> The paper has been submitted "
+        "to arXiv. A link will be added when available. Benchmark code, "
+        "per-run results, and maintenance journals are available in the "
         "<a href='https://github.com/WindChimeRan/SiliconBench'>benchmark "
         "repository</a>.")
     return f"""
 <section id="paper">
 <h2 class="sechead">Findings from the paper
-  <span class="sechint">frozen analysis; not refreshed by the weekly
-  pipeline</span></h2>
+  <span class="sechint">findings from the retained benchmark snapshot</span></h2>
 
 <div class="frozen">{banner}</div>
 
 <div class="tldr">
-<p><strong>TL;DR.</strong></p>
+<p><strong>Main findings</strong></p>
 <ul>{tldr_html}</ul>
 </div>
 
-<h3>Flat paths are enforced budgets; diving paths end in failure</h3>
+<h3>Explicit memory budgets do not guarantee headroom</h3>
 <figure>
-<img src="paper_f3_trajectory.png" loading="lazy"
+<img src="paper_f3_trajectory.png" loading="eager"
      alt="Speed-memory trajectories per stack on chat and agent splits">
 <figcaption>{fig3_cap}</figcaption>
 </figure>
 <p>{fig3_para}</p>
 
-<h3>The scaling gap is software, not silicon</h3>
+<h3>CUDA vLLM and SGLang sustain stronger concurrency scaling</h3>
 <figure>
-<img src="paper_f5_bridge_pairs.png" loading="lazy"
+<img src="paper_f5_bridge_pairs.png" loading="eager"
      alt="Bridge pairs: same engine family on Apple Silicon and DGX Spark">
 <figcaption>{fig5_cap}</figcaption>
 </figure>
 <p>{fig5_para}</p>
 
-<h3>The benchmark maintains itself</h3>
+<h3>Maintainers review changes before rerunning official results</h3>
 <p>{maintain}</p>
 
 <div id="links" class="linksbox">
 <p>{links}</p>
+<h3 id="citation">Citation</h3>
+<pre class="citation"><code>{esc(PAPER_CITATION)}</code></pre>
 </div>
 </section>
 """
@@ -904,8 +899,8 @@ def build(repo, commit):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops</title>
 <meta name="description" content="Speed, memory, and fidelity for LLM serving
-engines on unified-memory desktops (Apple Silicon, DGX Spark). Updated
-automatically from weekly benchmark runs.">
+engines on unified-memory desktops, with live benchmark results and findings
+from the SiliconBench paper.">
 <style>{CSS}</style>
 </head>
 <body>
@@ -913,43 +908,24 @@ automatically from weekly benchmark runs.">
 <header>
   <h1>SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops</h1>
   <p class="byline">Ranran Haoran Zhang, Aysa Xuemo Fan, David Munhá Correia, Alex Cheema, Rui Zhang</p>
-  <p class="tag">{flow("""All requests hit an OpenAI-compatible endpoint at
-  concurrency 1 / 8 / 16, BF16 weights, n=100 per level.""")}</p>
+  <p class="tag">{flow("""SiliconBench evaluates local LLM serving through
+  speed, memory, and fidelity. Explore how engines handle concurrent
+  workloads while preserving memory headroom and model quality.""")}</p>
   <p class="links">
-    <a href="https://github.com/WindChimeRan/SiliconBench">benchmark repo</a>
-    <a href="https://github.com/WindChimeRan/SiliconBench/tree/main/results">weekly journals</a>
-    <a href="#" title="paper link coming">paper (soon)</a>
+    <a href="https://github.com/WindChimeRan/SiliconBench">GitHub</a>
+    <a href="https://github.com/WindChimeRan/SiliconBench/tree/main/results">Maintenance journals</a>
+    <a href="#citation">BibTeX</a>
+    <span>Paper (arXiv pending)</span>
   </p>
   <div class="about">
-  <p>{flow("""SiliconBench audits the LLM serving engines that run on
-  unified-memory desktop hardware. Nine stacks are benchmarked on Apple
-  Silicon against the same weights and prompts, with a CUDA-native
-  reference track on an NVIDIA DGX Spark for the three engines the two
-  ecosystems share. A maintainer agent re-runs the benchmark, commits the
-  raw results, and this page rebuilds from them automatically.""")}</p>
-  <p>{flow("""Speed alone is a misleading ranking on shared machines: the
-  engine pool is the same memory your browser and IDE use, and a stack can
-  be fastest while claiming most of it or while returning wrong output. The
-  tables therefore keep three lenses side by side. Speed is measured on
-  two workloads (a short-prompt chat split and an agent split whose
-  multi-turn prompts reach several thousand input tokens), memory as the
-  peak footprint during serving, and fidelity as weighted F1 on a
-  classification task against an NVIDIA reference on identical weights.
-  Try sorting by tok/s at c=1 and then at c=16: the point of the
-  concurrency sweep is that single-stream rankings do not survive load.""")}</p>
+  <p>{flow("""The main audit covers nine Apple Silicon serving engines
+  on chat and agent workloads. A complementary NVIDIA DGX Spark track
+  measures serving performance for three shared engine families.""")}</p>
+  <p>{flow("""Speed captures throughput and latency under load; memory
+  tracks the system footprint during serving; and fidelity uses a
+  classification task to check for quality regressions against an NVIDIA
+  reference.""")}</p>
   </div>
-  <p class="scopenote">{flow("""Single-node serving only. Stacks are
-  sorted by tok/s at c=16 by default; click any column header to re-sort
-  (failed runs always sink to the bottom). That default is a convenience,
-  not a recommendation — read it against the fidelity table below before
-  treating it as a ranking, because the paper's central finding is that
-  speed-only orderings mislead: the fastest stack here is not always one
-  that answers correctly. ✕ =
-  crashed (&lt;5/100 requests), <i>n</i>/100 = partial run, – = not
-  measured. Trend sparklines show each stack's own shape across c=1/8/16
-  (per-row normalized; TTFT on a log scale); magnitudes are in the
-  numbers. Hover a stack name for its run provenance; the full record is
-  under per-framework provenance at the bottom.""")}</p>
   <nav class="pagenav">
     <a href="#live">Live results</a>
     <a href="#paper">Findings from the paper</a>
@@ -967,6 +943,13 @@ automatically from weekly benchmark runs.">
   <span class="group"><span class="lbl">model</span>{model_btns}</span>
   <button id="themetoggle" title="toggle light/dark">◐ theme</button>
 </div>
+
+<p class="scopenote">{flow("""Single-node serving. Select a machine and
+model, then click a column header to sort. Read throughput alongside memory
+and fidelity. ✕ = crashed (&lt;5/100 requests), <i>n</i>/100 = partial run,
+– = not measured. Trend lines show each engine's change across the tested
+concurrency levels; each row is scaled independently, with first-token
+latency on a log scale. Hover an engine name for run details.""")}</p>
 
 {sections}
 </section>
