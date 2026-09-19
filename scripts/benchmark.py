@@ -13,10 +13,17 @@ import platform
 import subprocess
 import time
 import sys
+import urllib.request
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
 import aiohttp
+
+# The prompt set is frozen and lives on the Hub. Pinning a commit makes the URL
+# immutable, so there is nothing to cache or verify.
+PROMPTS_REVISION = "3e9fa20c6fc6de333c5cb40e5da46d001194443c"
+PROMPTS_URL = ("https://huggingface.co/datasets/windchimeran/SiliconBench/resolve/"
+               f"{PROMPTS_REVISION}/{{split}}_benchmark_prompts.json")
 
 
 def machine_info():
@@ -452,7 +459,8 @@ def _run_config(args, concurrency_levels):
         "requests_per_level": args.requests,
         "warmup": args.warmup,
         "split": args.split,
-        "serve_env": {k: v for k, v in sorted(os.environ.items())
+        "prompts": args.prompts or f"hub@{PROMPTS_REVISION}",
+        "serve_env":{k: v for k, v in sorted(os.environ.items())
                       if k.startswith(_SERVE_ENV_PREFIXES)},
     }
 
@@ -505,12 +513,11 @@ def main():
 
     # Load prompts
     if args.prompts:
-        prompts_path = Path(args.prompts)
+        with open(args.prompts) as f:
+            prompts = json.load(f)
     else:
-        split_file = f"{args.split}_benchmark_prompts.json"
-        prompts_path = Path(__file__).parent.parent / "prompts" / split_file
-    with open(prompts_path) as f:
-        prompts = json.load(f)
+        with urllib.request.urlopen(PROMPTS_URL.format(split=args.split), timeout=60) as r:
+            prompts = json.load(r)
 
     # Get model name from server or use provided
     model = args.model if args.model else get_model_name(base_url)
