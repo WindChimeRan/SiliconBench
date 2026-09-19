@@ -9,11 +9,14 @@ This repository includes code and materials for the paper
 (submitted to arXiv).
 
 ```bibtex
-@misc{zhang2026siliconbench,
-  title  = {{SiliconBench}: Speed, Memory, and Fidelity for {LLM} Serving on Unified-Memory Desktops},
-  author = {Ranran Haoran Zhang and Aysa Xuemo Fan and David Munh{\'a} Correia and Alex Cheema and Rui Zhang},
-  year   = {2026},
-  note   = {Submitted to arXiv}
+@misc{zhang2026siliconbenchspeedmemoryfidelity,
+      title={SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops}, 
+      author={Ranran Haoran Zhang and Aysa Xuemo Fan and David Munhá Correia and Alex Cheema and Rui Zhang},
+      year={2026},
+      eprint={2609.19169},
+      archivePrefix={arXiv},
+      primaryClass={cs.AR},
+      url={https://arxiv.org/abs/2609.19169}, 
 }
 ```
 
