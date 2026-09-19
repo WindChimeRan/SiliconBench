@@ -754,26 +754,22 @@ def machine_section(repo, machine, commit):
             + "".join(blocks) + meta + "</section>")
 
 
-PAPER_CITATION = r"""@misc{zhang2026siliconbench,
-  title  = {{SiliconBench}: Speed, Memory, and Fidelity for {LLM} Serving on Unified-Memory Desktops},
-  author = {Ranran Haoran Zhang and Aysa Xuemo Fan and David Munh{\'a} Correia and Alex Cheema and Rui Zhang},
-  year   = {2026},
-  note   = {Submitted to arXiv}
+PAPER_CITATION = r"""@misc{zhang2026siliconbenchspeedmemoryfidelity,
+      title={SiliconBench: Speed, Memory, and Fidelity for LLM Serving on Unified-Memory Desktops},
+      author={Ranran Haoran Zhang and Aysa Xuemo Fan and David Munhá Correia and Alex Cheema and Rui Zhang},
+      year={2026},
+      eprint={2609.19169},
+      archivePrefix={arXiv},
+      primaryClass={cs.AR},
+      url={https://arxiv.org/abs/2609.19169},
 }"""
 
 
 def paper_section():
-    """Publication status, code link, and citation after the live tables."""
-    links = flow(
-        "The paper has been submitted to arXiv. A link will be added when "
-        "available. Benchmark code, per-run results, and maintenance journals "
-        "are available in the "
-        "<a href='https://github.com/WindChimeRan/SiliconBench'>benchmark "
-        "repository</a>.")
+    """Citation after the live tables."""
     return f"""
 <section id="links" class="linksbox">
 <h2 class="sechead">Paper &amp; code</h2>
-<p>{links}</p>
 <h3 id="citation">Citation</h3>
 <pre class="citation"><code>{esc(PAPER_CITATION)}</code></pre>
 </section>
@@ -810,10 +806,10 @@ complementary DGX Spark performance track.">
   speed, memory, and fidelity. Explore how engines handle concurrent
   workloads while preserving memory headroom and model quality.""")}</p>
   <p class="links">
-    <a href="https://github.com/WindChimeRan/SiliconBench">GitHub</a>
-    <a href="https://github.com/WindChimeRan/SiliconBench/tree/main/results">Maintenance journals</a>
-    <a href="#citation">BibTeX</a>
-    <span>Paper (arXiv pending)</span>
+    <a href="https://github.com/WindChimeRan/SiliconBench">🛠️ GitHub</a>
+    <a href="#citation">📚 BibTeX</a>
+    <a href="https://arxiv.org/pdf/2609.19169">📄 Paper</a>
+    <a href="https://huggingface.co/datasets/windchimeran/SiliconBench">🤗 Dataset</a>
   </p>
   <div class="about">
   <p>{flow("""The main audit covers nine Apple Silicon serving engines
