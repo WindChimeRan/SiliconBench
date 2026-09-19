@@ -1,7 +1,7 @@
 # SiliconBench
 
 <p align="center">
-<a href="https://ranranhaoranzhang.com/siliconbench/">Project Website</a> | 📄 <a href="https://arxiv.org/pdf/2609.19169">Paper</a> | 🛠️ <a href="https://github.com/WindChimeRan/SiliconBench">GitHub</a>
+🌐 <a href="https://ranranhaoranzhang.com/siliconbench/">Project Website</a> | 📄 <a href="https://arxiv.org/pdf/2609.19169">Paper</a> | 🛠️ <a href="https://github.com/WindChimeRan/SiliconBench">GitHub</a> | 🤗 <a href="https://huggingface.co/datasets/windchimeran/SiliconBench">Dataset</a>
 </p>
 
 This repository includes code and materials for the paper
