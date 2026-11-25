@@ -48,7 +48,9 @@ async def one_request(
         # mlx-vlm; harmless on templates that don't read the kwarg. Without
         # this, Gemma4-E4B-it consumed the entire 256-token max_tokens
         # budget on reasoning and never emitted JSON, scoring F1≈0.14.
-        "chat_template_kwargs": {"enable_thinking": False},
+        # Muse Glimmer's template has no enable_thinking switch, only a
+        # reasoning strength (default high); low is its closest to off.
+        "chat_template_kwargs": {"enable_thinking": False, "reasoning_strength": "low"},
     }
 
     last_err = None
