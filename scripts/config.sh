@@ -18,6 +18,7 @@ OLLAMA_PORT=8006
 VLLM_MLX_PORT=8008
 HF_TRANSFORMERS_PORT=8009
 SGLANG_PORT=8010
+EXECUTORCH_PORT=8012
 
 # Model profile — set APPLEBENCH_MODEL env var to switch models
 # Default: qwen3-0.6b. See models/*.sh for available profiles.
@@ -35,6 +36,7 @@ source "$MODEL_PROFILE"
 GGUF_MODEL="$MODELS_DIR/$GGUF_FILE"
 MLX_MODEL="$MODELS_DIR/$MLX_DIR_NAME"
 HF_MODEL="$MODELS_DIR/$HF_DIR_NAME"
+ET_MODEL_DIR="$MODELS_DIR/executorch/$MODEL_NAME"  # ExecuTorch .pte export
 # APPLEBENCH_RESULTS_SUBDIR scopes results to one machine within the apple
 # track: results/<MODEL>/<subdir>/<split>/. It is now derived from the hardware
 # rather than remembered, because forgetting it was destructive, not merely

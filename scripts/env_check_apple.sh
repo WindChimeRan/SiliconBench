@@ -128,6 +128,12 @@ if [ -d "$VENVS_DIR/sglang" ]; then
 else
     warn "sglang venv not found" "Run: scripts/install_sglang.sh"
 fi
+
+if [ -f "$FRAMEWORKS_DIR/executorch/cmake-out/backends/mlx/examples/llm/llm_worker" ]; then
+    ok "executorch"
+else
+    warn "executorch not built" "Run: scripts/install_executorch.sh"
+fi
 echo ""
 
 # --- Models ---

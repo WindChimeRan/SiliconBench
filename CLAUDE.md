@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-SiliconBench benchmarks local LLM inference frameworks side-by-side across two hardware platforms. **Apple Silicon** (primary track) covers 9 frameworks: llama.cpp, mlx_lm, mistral.rs, vllm-metal, vllm-mlx, omlx, ollama, hf_transformers, sglang. **NVIDIA DGX Spark** (secondary track, Grace CPU + Blackwell GB10 GPU, Linux) covers the 3 frameworks common to both hardware families: llama.cpp, vllm, sglang. All frameworks serve an OpenAI-compatible API; the benchmark hits `/v1/chat/completions` with streaming and measures TTFT, throughput, ITL, and latency at concurrency levels 1/8/16. See "Platform Dispatch" below for how the two tracks stay independent, and "DGX Spark Notes" for platform-specific caveats.
+SiliconBench benchmarks local LLM inference frameworks side-by-side across two hardware platforms. **Apple Silicon** (primary track) covers 10 frameworks: llama.cpp, mlx_lm, mistral.rs, vllm-metal, vllm-mlx, omlx, ollama, hf_transformers, sglang, executorch. **NVIDIA DGX Spark** (secondary track, Grace CPU + Blackwell GB10 GPU, Linux) covers the 3 frameworks common to both hardware families: llama.cpp, vllm, sglang. All frameworks serve an OpenAI-compatible API; the benchmark hits `/v1/chat/completions` with streaming and measures TTFT, throughput, ITL, and latency at concurrency levels 1/8/16. See "Platform Dispatch" below for how the two tracks stay independent, and "DGX Spark Notes" for platform-specific caveats.
 
 ## Key Commands
 
@@ -93,7 +93,7 @@ results/<MODEL_NAME>/
 
 **Model formats:** Three formats are downloaded per model profile (`download_model.sh --formats gguf,mlx,hf`, default all three). GGUF (llama.cpp, mistral.rs, ollama), MLX (mlx_lm, omlx — apple-only), Safetensors/HF (vllm-metal, and on DGX Spark: vllm, sglang). All use BF16 for fair comparison. `install_all_dgxspark.sh` passes `--formats gguf,hf` since none of its 3 frameworks use MLX.
 
-**Ports:** 8001-8010 (gap at 8007, retired with inferrs), one per apple framework, defined in `config.sh`. DGX Spark reuses `LLAMACPP_PORT`/`SGLANG_PORT` from `config.sh` (different physical machine, no real collision) and adds `VLLM_PORT=8011` in `config_dgxspark.sh`.
+**Ports:** 8001-8010 (gap at 8007, retired with inferrs) plus 8012 for executorch, one per apple framework, defined in `config.sh`. DGX Spark reuses `LLAMACPP_PORT`/`SGLANG_PORT` from `config.sh` (different physical machine, no real collision) and adds `VLLM_PORT=8011` in `config_dgxspark.sh`.
 
 ## Adding a New Framework
 
@@ -136,6 +136,7 @@ The `.claude/skills/weekly-bench/` intelligent-recovery skill and the `metalstat
 - **mistral.rs:** Crashes at concurrency 16. Requires `cargo` for build.
 - **vllm-metal:** Uses global venv at `~/.venv-vllm-metal` (not in project `.venvs/`). Update script backs up before reinstalling.
 - **omlx:** Multi-model server; uses symlink in `.models/omlx/` pointing to the shared MLX model directory.
+- **executorch:** Runs an exported `.pte`, not the raw weights. `serve_executorch.sh` exports the active profile to `.models/executorch/<MODEL_NAME>/` on first use; `update_executorch.sh` deletes all exports, since a `.pte` must match its runtime. Profiles with `ET_PIPELINE="muse_glimmer"` use Muse Glimmer's own exporter (from the GGUF) and batching server. Its server returns 429 rather than queueing once every session is busy, so the session count (16) caps concurrency. The generic server runs with `--no-special-token-stops` (pytorch/executorch#25744) so requests without `tools` stop only at end-of-turn, and exports carry the model's full EOS list (`get_eos_ids`, #25705); an ExecuTorch older than both fails at server startup on the unknown flag.
 
 ## DGX Spark Notes
 

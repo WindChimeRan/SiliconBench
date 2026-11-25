@@ -85,6 +85,10 @@ cleanup() {
     pkill -f "vllm-mlx serve" 2>/dev/null || true
     pkill -f "transformers serve" 2>/dev/null || true
     pkill -f "sglang.launch_server" 2>/dev/null || true
+    pkill -f "llm_server.python.serve" 2>/dev/null || true
+    pkill -f "muse_glimmer.serving.serve_batching" 2>/dev/null || true
+    pkill -f "llm_worker" 2>/dev/null || true
+    pkill -f "muse_glimmer_batching_worker" 2>/dev/null || true
     sleep 5  # let processes die and release memory
 }
 
@@ -106,6 +110,7 @@ FRAMEWORKS=(
     "vllm_mlx:$VLLM_MLX_PORT:serve_vllm_mlx.sh:stop_vllm_mlx.sh:$MLX_MODEL"
     "hf_transformers:$HF_TRANSFORMERS_PORT:serve_hf_transformers.sh:stop_hf_transformers.sh:$HF_MODEL"
     "sglang:$SGLANG_PORT:serve_sglang.sh:stop_sglang.sh:$HF_MODEL"
+    "executorch:$EXECUTORCH_PORT:serve_executorch.sh:stop_executorch.sh:$MODEL_NAME"
 )
 
 # Bump context window for agent split — prompts reach ~8.8K tokens.
