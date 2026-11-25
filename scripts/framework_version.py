@@ -132,13 +132,16 @@ def probe(fw):
             d = _git(FRAMEWORKS_DIR / "sglang")
             d.update(_dist(VENVS_DIR / "sglang/bin/python", "sglang", "torch"))
             return d
+
+        if fw == "executorch":
+            return _git(FRAMEWORKS_DIR / "executorch")
     except Exception:
         pass
     return {}
 
 
 ALL = ["llamacpp", "mlx_lm", "omlx", "vllm_metal", "vllm_mlx",
-       "mistralrs", "ollama", "hf_transformers", "sglang"]
+       "mistralrs", "ollama", "hf_transformers", "sglang", "executorch"]
 
 
 def describe(fw):

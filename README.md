@@ -56,6 +56,9 @@ The Apple Silicon audit includes:
 - [Hugging Face Transformers](https://github.com/huggingface/transformers)
 - [SGLang](https://github.com/sgl-project/sglang)
 
+The harness also supports [ExecuTorch](https://github.com/pytorch/executorch)
+(MLX backend, served by its `examples/llm_server` OpenAI server).
+
 The DGX Spark track covers llama.cpp, [vLLM](https://github.com/vllm-project/vllm),
 and SGLang. The paper's multi-node study also includes
 [EXO](https://github.com/exo-explore/exo), alongside MLX LM and llama.cpp.
