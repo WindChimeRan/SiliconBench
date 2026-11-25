@@ -9,7 +9,9 @@ at specified concurrency levels.
 import argparse
 import asyncio
 import json
+import os
 import platform
+import ssl
 import subprocess
 import time
 import sys
@@ -24,6 +26,17 @@ import aiohttp
 PROMPTS_REVISION = "3e9fa20c6fc6de333c5cb40e5da46d001194443c"
 PROMPTS_URL = ("https://huggingface.co/datasets/windchimeran/SiliconBench/resolve/"
                f"{PROMPTS_REVISION}/{{split}}_benchmark_prompts.json")
+
+
+def _hub_ssl_context():
+    """TLS context for the Hub download. Some Python builds look for their CA
+    bundle at a path that doesn't exist on macOS (e.g. a framework Python built
+    for /etc/pki/tls/cert.pem), so every certificate check fails. Use
+    SSL_CERT_FILE if set, else the macOS system bundle when present."""
+    cafile = os.environ.get("SSL_CERT_FILE")
+    if not cafile and os.path.exists("/etc/ssl/cert.pem"):
+        cafile = "/etc/ssl/cert.pem"
+    return ssl.create_default_context(cafile=cafile)
 
 
 def machine_info():
@@ -516,7 +529,8 @@ def main():
         with open(args.prompts) as f:
             prompts = json.load(f)
     else:
-        with urllib.request.urlopen(PROMPTS_URL.format(split=args.split), timeout=60) as r:
+        with urllib.request.urlopen(PROMPTS_URL.format(split=args.split), timeout=60,
+                                    context=_hub_ssl_context()) as r:
             prompts = json.load(r)
 
     # Get model name from server or use provided
